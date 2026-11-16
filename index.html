@@ -565,6 +565,10 @@ body.soul-playing{overflow:hidden}
 :root{--page-ui-scale:1.5}
 }
 </style>
+<style id="overall-90-percent-scale">
+  /* Uniform 90% screen zoom; leave print styling and calculation logic unchanged. */
+  @media screen { html { zoom: 90%; } }
+</style>
 <script id="page-layout">
 'use strict';
 (() => {
@@ -623,12 +627,12 @@ body.soul-playing{overflow:hidden}
             </div>
             <hr class="divider">
             <div id="handEntry">
-  <div class="tile-entry-head"><span class="section-label">輸入牌面</span><div class="tile-entry-actions"><button type="button" class="text-button reset-button hand-undo" id="undoHand" title="撤銷上一步" aria-label="撤銷上一步輸入"><svg class="icon" aria-hidden="true"><use href="#i-reset"/></svg><span>撤銷</span></button><span class="hand-closed" id="closedBadge">門前</span></div></div>
+  <div class="tile-entry-head"><span class="section-label">輸入牌面</span><div class="tile-entry-actions"><button type="button" class="text-button reset-button" id="clearHand" title="清空牌面" aria-label="清空牌面"><svg class="icon" aria-hidden="true"><use href="#i-reset"/></svg><span>清空牌面</span></button><span class="hand-closed" id="closedBadge">門前</span></div></div>
   <div class="hand-board">
     <div class="concealed-area"><button type="button" class="board-label" data-target="hand" aria-pressed="true">手牌 <span id="handCount">0 / 13</span></button><div class="hand-rack" id="handRack" role="group" aria-label="手牌，點擊牌面可移除"></div></div>
     <div class="winning-area"><button type="button" class="board-label" data-target="win" aria-pressed="false">和牌</button><div id="winRack" class="win-rack" role="group" aria-label="和牌那張牌"></div></div>
   </div>
-  <div class="tile-tools"><span id="handInstruction">先選手牌，最後另選和牌。</span><button type="button" id="sortHand">理牌</button><button type="button" id="clearHand">清空牌面</button></div>
+  <div class="tile-tools"><span id="handInstruction">先選手牌，最後另選和牌。</span><button type="button" id="sortHand">理牌</button><button type="button" class="hand-undo" id="undoHand" title="撤銷上一步" aria-label="撤銷上一步輸入">撤銷</button></div>
   <div class="meld-head"><span class="section-label">副露／暗槓 <small id="meldCount">0 組</small></span><button type="button" class="add-meld" id="openMeld">＋ 新增面子</button></div>
   <div id="meldList" class="meld-list"></div>
   <div class="tile-keyboard">
