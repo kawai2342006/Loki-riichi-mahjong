@@ -593,15 +593,13 @@ body.soul-playing{overflow:hidden}
   .mj-tile.mj-dora{border-color:#d8ba64;border-bottom-color:#bea050;background:linear-gradient(135deg,#fffdf0,#fffefb 48%,#fff0ba);box-shadow:0 0 calc(7px * var(--page-ui-scale,1)) #dfb64055,inset 0 0 calc(5px * var(--page-ui-scale,1)) #f4ce6350}
   .mj-tile.mj-dora:hover:not(:disabled):not(.mj-static){border-color:#c39c31;background:linear-gradient(135deg,#fff9d9,#fffefb 48%,#ffe9a0)}
   .mj-tile.mj-dora::before{content:"";position:absolute;inset:-40% -80%;background:linear-gradient(110deg,transparent 38%,#fff8 47%,#fffffff0 50%,#fff7 53%,transparent 62%);transform:translateX(-65%);animation:dora-sheen 3.6s ease-in-out infinite;pointer-events:none;z-index:1}
-  .mj-tile.mj-dora::after{content:"✦";position:absolute;top:0;left:calc(2px * var(--page-ui-scale,1));color:#c69c34;font-size:calc(10px * var(--page-ui-scale,1));line-height:1.2;text-shadow:0 0 calc(4px * var(--page-ui-scale,1)) #fff6b6;animation:dora-sparkle 2.4s ease-in-out infinite;pointer-events:none;z-index:2}
   @keyframes dora-sheen{0%,18%{transform:translateX(-65%)}60%,100%{transform:translateX(65%)}}
-  @keyframes dora-sparkle{0%,100%{opacity:.45;transform:scale(.75)}50%{opacity:1;transform:scale(1.15)}}
   @container hand-entry (max-width:420px){
     .hand-extras{grid-template-columns:minmax(0,1fr);gap:12px}
     .hand-extras .indicator-rack{max-width:184px}
   }
-  @media(prefers-reduced-motion:reduce){.mj-tile.mj-dora::before{animation:none;transform:translateX(0);opacity:.35}.mj-tile.mj-dora::after{animation:none;opacity:.8;transform:none}}
-  @media print{.mj-tile.mj-dora::before,.mj-tile.mj-dora::after{display:none}}
+  @media(prefers-reduced-motion:reduce){.mj-tile.mj-dora::before{animation:none;transform:translateX(0);opacity:.35}}
+  @media print{.mj-tile.mj-dora::before{display:none}}
 </style>
 <script id="page-layout">
 'use strict';
@@ -2370,7 +2368,7 @@ globalThis.MajiangCore=Object.freeze({Shoupai:load("shoupai"),Shan:load("shan"),
       const h=getHand(),counts=new Map();
       for(const indicator of [...h.dora,...(h.riichi?h.ura:[])]){const p=MajiangCore.Shan.zhenbaopai(indicator);counts.set(p,(counts.get(p)||0)+1);}
       $$('#handRack .mj-tile, #winRack .mj-tile, #meldList .mj-tile, #tilePalette .mj-tile, #meldDraft .mj-tile, #meldPalette .mj-tile').forEach(e=>{
-        const count=e.dataset.tile&&!e.classList.contains('mj-back')?counts.get(HandCalc.norm(e.dataset.tile))||0:0;
+        const count=e.dataset.tile&&!e.classList.contains('mj-back')?(counts.get(HandCalc.norm(e.dataset.tile))||0)+(e.dataset.tile[1]==='0'?1:0):0;
         e.classList.toggle('mj-dora',count>0);
         if(count)e.dataset.doraCount=String(count);else delete e.dataset.doraCount;
         if(e.dataset.baseLabel){const label=e.dataset.baseLabel+(count?'，寶牌'+(count>1?' × '+count:''):'');e.setAttribute('aria-label',label);e.title=label;}
