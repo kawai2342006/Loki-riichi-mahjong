@@ -575,7 +575,7 @@ body.soul-playing{overflow:hidden}
   .tile-entry-actions .hand-tool{background:none;color:#687a5d;font-size:calc(10px * var(--page-ui-scale,1));padding:calc(4px * var(--page-ui-scale,1)) 0;min-height:calc(26px * var(--page-ui-scale,1));white-space:nowrap}
   .tile-entry-actions .hand-tool:hover:not(:disabled){color:var(--green)}
   .tile-entry-actions .hand-tool:disabled{color:#aab69c;opacity:.65}
-  .hand-extras{display:grid;grid-template-columns:minmax(0,2fr) minmax(0,1fr);gap:calc(16px * var(--page-ui-scale,1));align-items:start;margin-top:calc(16px * var(--page-ui-scale,1))}
+  .hand-extras{display:grid;grid-template-columns:minmax(0,1.6fr) minmax(0,1fr);gap:calc(16px * var(--page-ui-scale,1)) clamp(calc(24px * var(--page-ui-scale,1)),14%,calc(80px * var(--page-ui-scale,1)));align-items:start;margin-top:calc(16px * var(--page-ui-scale,1))}
   .meld-section,.hand-extras .bonus-entry{min-width:0}
   .hand-extras .meld-head{justify-content:flex-start;gap:calc(8px * var(--page-ui-scale,1));margin:0 0 calc(8px * var(--page-ui-scale,1));min-height:calc(29px * var(--page-ui-scale,1));flex-wrap:wrap}
   .hand-extras .meld-head .section-label{white-space:nowrap}
@@ -2414,7 +2414,7 @@ globalThis.MajiangCore=Object.freeze({Shoupai:load("shoupai"),Shan:load("shan"),
       $('closedBadge').textContent=closed?'門前':'副露';
       renderRack('handRack',h.tiles,(h,i)=>h.tiles.splice(i,1),{empty:Math.max(h.tiles.length,need)});
       renderRack('winRack',h.win?[h.win]:[],h=>{h.win=null;},{empty:1,winning:true});
-      renderRack('doraRack',h.dora,(h,i)=>h.dora.splice(i,1),{empty:HandCalc.MAX_INDICATORS,emptyClick:()=>chooseTarget('dora'),emptyLabel:'輸入寶牌指示牌'});
+      renderRack('doraRack',h.dora,(h,i)=>h.dora.splice(i,1));
       $('bonusCount').textContent=`${h.dora.length} / ${HandCalc.MAX_INDICATORS} 張`;
       for(const [name,value]of [['roundWind',h.round],['seatWind',h.seat],['handRiichi',h.riichi]])$$(`input[name="${name}"]`).forEach(r=>{r.checked=Number(r.value)===value;});
       $('handRiichi').disabled=!closed;
