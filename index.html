@@ -5,7 +5,7 @@
   <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
   <meta name="color-scheme" content="light">
   <meta name="theme-color" content="#f4f5ef">
-  <meta name="description" content="四人日麻手牌點數計算器。支援預設即時計算及雀魂和牌動畫模式、合併八張寶牌與裏寶牌指示牌、副露、暗槓及赤五。">
+  <meta name="description" content="四人日麻手牌點數計算器。手牌計算預設雀魂和牌動畫、番符速算即時計算。附隨機番符練習、圖像牌面及逐項符數拆解。">
   <meta http-equiv="Content-Security-Policy" content="default-src 'none'; script-src 'unsafe-inline'; style-src 'unsafe-inline'; img-src data:; connect-src 'none'; base-uri 'none'; form-action 'none'">
   <title>點和 · 日麻點數計算器</title>
   <link rel="icon" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 64 64'%3E%3Crect x='9' y='3' width='46' height='58' rx='10' fill='%231f5644'/%3E%3Crect x='9' y='3' width='46' height='51' rx='10' fill='%23fffefb'/%3E%3Cpath d='M21 19h22v19H21zM32 11v36' fill='none' stroke='%23b85d4b' stroke-width='5'/%3E%3C/svg%3E">
@@ -601,6 +601,128 @@ body.soul-playing{overflow:hidden}
   @media(prefers-reduced-motion:reduce){.mj-tile.mj-dora::before{animation:none;transform:translateX(0);opacity:.35}}
   @media print{.mj-tile.mj-dora::before{display:none}}
 </style>
+<style id="practice-styles">
+/* Practice uses the existing vector tile faces and local scoring engine. */
+.calc-tabs{width:min(calc(640px * var(--page-ui-scale,1)),100%)}
+.calc-tabs button{white-space:nowrap}
+.presentation-picker>small{font-size:calc(9px * var(--page-ui-scale,1));color:var(--muted)}
+.practice-view{padding-bottom:0}
+.score-practice{--pr-unit:var(--page-ui-scale,1);max-width:calc(1060px * var(--pr-unit));margin:0 auto;font-size:calc(13px * var(--pr-unit))}
+.practice-heading{display:flex;align-items:center;justify-content:space-between;gap:20px;margin-bottom:calc(22px * var(--pr-unit))}
+.practice-heading h2{font-size:calc(25px * var(--pr-unit));margin:3px 0 8px;line-height:1.4}
+.practice-heading p{margin:0;color:var(--muted);font-size:calc(12px * var(--pr-unit))}
+.practice-primary,.practice-secondary{min-height:calc(43px * var(--pr-unit));padding:calc(10px * var(--pr-unit)) calc(20px * var(--pr-unit));border-radius:calc(10px * var(--pr-unit));font-size:calc(12px * var(--pr-unit));font-weight:650;white-space:nowrap}
+.practice-primary{background:var(--green);color:#fffefb}
+.practice-primary:hover{background:#174734}
+.practice-secondary{border:1px solid #cdd9c4;background:var(--paper);color:var(--green);flex-shrink:0}
+.practice-secondary:hover{background:#eaf1e7}
+.practice-question,.practice-answer{padding:calc(25px * var(--pr-unit));scroll-margin-top:20px}
+.practice-question-head,.practice-answer-head{display:flex;justify-content:space-between;align-items:center;gap:12px;margin-bottom:calc(18px * var(--pr-unit))}
+.practice-question-head h3{margin:0;display:flex;align-items:baseline;gap:calc(14px * var(--pr-unit));font-size:calc(17px * var(--pr-unit));flex-wrap:wrap}
+.practice-small-label{display:block;font-size:calc(11px * var(--pr-unit));color:#6c7e62;font-weight:500;margin-bottom:calc(7px * var(--pr-unit))}
+.practice-question-head .practice-small-label{margin:0}
+.practice-state{border:1px solid #d5e3cb;background:#edf3e7;color:#4d7046;border-radius:100px;padding:calc(4px * var(--pr-unit)) calc(12px * var(--pr-unit));white-space:nowrap;font-size:calc(11px * var(--pr-unit))}
+.practice-conditions{display:grid;grid-template-columns:repeat(6,minmax(0,1fr));border:1px solid #e2e8d9;border-radius:calc(11px * var(--pr-unit));overflow:hidden;margin-bottom:calc(20px * var(--pr-unit));background:#f7f9f2}
+.practice-condition{padding:calc(10px * var(--pr-unit));text-align:center;min-width:0}
+.practice-condition+.practice-condition{border-left:1px solid #e2e8d9}
+.practice-condition span{display:block;font-size:calc(10px * var(--pr-unit));color:#718367}
+.practice-condition strong{display:block;font-size:calc(13px * var(--pr-unit));font-weight:650;margin-top:3px}
+.practice-board{display:flex;gap:calc(15px * var(--pr-unit));padding:calc(17px * var(--pr-unit));background:#f1f5eb;border:1px solid #dde6d4;border-radius:calc(12px * var(--pr-unit))}
+.practice-concealed{flex:1;min-width:0}
+.practice-win{border-left:1px solid #d1ddc8;padding-left:calc(14px * var(--pr-unit));flex-shrink:0}
+.practice-tiles{display:flex;align-items:center;gap:calc(4px * var(--pr-unit));flex-wrap:wrap}
+.score-practice .mj-tile{width:calc(36px * var(--pr-unit));height:auto;aspect-ratio:40/56;flex-shrink:0}
+.practice-meld-section{margin-top:calc(17px * var(--pr-unit))}
+.practice-declared-list{display:flex;gap:calc(12px * var(--pr-unit));flex-wrap:wrap}
+.practice-declared{padding:calc(9px * var(--pr-unit));border:1px solid #e0e7d7;border-radius:calc(9px * var(--pr-unit))}
+.practice-declared .mj-tile{width:calc(29px * var(--pr-unit))}
+.practice-indicators{display:flex;align-items:center;gap:calc(25px * var(--pr-unit));flex-wrap:wrap;padding:calc(18px * var(--pr-unit)) 0 calc(12px * var(--pr-unit))}
+.practice-indicators .mj-tile{width:calc(29px * var(--pr-unit))}
+.practice-muted{font-size:calc(11px * var(--pr-unit));color:#718367;line-height:1.8;margin:8px 0}
+.practice-rules,.practice-footnote{font-size:calc(10px * var(--pr-unit));color:#718367;line-height:1.9;margin:5px 0 0}
+.practice-form{display:grid;grid-template-columns:1fr 1fr auto;align-items:start;gap:calc(18px * var(--pr-unit));padding-top:calc(20px * var(--pr-unit));margin-top:calc(16px * var(--pr-unit));border-top:1px solid var(--line)}
+.practice-form>div{min-width:0}
+.practice-form label{display:flex;justify-content:space-between;align-items:baseline;gap:5px;font-size:calc(12px * var(--pr-unit));font-weight:650;margin-bottom:7px;flex-wrap:wrap;min-height:calc(22px * var(--pr-unit))}
+.practice-form label>span{font-size:calc(9px * var(--pr-unit));font-weight:400;color:#718367}
+.practice-input-wrap{position:relative}
+.practice-input-wrap input{width:100%;height:calc(52px * var(--pr-unit));padding:5px calc(35px * var(--pr-unit)) 5px calc(15px * var(--pr-unit));border:1px solid #ccd9c2;border-radius:calc(10px * var(--pr-unit));background:#fafbf6;font-size:calc(25px * var(--pr-unit));font-weight:600;appearance:textfield;-moz-appearance:textfield}
+.practice-input-wrap input::-webkit-inner-spin-button,.practice-input-wrap input::-webkit-outer-spin-button{-webkit-appearance:none;margin:0}
+.practice-input-wrap input[aria-invalid="true"]{border-color:#bd7358;background:#fff9f2}
+.practice-input-wrap input[aria-invalid="false"]{border-color:#7c9e6c;background:#f0f7e9}
+.practice-input-wrap>span{position:absolute;right:calc(15px * var(--pr-unit));top:50%;transform:translateY(-50%);color:#718367;font-size:calc(12px * var(--pr-unit))}
+.practice-input-feedback{display:block;min-height:calc(18px * var(--pr-unit));font-size:calc(10px * var(--pr-unit));color:#667b59;margin-top:5px}
+.practice-form>.practice-primary{margin-top:calc(22px * var(--pr-unit) + 7px);min-height:calc(52px * var(--pr-unit))}
+.practice-feedback{margin:calc(16px * var(--pr-unit)) 0 0;padding:calc(12px * var(--pr-unit)) calc(16px * var(--pr-unit));border:1px solid #e3d1ae;border-radius:calc(10px * var(--pr-unit));color:#7c5e29;background:#fff8e9;font-weight:550}
+.practice-feedback.is-correct{color:#365d35;background:#eff6e8;border-color:#c9ddba}
+.practice-answer{margin-top:calc(23px * var(--pr-unit))}
+.practice-answer h3{font-size:calc(17px * var(--pr-unit));margin:0 0 calc(13px * var(--pr-unit))}
+.practice-answer-head{padding-bottom:calc(15px * var(--pr-unit));border-bottom:1px solid var(--line)}
+.practice-answer-head h3{margin:0;color:var(--green);font-size:calc(23px * var(--pr-unit))}
+.practice-answer-head .practice-small-label{margin:0}
+.practice-yaku-columns{display:grid;grid-template-columns:1fr 1fr;gap:calc(25px * var(--pr-unit))}
+.practice-yaku-section h4{margin:0 0 5px;font-size:calc(12px * var(--pr-unit));color:#617855}
+.practice-yaku-list{margin:0;padding:0;list-style:none}
+.practice-yaku-list li{display:flex;justify-content:space-between;gap:10px;padding:calc(9px * var(--pr-unit)) 0;border-bottom:1px solid #edf0e6}
+.practice-yaku-list li.is-bonus{color:#886b30}
+.practice-yaku-list strong{white-space:nowrap}
+.practice-han-total{margin:calc(15px * var(--pr-unit)) 0 0;background:#edf3e6;padding:calc(10px * var(--pr-unit)) calc(14px * var(--pr-unit));border-radius:8px;color:#47633e;font-weight:600}
+.practice-fu-explanation{margin-top:calc(25px * var(--pr-unit));padding-top:calc(22px * var(--pr-unit));border-top:1px solid var(--line)}
+.practice-shapes{display:flex;align-items:stretch;gap:calc(11px * var(--pr-unit));flex-wrap:wrap;margin:calc(16px * var(--pr-unit)) 0}
+.practice-shape{padding:calc(10px * var(--pr-unit));background:#fafbf5;border:2px solid #e3e8dc;border-radius:calc(11px * var(--pr-unit));min-width:0}
+.practice-shape.has-fu{border-color:#7d9d68;background:#f1f7ea}
+.practice-shape.has-wait .practice-tiles{outline:2px solid #c69b43;outline-offset:4px;border-radius:5px}
+.practice-shape .mj-tile{width:calc(29px * var(--pr-unit))}
+.practice-shape-title{display:flex;align-items:center;justify-content:space-between;gap:calc(9px * var(--pr-unit));font-size:calc(10px * var(--pr-unit));color:#617855;margin-bottom:calc(12px * var(--pr-unit))}
+.practice-fu-badge{color:#365e2e;white-space:nowrap}
+.practice-wait-badge{display:block;width:fit-content;margin-top:calc(12px * var(--pr-unit));padding:3px 6px;background:#f7ecd0;color:#81601f;border:1px solid #dfc584;border-radius:5px;font-size:calc(10px * var(--pr-unit));font-weight:600}
+.practice-shape-note{display:block;font-size:calc(9px * var(--pr-unit));color:#718367;margin-top:9px;max-width:calc(140px * var(--pr-unit))}
+.score-practice .mj-winning{background:#fff8de;border-color:#c6a350}
+.practice-wait-tile{box-shadow:0 0 0 2px #bb8f35}
+.practice-method{padding:calc(12px * var(--pr-unit)) 0;font-size:calc(12px * var(--pr-unit))}
+.practice-method.has-fu,.practice-method.is-special{padding:calc(12px * var(--pr-unit)) calc(15px * var(--pr-unit));border:2px solid #7d9d68;background:#f1f7ea;border-radius:calc(10px * var(--pr-unit))}
+.practice-method.is-special{border-color:#92a6b4;background:#eef4f7;color:#3b5c70}
+.practice-method p{margin:5px 0 0;font-size:calc(11px * var(--pr-unit));line-height:1.8}
+.practice-fu-math{margin:calc(19px * var(--pr-unit)) 0;background:#f6f7f0;border-radius:calc(11px * var(--pr-unit));padding:calc(17px * var(--pr-unit));font-size:calc(12px * var(--pr-unit));font-variant-numeric:tabular-nums}
+.practice-math-row{display:grid;grid-template-columns:calc(82px * var(--pr-unit)) minmax(0,1fr);gap:8px;padding:4px 0;overflow-wrap:anywhere}
+.practice-math-row>span:first-child{color:#64785a}
+.practice-rounding{font-weight:650;color:var(--green);margin:calc(12px * var(--pr-unit)) 0 0;padding-top:calc(12px * var(--pr-unit));border-top:1px solid #dce5d2}
+.practice-footnote{margin:calc(16px * var(--pr-unit)) 5px 0}
+@media(max-width:760px){
+  .calc-tabs{display:grid;grid-template-columns:1fr 1fr;gap:4px}
+  .calc-tabs button{min-height:40px}
+  .score-practice{--pr-unit:1}
+  .practice-heading{align-items:flex-start;gap:12px}
+  .practice-heading h2{font-size:22px}
+  .practice-heading .practice-secondary{padding:8px 10px;min-height:38px;font-size:11px}
+  .practice-heading p{font-size:11px}
+  .practice-question,.practice-answer{padding:17px}
+  .practice-question-head,.practice-answer-head{align-items:flex-start;flex-wrap:wrap;gap:8px}
+  .practice-question-head h3{gap:5px;font-size:16px;flex-direction:column}
+  .practice-question-head .practice-small-label{font-size:10px}
+  .practice-conditions{grid-template-columns:repeat(3,minmax(0,1fr))}
+  .practice-condition:nth-child(4){border-left:0}
+  .practice-condition:nth-child(n+4){border-top:1px solid #e2e8d9}
+  .practice-condition{padding:9px 5px}
+  .practice-board{padding:11px;gap:10px}
+  .practice-win{padding-left:10px}
+  .score-practice .practice-board .mj-tile{width:27px}
+  .practice-tiles{gap:3px}
+  .practice-indicators{gap:14px}
+  .practice-indicators>.practice-muted{width:100%;margin:0}
+  .practice-form{grid-template-columns:1fr 1fr;gap:10px 14px;padding-top:16px}
+  .practice-form label{min-height:37px;display:block}
+  .practice-form label>span{display:block;font-size:9px;margin-top:3px}
+  .practice-form>.practice-primary{grid-column:1/-1;margin-top:0;min-height:44px}
+  .practice-yaku-columns{gap:14px}
+  .practice-answer-head h3{font-size:21px}
+  .practice-shapes{gap:9px}
+  .practice-shape{padding:8px}
+  .practice-shape .mj-tile{width:26px}
+  .practice-math-row{grid-template-columns:65px minmax(0,1fr);font-size:11px}
+}
+@media print{.practice-heading button,.practice-form,.practice-answer>.practice-primary{display:none}.practice-question,.practice-answer{break-inside:avoid}}
+
+</style>
 <script id="page-layout">
 'use strict';
 (() => {
@@ -634,11 +756,12 @@ body.soul-playing{overflow:hidden}
       </nav>
     </header>
     <main>
-      <div class="intro"><div><div class="eyebrow">四人日本麻雀 / SCORE CALCULATOR</div><h1>日麻手牌點數計算器</h1><p id="introHint">揀好手牌，自動拆解役種、番數與符數。</p></div><label class="presentation-picker" for="presentationMode"><span>顯示模式</span><select id="presentationMode"><option value="default">預設模式</option><option value="soul">雀魂和牌模式</option></select></label></div>
+      <div class="intro"><div><div class="eyebrow">四人日本麻雀 / SCORE CALCULATOR</div><h1>日麻手牌點數計算器</h1><p id="introHint">揀好手牌，自動拆解役種、番數與符數。</p></div><label class="presentation-picker" for="presentationMode"><span>顯示模式 · 只適用於手牌計算</span><select id="presentationMode"><option value="default">預設模式</option><option value="soul" selected>雀魂和牌模式</option></select></label></div>
       <noscript><p class="noscript">請在瀏覽器開啟 JavaScript，才可使用計算器。所有計算均在裝置內完成。</p></noscript>
       <div class="calc-tabs" role="tablist" aria-label="計算器與役種提示卡">
         <button type="button" id="tabHand" role="tab" data-tab="hand" aria-controls="calculatorWorkspace" aria-selected="true" tabindex="0">手牌計算</button>
         <button type="button" id="tabManual" role="tab" data-tab="manual" aria-controls="calculatorWorkspace" aria-selected="false" tabindex="-1">番符速算</button>
+        <button type="button" id="tabPractice" role="tab" data-tab="practice" aria-controls="scorePractice" aria-selected="false" tabindex="-1">番符計算練習</button>
         <button type="button" id="tabGuide" role="tab" data-tab="guide" aria-controls="yakuGuide" aria-selected="false" tabindex="-1">新手役種提示卡</button>
       </div>
       <div class="workspace" id="calculatorWorkspace" role="tabpanel" aria-labelledby="tabHand">
@@ -723,6 +846,32 @@ body.soul-playing{overflow:hidden}
           <p class="small-tip"><svg class="icon" aria-hidden="true"><use href="#i-info"/></svg><span>寶牌可以增加番數，但本身不是役。<br>供託由桌面領取，不會再次計入各家的付款。</span></p>
         </aside>
       </div>
+      <section class="score-practice" id="scorePractice" role="tabpanel" aria-labelledby="tabPractice" hidden>
+        <div class="practice-heading">
+          <div><div class="eyebrow">睇牌面，自己計一次</div><h2>番符計算練習</h2><p>每題即時隨機生成一副有役和牌。先填番數、符數，核對後再睇逐項拆解。</p></div>
+          <button type="button" class="practice-secondary" id="practiceNew">換一副牌 ↻</button>
+        </div>
+        <section class="panel practice-question" id="practiceQuestion" aria-labelledby="practiceQuestionTitle">
+          <div class="practice-question-head"><h3 id="practiceQuestionTitle" tabindex="-1"><span id="practiceNumber">第 1 題</span><span class="practice-small-label">計出總番數與進位後符數</span></h3><span class="practice-state" id="practiceHandState"></span></div>
+          <div class="practice-conditions" id="practiceConditions"></div>
+          <div class="practice-board">
+            <div class="practice-concealed"><div class="practice-small-label">手牌 <span id="practiceTileCount"></span></div><div class="practice-tiles" id="practiceHandTiles" role="group" aria-label="本題手牌"></div></div>
+            <div class="practice-win"><div class="practice-small-label">和牌</div><div class="practice-tiles" id="practiceWinTile" role="group" aria-label="本題和牌張"></div></div>
+          </div>
+          <div class="practice-meld-section" id="practiceMeldSection" hidden><div class="practice-small-label">副露／暗槓</div><div class="practice-declared-list" id="practiceMelds"></div></div>
+          <div class="practice-indicators"><div><div class="practice-small-label">寶牌指示牌</div><div class="practice-tiles" id="practiceDora" role="group" aria-label="本題寶牌指示牌"></div></div><div id="practiceUraSection" hidden><div class="practice-small-label">裏寶牌指示牌（已立直）</div><div class="practice-tiles" id="practiceUra" role="group" aria-label="本題裏寶牌指示牌"></div></div><p class="practice-muted">顯示的是指示牌，寶牌為下一張。<br>番數包括寶牌、赤寶牌及立直後的裏寶牌。</p></div>
+          <p class="practice-rules" id="practiceRules"></p>
+          <form id="practiceForm" class="practice-form">
+            <div><label for="practiceHan">番數</label><div class="practice-input-wrap"><input id="practiceHan" type="number" min="1" max="99" step="1" inputmode="numeric" placeholder="?" required autocomplete="off" aria-describedby="practiceHanFeedback"><span>番</span></div><small id="practiceHanFeedback" class="practice-input-feedback"></small></div>
+            <div><label for="practiceFu">符數<span>進位後；七對子 25 符</span></label><div class="practice-input-wrap"><input id="practiceFu" type="number" min="1" max="200" step="1" inputmode="numeric" placeholder="?" required autocomplete="off" aria-describedby="practiceFuFeedback"><span>符</span></div><small id="practiceFuFeedback" class="practice-input-feedback"></small></div>
+            <button type="submit" class="practice-primary" id="practiceCheck">核對答案</button>
+          </form>
+          <p class="practice-feedback" id="practiceFeedback" role="status" aria-live="polite" hidden></p>
+        </section>
+        <section class="panel practice-answer" id="practiceAnswer" aria-labelledby="practiceAnswerTitle" hidden><h3 id="practiceAnswerTitle">答案</h3></section>
+        <p class="practice-footnote">練習出一般有役和牌，不出役滿；題目包含門前、副露、槓、不同聽牌、寶牌及七對子。最近 200 副牌組不重複。可在「手牌計算」的計分規則調整連風雀眼及食斷設定，下一題生效。</p>
+      </section>
+
       <section class="yaku-guide" id="yakuGuide" role="tabpanel" aria-labelledby="tabGuide" hidden>
   <div class="guide-heading"><div><div class="eyebrow">先有役，才可以和牌</div><h2 id="yakuGuideHeading">新手役種提示卡</h2><p>38 種常見役種／役滿，另附 3 種加番獎勵。點卡片看牌例，亦可載入計算器。</p></div><span class="guide-mascot" aria-hidden="true"><span class="cat-ear"></span><span class="cat-face">· ᴗ ·</span><span class="cat-blush">●　●</span></span></div>
   <div class="beginner-path"><strong>懂港麻？先由四條路開始</strong><span>不副露就試立直</span><span>白發中先做一組役牌</span><span>全中張走斷么九</span><span>保持門前，自摸也有役</span></div>
@@ -2167,6 +2316,7 @@ function load(id){id=id.replace(/^\.\//, ""); if(cache[id])return cache[id].expo
 globalThis.MajiangCore=Object.freeze({Shoupai:load("shoupai"),Shan:load("shan"),rule:load("rule"),...load("hule")});})();
 </script>
 <script id="hand-engine">
+
 'use strict';
 (() => {
   const VALID=/^(?:[mps][0-9]|z[1-7])$/;
@@ -2245,30 +2395,53 @@ globalThis.MajiangCore=Object.freeze({Shoupai:load("shoupai"),Shan:load("shan"),
   const yakuName=s=>names[s]||s.replace(/^翻牌 /,'役牌 ');
   function fuBreakdown(detail,h,config) {
     const {mianzi,hudi}=detail,lines=[];
-    if(mianzi.length===7)return {lines:[{label:'七對子固定符數',points:25}],raw:25,total:25,note:'七對子不另加自摸、雀頭或聽牌符。'};
-    if(mianzi.length!==5)return {lines:[],raw:null,total:null,note:'役滿不需要計符。'};
-    const add=(label,points)=>lines.push({label,points});add('基本符',20);
-    const pair=mianzi[0],n=Number(pair[1]);let pairFu=0;
-    if(pair[0]==='z') {if(n===h.round+1)pairFu+=2;if(n===h.seat+1)pairFu+=2;if(n>=5)pairFu+=2;}
-    if(config.doubleWind2&&pairFu>2)pairFu=2;
-    if(pairFu)add(`役牌雀頭（${tileName(pair.slice(0,2))}）`,pairFu);
+    if(mianzi.length===7)return {
+      lines:[{label:'七對子固定符數',points:25,kind:'fixed'}],
+      groups:mianzi.map((_,index)=>({index,kind:'pair',label:'對子',points:0})),
+      wait:{points:0},method:{label:'七對子',points:0,special:true,note:'固定 25 符，不另加和了方式、雀眼或聽牌符。'},
+      fixed:true,raw:25,total:25,note:'七對子固定 25 符，不另加符，亦不進位。'
+    };
+    if(mianzi.length!==5)return {lines:[],groups:[],raw:null,total:null,note:'役滿不需要計符。'};
+    const add=(label,points,kind,groupIndex)=>lines.push({label,points,kind,...(groupIndex===undefined?{}:{groupIndex})});
+    add('底符',20,'base');
     const isTriplet=m=>/^[mpsz](\d)\1\1/.test(m),isClosed=m=>/^[mpsz](\d)\1\1(?:\1|_!)?$/.test(m);
-    for(const m of mianzi.slice(1))if(isTriplet(m)){
+    const groups=mianzi.map((m,index)=>{
+      if(!index)return {index,kind:'pair',label:'雀眼',points:0};
+      if(!isTriplet(m))return {index,kind:'sequence',label:'順子',points:0};
       const kan=(m.match(/\d/g)||[]).length===4,closed=isClosed(m),terminal=/[z19]/.test(m);
-      const pts=2*(kan?4:1)*(closed?2:1)*(terminal?2:1);
-      add(`${tileName(m.slice(0,2))}${closed?'暗':'明'}${kan?'槓':'刻'}`,pts);
+      return {index,kind:kan?'quad':'triplet',label:(closed?'暗':'明')+(kan?'槓':'刻'),
+        points:2*(kan?4:1)*(closed?2:1)*(terminal?2:1),
+        ronCompleted:!hudi.zimo&&m.includes('!')};
+    });
+    const pair=mianzi[0],n=Number(pair[1]);let pairFu=0;
+    if(pair[0]==='z'){if(n===h.round+1)pairFu+=2;if(n===h.seat+1)pairFu+=2;if(n>=5)pairFu+=2;}
+    if(config.doubleWind2&&pairFu>2)pairFu=2;
+    groups[0].points=pairFu;
+    if(pairFu)add(`役牌雀眼（${tileName(pair.slice(0,2))}）`,pairFu,'pair',0);
+    groups.slice(1).forEach(g=>{if(g.points)add(`${tileName(mianzi[g.index].slice(0,2))}${g.label}`,g.points,'meld',g.index);});
+    const winIndex=mianzi.findIndex(m=>m.includes('!')),winGroup=mianzi[winIndex];
+    const wait={points:0,groupIndex:winIndex,label:''};
+    if(hudi.danqi){wait.label='單騎聽牌';wait.points=2;}
+    else if(/^[mps]\d\d[+=\-_]!\d$/.test(winGroup)){wait.label='嵌張聽牌';wait.points=2;}
+    else if(/^[mps](123[+=\-_]!|7[+=\-_]!89)$/.test(winGroup)){wait.label='邊張聽牌';wait.points=2;}
+    if(wait.points)add(wait.label,wait.points,'wait',winIndex);
+    const method={label:hudi.zimo?'自摸':hudi.menqian?'門前榮和':'副露榮和',
+      points:hudi.zimo?(hudi.pinghu?0:2):(hudi.menqian?10:0),special:false,note:''};
+    if(hudi.pinghu){
+      method.label=hudi.zimo?'平和自摸':'平和榮和';method.special=true;
+      method.note=hudi.zimo?'不加自摸的 2 符，固定 20 符。':'門前榮和仍加 10 符，合共 30 符。';
     }
-    const winGroup=mianzi.find(m=>m.includes('!'));
-    if(hudi.danqi)add('單騎聽牌',2);
-    else if(/^[mps]\d\d[+=\-_]!\d$/.test(winGroup))add('嵌張聽牌',2);
-    else if(/^[mps](123[+=\-_]!|7[+=\-_]!89)$/.test(winGroup))add('邊張聽牌',2);
-    if(hudi.zimo&&!hudi.pinghu)add('自摸',2);
-    if(!hudi.zimo&&hudi.menqian)add('門前榮和',10);
+    if(method.points)add(method.label,method.points,'method');
     let raw=lines.reduce((a,l)=>a+l.points,0);
-    if(!hudi.zimo&&!hudi.menqian&&raw===20){add('副露榮和最低 30 符',10);raw=30;}
+    if(!hudi.zimo&&!hudi.menqian&&raw===20){
+      add('副露平和形（最低 30 符）',2,'adjustment');raw+=2;
+      method.special=true;method.note='沒有門前榮和的 10 符；副露平和形另加 2 符，再進位至 30 符。';
+    }
     const total=Math.ceil(raw/10)*10;
-    return {lines,raw,total,note:hudi.pinghu&&hudi.zimo?'平和自摸固定 20 符，不加自摸的 2 符。':total!==raw?`${raw} 符向上進位至 ${total} 符。`:'符數無需再進位。'};
+    return {lines,groups,wait,method,raw,total,
+      note:hudi.pinghu?method.note:total!==raw?`${raw} 符無條件進位至 ${total} 符。`:'符數已為整十，無需再進位。'};
   }
+
   function evaluate(h,config={}) {
     const cfg={method:'ron',kiriage:false,kazoe:'yakuman',doubleWind2:false,doubleYakuman:true,kuitan:true,...config};
     const fail=(status,error)=>({ok:false,status,error});
@@ -2307,6 +2480,7 @@ globalThis.MajiangCore=Object.freeze({Shoupai:load("shoupai"),Shan:load("shan"),
   }
   globalThis.HandCalc=Object.freeze({defaults,sanitize,evaluate,parse,notation,sortTiles,tileName,norm,meldError,inferMeld,meldString,physicalError,visualGroups,VALID,MAX_INDICATORS});
 })();
+
 
 </script>
 <script id="hand-ui">
@@ -2974,7 +3148,276 @@ globalThis.YakuData={"version":"3.0","groups":[{"id":"oneclosed","title":"一番
 })();
 
 </script>
+<script id="practice-engine">
+'use strict';
+(() => {
+  // Build fresh hands from melds and pairs; no stored question bank.
+  const TYPES = [...'mps'].flatMap(s => Array.from({length:9}, (_,i) => s+(i+1)))
+    .concat(Array.from({length:7}, (_,i) => 'z'+(i+1)));
+  const FAMILIES = ['mixed','mixed','mixed','mixed','pinfu','pinfu',
+    'yakuhai','yakuhai','triplets','flush','pairs','outside'];
+  const random = () => {
+    if (globalThis.crypto?.getRandomValues) {
+      const a = new Uint32Array(1); globalThis.crypto.getRandomValues(a);
+      return a[0] / 4294967296;
+    }
+    return Math.random();
+  };
+  const keyOf = h => HandCalc.notation(HandCalc.sortTiles(
+    [...h.tiles,h.win,...h.melds.flatMap(m=>m.tiles)].map(HandCalc.norm)));
+
+  function generate({config={}, recent=[], rng=random}={}) {
+    const n = max => Math.floor(rng()*max), pick = a => a[n(a.length)];
+    const chance = p => rng()<p, seen = new Set(recent);
+    const rules = {doubleWind2:config.doubleWind2===true,
+      doubleYakuman:config.doubleYakuman!==false,kuitan:config.kuitan!==false,
+      kazoe:config.kazoe==='sanbaiman'?'sanbaiman':'yakuman',kiriage:config.kiriage===true};
+    for(let attempt=0; attempt<1800; attempt++) {
+      const family=pick(FAMILIES), h=HandCalc.defaults();
+      h.round=n(4); h.seat=n(4);
+      const method=chance(.48)?'tsumo':'ron', suit=pick([...'mps']);
+      const pool=family==='flush'?TYPES.filter(p=>p[0]===suit||p[0]==='z'):
+        family==='outside'?TYPES.filter(p=>p[0]==='z'||/[19]/.test(p[1])):TYPES;
+      const groups=[];
+      if(family==='pairs') {
+        const available=TYPES.slice();
+        for(let i=0;i<7;i++){const p=available.splice(n(available.length),1)[0];groups.push({tiles:[p,p],pair:true});}
+      } else {
+        const pairPool=family==='pinfu'?pool.filter(p=>p[0]!=='z'||
+          (Number(p[1])<5&&Number(p[1])!==h.seat+1&&Number(p[1])!==h.round+1)):pool;
+        const p=pick(pairPool); groups.push({tiles:[p,p],pair:true});
+        for(let i=0;i<4;i++) {
+          const sequence=family==='pinfu'||(family!=='triplets'&&chance(.62));
+          if(sequence) {
+            const s=family==='flush'?suit:pick([...'mps']);
+            const start=family==='outside'?pick([1,7]):1+n(7);
+            groups.push({tiles:[s+start,s+(start+1),s+(start+2)],sequence:true});
+          } else {
+            const t=family==='yakuhai'&&i===0?pick(['z5','z6','z7','z'+(h.seat+1),'z'+(h.round+1)]):pick(pool);
+            groups.push({tiles:[t,t,t]});
+          }
+        }
+        // A yakuhai question always contains an actual value-honour set.
+        if(family==='yakuhai') {
+          const t=pick(['z5','z6','z7','z'+(h.seat+1),'z'+(h.round+1)]);
+          groups[1]={tiles:[t,t,t]};
+        }
+        let kans=0;
+        const openHand=family!=='pinfu'&&chance(.54);
+        groups.slice(1).forEach(g=>{
+          if(!g.sequence&&kans<2&&chance(.14)){g.tiles.push(g.tiles[0]);kans++;}
+          const open=openHand&&chance(.52);
+          if(g.tiles.length===4)g.type=open?'minkan':'ankan';
+          else if(open)g.type=g.sequence?'chi':'pon';
+        });
+      }
+      // Respect all four physical copies, including the single red five per suit.
+      const counts={};
+      for(const g of groups)for(const p of g.tiles)counts[p]=(counts[p]||0)+1;
+      if(Object.values(counts).some(v=>v>4))continue;
+      for(const s of 'mps') {
+        const positions=[];
+        groups.forEach((g,i)=>g.tiles.forEach((p,j)=>{if(p===s+'5')positions.push([i,j]);}));
+        // If all four fives are present, one must be the red five.
+        if(positions.length&&(positions.length===4||chance(.42))) {
+          const [i,j]=pick(positions);groups[i].tiles[j]=s+'0';
+        }
+      }
+      const winChoices=[];
+      groups.forEach((g,i)=>{
+        if(g.type)return;
+        g.tiles.forEach((p,j)=>{
+          if(family==='pinfu'&&(!g.sequence||j===1||
+            (HandCalc.norm(g.tiles[0])[1]==='1'&&j===2)||
+            (HandCalc.norm(g.tiles[0])[1]==='7'&&j===0)))return;
+          winChoices.push([i,j]);
+        });
+      });
+      if(!winChoices.length)continue;
+      const [wi,wj]=pick(winChoices); h.win=groups[wi].tiles[wj];
+      groups.forEach((g,i)=>{
+        if(g.type)h.melds.push({type:g.type,tiles:g.tiles.slice()});
+        else h.tiles.push(...g.tiles.filter((_,j)=>i!==wi||j!==wj));
+      });
+      h.tiles=HandCalc.sortTiles(h.tiles);
+      const closed=h.melds.every(m=>m.type==='ankan');
+      if(closed&&chance(.48))h.riichi=chance(.045)?2:1;
+      h.ippatsu=!!h.riichi&&!h.melds.length&&chance(.12);
+      if(chance(.045))h.event='last';
+      if(h.melds.some(m=>m.type==='minkan'||m.type==='ankan')&&method==='tsumo'&&chance(.12))h.event='rinshan';
+      if(h.event==='rinshan')h.ippatsu=false;
+
+      const deck=TYPES.flatMap(p=>p[0]!=='z'&&p[1]==='5'?[p,p,p,p[0]+'0']:[p,p,p,p]);
+      let physical=true;
+      for(const p of [...h.tiles,h.win,...h.melds.flatMap(m=>m.tiles)]) {
+        const i=deck.indexOf(p);if(i<0){physical=false;break;}deck.splice(i,1);
+      }
+      if(!physical)continue;
+      const draw=()=>deck.splice(n(deck.length),1)[0];
+      const indicatorCount=1+h.melds.filter(m=>m.type==='minkan'||m.type==='ankan').length;
+      h.dora=Array.from({length:indicatorCount},draw);
+      if(h.riichi)h.ura=Array.from({length:indicatorCount},draw);
+      const cfg={...rules,method}, answer=HandCalc.evaluate(h,cfg), key=keyOf(h);
+      if(!answer.ok||answer.yakuman||!answer.yaku.some(y=>!y.bonus&&y.han>0)||seen.has(key))continue;
+      return {hand:h,config:cfg,answer,key};
+    }
+    throw new Error('暫時未能生成新題目，請再按「換一副牌」。');
+  }
+  globalThis.PracticeHands=Object.freeze({generate,keyOf});
+})();
+
+</script>
+<script id="practice-ui">
+'use strict';
+(() => {
+  const $=id=>document.getElementById(id);
+  const el=(tag,cls,text)=>{const e=document.createElement(tag);if(cls)e.className=cls;if(text!==undefined)e.textContent=text;return e;};
+  const winds=['東','南','西','北'];
+  const eventNames={none:'無',last:'河底撈魚',rinshan:'嶺上開花'};
+  const meldNames={chi:'吃',pon:'碰',minkan:'明槓',ankan:'暗槓'};
+  function create({getConfig,toast}) {
+    const HISTORY_KEY='tenwa.practice.recent.v1';
+    let question=null,number=0,recent=[],checked=false;
+    try{const raw=JSON.parse(localStorage.getItem(HISTORY_KEY)||'[]');if(Array.isArray(raw))recent=raw.filter(s=>typeof s==='string'&&s.length<120).slice(-200);}catch{}
+    function renderTiles(box,tiles,options={}) {
+      box.replaceChildren();tiles.forEach(p=>box.append(HandUI.tile(p,{button:false,...options})));
+    }
+    function resetFeedback() {
+      checked=false;
+      $('practiceAnswer').hidden=true;$('practiceFeedback').hidden=true;
+      $('practiceCheck').textContent='核對答案';
+      for(const key of ['Han','Fu']) {
+        const input=$('practice'+key);input.value='';input.removeAttribute('aria-invalid');
+        $('practice'+key+'Feedback').textContent='';
+      }
+    }
+    function next({focus=false}={}) {
+      let generated;
+      try{generated=PracticeHands.generate({config:getConfig(),recent});}
+      catch(e){toast(e.message);return;}
+      question=generated;number++;
+      recent.push(question.key);recent=recent.slice(-200);
+      try{localStorage.setItem(HISTORY_KEY,JSON.stringify(recent));}catch{}
+      resetFeedback();
+      const {hand:h,config:c,answer:a}=question;
+      $('practiceNumber').textContent='第 '+number+' 題';
+      $('practiceHandState').textContent=(a.closed?'門前':'副露')+' · '+(c.method==='ron'?'榮和':'自摸');
+      const conditions=[['場風',winds[h.round]],['自風',winds[h.seat]],['和了',c.method==='ron'?'榮和':'自摸'],
+        ['立直',h.riichi===2?'兩立直':h.riichi?'有':'無'],['一發',h.ippatsu?'有':'無'],
+        ['特殊',h.event==='last'?(c.method==='tsumo'?'海底摸月':'河底撈魚'):eventNames[h.event]||'無']];
+      $('practiceConditions').replaceChildren(...conditions.map(([name,value])=>{
+        const item=el('div','practice-condition');item.append(el('span','',name),el('strong','',value));return item;
+      }));
+      $('practiceRules').textContent=`本題規則：連風雀眼 ${c.doubleWind2?2:4} 符 · 食斷${c.kuitan?'開':'關'} · 每門一張赤五。滿貫以上仍需計算符數。`;
+      $('practiceTileCount').textContent=h.tiles.length+' 張';
+      renderTiles($('practiceHandTiles'),h.tiles);
+      renderTiles($('practiceWinTile'),[h.win],{winning:true});
+      $('practiceMelds').replaceChildren();$('practiceMeldSection').hidden=!h.melds.length;
+      h.melds.forEach(m=>{
+        const group=el('div','practice-declared'),tiles=el('div','practice-tiles');
+        group.append(el('span','practice-small-label',meldNames[m.type]),tiles);
+        HandCalc.sortTiles(m.tiles).forEach((p,i)=>tiles.append(HandUI.tile(p,{button:false,back:m.type==='ankan'&&(i===0||i===3)})));
+        $('practiceMelds').append(group);
+      });
+      renderTiles($('practiceDora'),h.dora);renderTiles($('practiceUra'),h.ura);
+      $('practiceUraSection').hidden=!h.riichi;
+      const placeholder=el('h3','','答案');placeholder.id='practiceAnswerTitle';
+      $('practiceAnswer').replaceChildren(placeholder);
+      if(focus){$('practiceQuestionTitle').focus({preventScroll:true});$('practiceQuestion').scrollIntoView({behavior:'auto',block:'start'});}
+    }
+    function yakuSection(title,values,empty) {
+      const section=el('section','practice-yaku-section');section.append(el('h4','',title));
+      if(!values.length){section.append(el('p','practice-muted',empty));return section;}
+      const list=el('ul','practice-yaku-list');
+      values.forEach(y=>{const row=el('li',y.bonus?'is-bonus':'');row.append(el('span','',y.name),el('strong','',y.han+' 番'));list.append(row);});
+      section.append(list);return section;
+    }
+    function renderAnswer() {
+      const {hand:h,answer:a}=question,b=a.breakdown,box=$('practiceAnswer');
+      box.replaceChildren();
+      const head=el('div','practice-answer-head');
+      const title=el('h3','','答案：'+a.han+' 番 '+a.fu+' 符');title.id='practiceAnswerTitle';
+      head.append(title,el('span','practice-small-label','採最高得點的合法拆牌'));box.append(head);
+      const han=el('section','practice-han-explanation');han.append(el('h3','','番數拆解'));
+      const yakuColumns=el('div','practice-yaku-columns');
+      yakuColumns.append(yakuSection('役種',a.yaku.filter(y=>!y.bonus)),yakuSection('寶牌加番',a.yaku.filter(y=>y.bonus),'本題沒有寶牌加番。'));
+      han.append(yakuColumns);
+      const bonus=a.yaku.filter(y=>y.bonus).reduce((sum,y)=>sum+y.han,0);
+      han.append(el('p','practice-han-total',`役種 ${a.han-bonus} 番 + 寶牌 ${bonus} 番 = ${a.han} 番`));box.append(han);
+
+      const fu=el('section','practice-fu-explanation');fu.append(el('h3','','用同一副牌拆解符數'));
+      fu.append(el('p','practice-muted','綠框為面子／雀眼加符；金框及金色標籤為聽牌加符；淡金牌面為和牌。沒有加符的位置不加標籤。'));
+      const shapes=el('div','practice-shapes');shapes.setAttribute('role','group');shapes.setAttribute('aria-label','本題手牌的符數標示');
+      const visual=HandCalc.visualGroups(a.mianzi,h);
+      const order=b.fixed?visual.map((_,i)=>i):[1,2,3,4,0];
+      order.forEach(i=>{
+        const g=b.groups[i],wait=b.wait.points>0&&b.wait.groupIndex===i;
+        const group=el('div','practice-shape'+(g.points>0?' has-fu':'')+(wait?' has-wait':''));
+        group.dataset.groupIndex=String(i);
+        const top=el('div','practice-shape-title');
+        top.append(el('span','',b.fixed?'對子 '+(i+1):i===0?'雀眼':'面子 '+i+' · '+g.label));
+        if(g.points>0)top.append(el('strong','practice-fu-badge','+'+g.points+' 符'));
+        const tiles=el('div','practice-tiles');
+        visual[i].forEach(item=>{
+          const tile=HandUI.tile(item.tile,{button:false,winning:item.winning});
+          if(wait&&item.winning)tile.classList.add('practice-wait-tile');
+          tiles.append(tile);
+        });group.append(top,tiles);
+        if(wait)group.append(el('span','practice-wait-badge',b.wait.label+' +'+b.wait.points+' 符'));
+        if(g.ronCompleted)group.append(el('span','practice-shape-note','榮和完成，按明刻計符'));
+        shapes.append(group);
+      });fu.append(shapes);
+      const method=b.method;
+      const methodBox=el('div','practice-method'+(method.special?' is-special':method.points>0?' has-fu':''));
+      methodBox.append(el('strong','',`和了方式：${method.label}${method.points>0||method.special?' +'+method.points+' 符':'（無額外加符）'}`));
+      if(method.note)methodBox.append(el('p','',method.note));fu.append(methodBox);
+      const math=el('div','practice-fu-math');
+      const add=(label,value)=>{const row=el('div','practice-math-row');row.append(el('span','',label+'：'),el('span','',value));math.append(row);};
+      if(b.fixed){
+        add('固定符數','七對子 25 符');
+        add('計算','25 = 25 符');
+        math.append(el('p','practice-rounding','→ 七對子固定 25 符，不另加符，亦不進位。'));
+      }else{
+        add('底符','20 符');
+        b.lines.filter(l=>l.kind==='meld').forEach(l=>add('面子',l.label+' + '+l.points+' 符'));
+        b.lines.filter(l=>l.kind==='pair').forEach(l=>add('雀眼',l.label+' + '+l.points+' 符'));
+        if(b.wait.points)add('聽牌',b.wait.label+' + '+b.wait.points+' 符');
+        if(method.points||method.special)add('和了方式',method.label+' + '+method.points+' 符');
+        b.lines.filter(l=>l.kind==='adjustment').forEach(l=>add('特例',l.label+' + '+l.points+' 符'));
+        add('計算',b.lines.map(l=>l.points).join(' + ')+' = '+b.raw+' 符');
+        math.append(el('p','practice-rounding',b.raw===b.total?
+          `→ ${b.total} 符${b.total===20?'（平和自摸固定符數）':'（已為整十，毋須進位）'}`:
+          `→ 無條件進位至 ${b.total} 符`));
+      }
+      fu.append(math);
+      if(a.candidates>1)fu.append(el('p','practice-muted',`這副牌有 ${a.candidates} 種合法拆法，以上採用最高得點的一種。`));
+      box.append(fu);
+      const nextButton=el('button','practice-primary','下一題 →');nextButton.type='button';nextButton.addEventListener('click',()=>next({focus:true}));box.append(nextButton);
+      box.hidden=false;
+    }
+    $('practiceForm').addEventListener('submit',e=>{
+      e.preventDefault();if(!question||!$('practiceForm').reportValidity())return;
+      const han=Number($('practiceHan').value),fu=Number($('practiceFu').value);
+      if(!Number.isInteger(han)||!Number.isInteger(fu)||han<1||fu<1){toast('請輸入完整的番數及符數。');return;}
+      const hanOK=han===question.answer.han,fuOK=fu===question.answer.fu;
+      for(const [key,ok] of [['Han',hanOK],['Fu',fuOK]]) {
+        $('practice'+key).setAttribute('aria-invalid',String(!ok));
+        $('practice'+key+'Feedback').textContent=ok?'✓ 正確':'正確答案：'+question.answer[key==='Han'?'han':'fu']+(key==='Han'?' 番':' 符');
+      }
+      const feedback=$('practiceFeedback');feedback.hidden=false;feedback.className='practice-feedback'+(hanOK&&fuOK?' is-correct':'');
+      feedback.textContent=hanOK&&fuOK?'✓ 番數、符數都答啱！':hanOK?'番數答啱，睇吓符數加喺邊。':fuOK?'符數答啱，再睇吓有邊啲役同加番。':'一齊睇吓呢副牌嘅役種同加符位置。';
+      if(!checked){renderAnswer();checked=true;}
+      $('practiceCheck').textContent='重新核對';
+    });
+    $('practiceNew').addEventListener('click',()=>next({focus:true}));
+    return {ensure(){if(!question)next();}};
+  }
+  globalThis.ScorePractice=Object.freeze({create});
+})();
+
+</script>
 <script id="app">
+
 
   'use strict';
   (() => {
@@ -2982,9 +3425,9 @@ globalThis.YakuData={"version":"3.0","groups":[{"id":"oneclosed","title":"一番
     const $=id=>document.getElementById(id),$$=sel=>Array.from(document.querySelectorAll(sel));
     const fmt=n=>n.toLocaleString('en-US'),clamp=(n,min,max)=>Math.max(min,Math.min(max,Math.trunc(Number(n)||0)));
     const STORAGE_KEY='tenwa.riichi-score.v1';
-    const newState=()=>({...Riichi.defaults,entry:'hand',hand:HandCalc.defaults(),doubleWind2:false,doubleYakuman:true,kuitan:true,presentation:'default',sound:true});
+    const newState=()=>({...Riichi.defaults,entry:'hand',hand:HandCalc.defaults(),doubleWind2:false,doubleYakuman:true,kuitan:true,presentation:'soul',handPresentationVersion:2,sound:true});
     let state=newState(),active={...state},autoResult=null,handUI,storageAvailable=true,lastResult,toastTimer,announceTimer;
-    let tableDealer=false,tableMethod='ron',soulUI,revealedKey=null;
+    let tableDealer=false,tableMethod='ron',soulUI,practiceUI,revealedKey=null;
     const scoreKey=()=>{const {presentation,sound,...scoring}=state;return JSON.stringify(scoring);};
     function sanitize(raw) {
       if(!raw || typeof raw!=='object' || Array.isArray(raw)) return newState();
@@ -2993,7 +3436,7 @@ globalThis.YakuData={"version":"3.0","groups":[{"id":"oneclosed","title":"一番
         dealer:raw.dealer===true,method:raw.method==='tsumo'?'tsumo':'ron',mode:raw.mode==='yakuman'?'yakuman':'normal',
         yakuman:clamp(raw.yakuman??1,1,6),honba:clamp(raw.honba,0,99),riichi:clamp(raw.riichi,0,99),
         kiriage:raw.kiriage===true,kazoe:raw.kazoe==='sanbaiman'?'sanbaiman':'yakuman',
-        presentation:raw.presentation==='soul'?'soul':'default',sound:raw.sound!==false,
+        presentation:raw.handPresentationVersion===2&&raw.presentation==='default'?'default':'soul',handPresentationVersion:2,sound:raw.sound!==false,
         entry:raw.entry==='manual'?'manual':'hand',hand:HandCalc.sanitize(raw.hand,{combineIndicators:true}),doubleWind2:raw.doubleWind2===true,doubleYakuman:raw.doubleYakuman!==false,kuitan:raw.kuitan!==false
       };
     }
@@ -3001,7 +3444,7 @@ globalThis.YakuData={"version":"3.0","groups":[{"id":"oneclosed","title":"一番
       const saved=localStorage.getItem(STORAGE_KEY);
       if(saved) try {state=sanitize(JSON.parse(saved));} catch {state=newState();}
     } catch {storageAvailable=false;}
-    let currentTab=location.hash==='#yakuGuide'?'guide':state.entry;
+    let currentTab=location.hash==='#scorePractice'?'practice':location.hash==='#yakuGuide'?'guide':state.entry;
     function save() {
       if(storageAvailable) try {localStorage.setItem(STORAGE_KEY,JSON.stringify(state));} catch {storageAvailable=false;}
       $('storageNote').textContent=storageAvailable?'設定保留於此裝置':'此瀏覽器不會保留設定';
@@ -3047,16 +3490,21 @@ globalThis.YakuData={"version":"3.0","groups":[{"id":"oneclosed","title":"一番
       add(`總收入 = ${fmt(r.handPoints)} + ${fmt(r.honbaPoints)} + ${fmt(r.riichiPoints)} = ${fmt(r.total)} 點。`);
     }
     function update() {
-      const isHand=state.entry==='hand',isSoul=state.presentation==='soul';
-      $('presentationMode').value=state.presentation;$('soundEnabled').checked=state.sound;
-      setText('introHint',isSoul?'揀好手牌，按「計算」揭曉你的和牌時刻。':'揀好手牌，自動拆解役種、番數與符數。');
+      const isHand=state.entry==='hand',isGuide=currentTab==='guide',isPractice=currentTab==='practice';
+      const isSoul=currentTab==='hand'&&isHand&&state.presentation==='soul',isCalculator=!isGuide&&!isPractice;
+      $('presentationMode').value=currentTab==='hand'?state.presentation:'default';
+      $('presentationMode').disabled=currentTab!=='hand';
+      document.querySelector('.presentation-picker').hidden=currentTab!=='hand';
+      $('soundEnabled').checked=state.sound;
+      setText('introHint',isPractice?'睇牌面，自己計番符，再逐項核對。':isGuide?'由牌面例子認識役種與加番。':!isHand?'輸入番數與符數，即時查看得點。':isSoul?'揀好手牌，按「計算」揭曉你的和牌時刻。':'揀好手牌，自動拆解役種、番數與符數。');
       if(isHand)state.dealer=state.hand.seat===0;
-      const isGuide=currentTab==='guide';
       $$('[data-tab]').forEach(b=>{const selected=b.dataset.tab===currentTab;b.setAttribute('aria-selected',String(selected));b.tabIndex=selected?0:-1;});
-      $('calculatorWorkspace').hidden=isGuide;$('yakuGuide').hidden=!isGuide;
+      $('calculatorWorkspace').hidden=!isCalculator;$('yakuGuide').hidden=!isGuide;$('scorePractice').hidden=!isPractice;
+      if(isPractice)practiceUI?.ensure();
       $('calculatorWorkspace').setAttribute('aria-labelledby',isHand?'tabHand':'tabManual');
-      document.querySelector('.mobile-dock').hidden=isGuide;
+      document.querySelector('.mobile-dock').hidden=!isCalculator;
       document.body.classList.toggle('guide-view',isGuide);
+      document.body.classList.toggle('practice-view',isPractice);
       $('handEntry').hidden=!isHand;$('manualEntry').hidden=isHand;$('autoAnalysis').hidden=!isHand;
       $('handPresets').hidden=!isHand;$('manualPresets').hidden=isHand;$('sideHandSettings').hidden=!isHand;
       setText('settingsBrief',isHand?['東','南','西','北'][state.hand.round]+'場・'+['東','南','西','北'][state.hand.seat]+'家':'本場 '+state.honba+'・供託 '+state.riichi);
@@ -3103,7 +3551,7 @@ globalThis.YakuData={"version":"3.0","groups":[{"id":"oneclosed","title":"一番
       if(pending)setText('mobileTotal','待計算');
       $('copyResult').disabled=!r.valid||pending;
       setText('callLabel',state.method==='ron'?'榮和報點':state.dealer?'自摸報點（每家）':'自摸報點（閒家 / 莊家）');setText('scoreCall',reportCall(r));
-      clearTimeout(announceTimer);announceTimer=setTimeout(()=>setText('liveResult',pending?(r.valid?'和牌已準備好，請按計算揭曉結果。':r.error):r.valid?`${context()}，總收入 ${fmt(r.total)} 點。`:r.error),250);
+      clearTimeout(announceTimer);if(isCalculator)announceTimer=setTimeout(()=>setText('liveResult',pending?(r.valid?'和牌已準備好，請按計算揭曉結果。':r.error):r.valid?`${context()}，總收入 ${fmt(r.total)} 點。`:r.error),250);
       save();
     }
     function toast(t) {setText('toast',t);$('toast').classList.add('visible');clearTimeout(toastTimer);toastTimer=setTimeout(()=>$('toast').classList.remove('visible'),2600);}
@@ -3127,9 +3575,10 @@ globalThis.YakuData={"version":"3.0","groups":[{"id":"oneclosed","title":"一番
         const box=document.createElement('div');box.className='limit-item';const title=document.createElement('span');title.textContent=name;const value=document.createElement('strong');value.textContent=cellText(r);box.append(title,value);$('limitList').append(box);
       });
     }
-    $('presentationMode').addEventListener('change',()=>{state.presentation=$('presentationMode').value==='soul'?'soul':'default';revealedKey=null;update();});
+    $('presentationMode').addEventListener('change',()=>{if(currentTab!=='hand')return;state.presentation=$('presentationMode').value==='soul'?'soul':'default';revealedKey=null;update();});
     $('soundEnabled').addEventListener('change',()=>{state.sound=$('soundEnabled').checked;soulUI?.setSound();save();});
     function calculateWin(){
+      if(currentTab!=='hand'||state.entry!=='hand'||state.presentation!=='soul')return;
       if(!lastResult?.valid){toast(lastResult?.error||'請先完成和牌。');return;}
       soulUI.play({key:scoreKey(),state,active,answer:autoResult,result:lastResult});
     }
@@ -3144,7 +3593,7 @@ globalThis.YakuData={"version":"3.0","groups":[{"id":"oneclosed","title":"一番
     $('kiriage').addEventListener('change',()=>{state.kiriage=$('kiriage').checked;update();});$('kazoe').addEventListener('change',()=>{state.kazoe=$('kazoe').value;update();});
     const keepRules=()=>({kiriage:state.kiriage,kazoe:state.kazoe,doubleWind2:state.doubleWind2,doubleYakuman:state.doubleYakuman,kuitan:state.kuitan,presentation:state.presentation,sound:state.sound});
     $('reset').addEventListener('click',()=>{const rules=keepRules(),entry=state.entry;revealedKey=null;state={...newState(),...rules,entry};handUI.reset();$('handNotation').value='';update();toast('已重設本局，保留計分規則。');});
-    function selectTab(value){currentTab=value;if(value!=='guide')state.entry=value;update();}
+    function selectTab(value){currentTab=value;if(value==='hand'||value==='manual')state.entry=value;update();}
     const tabs=$$('[data-tab]');
     tabs.forEach((b,index)=>{
       b.addEventListener('click',()=>selectTab(b.dataset.tab));
@@ -3154,7 +3603,7 @@ globalThis.YakuData={"version":"3.0","groups":[{"id":"oneclosed","title":"一番
         if(next===null)return;e.preventDefault();selectTab(tabs[next].dataset.tab);tabs[next].focus();
       });
     });
-    window.addEventListener('hashchange',()=>{if(location.hash==='#yakuGuide')selectTab('guide');});
+    window.addEventListener('hashchange',()=>{if(location.hash==='#yakuGuide')selectTab('guide');else if(location.hash==='#scorePractice')selectTab('practice');});
     ['doubleWind2','doubleYakuman','kuitan'].forEach(k=>$(k).addEventListener('change',()=>{state[k]=$(k).checked;update();}));
     const presets={pinfu:{han:2,fu:20,method:'tsumo'},riichi:{han:1,fu:30,method:'ron'},mangan:{han:5,fu:40,method:'ron'}};
     $$('[data-preset]').forEach(b=>b.addEventListener('click',()=>{const rules=keepRules(),hand=state.hand;state={...newState(),...presets[b.dataset.preset],...rules,hand,entry:'manual'};update();toast('已載入例子，並清零本場與供託。');}));
@@ -3165,7 +3614,7 @@ globalThis.YakuData={"version":"3.0","groups":[{"id":"oneclosed","title":"一番
     $$('[data-close]').forEach(b=>b.addEventListener('click',()=>b.closest('dialog').close()));
     $$('dialog').forEach(d=>d.addEventListener('click',e=>{if(e.target!==d)return;const r=d.getBoundingClientRect();if(e.clientX<r.left||e.clientX>r.right||e.clientY<r.top||e.clientY>r.bottom)d.close();}));
     function resultText() {
-      const r=lastResult;if(!r.valid||(state.presentation==='soul'&&revealedKey!==scoreKey()))return '';
+      const r=lastResult;if(!r.valid||(state.entry==='hand'&&state.presentation==='soul'&&revealedKey!==scoreKey()))return '';
       return [context(),...(state.entry==='hand'&&autoResult?.ok?['役種：'+autoResult.yaku.map(y=>y.name+' '+(y.yakuman?y.yakuman+' 倍役滿':y.han+' 番')).join('、'),...(autoResult.yakuman?[]:['符數：'+autoResult.breakdown.lines.map(l=>l.label+' '+l.points+' 符').join(' + '),autoResult.breakdown.note])]:[]),`和牌點數：${fmt(r.handPoints)} 點`,`本場：${state.honba} 本（+${fmt(r.honbaPoints)} 點）`,`供託：${state.riichi} 支（+${fmt(r.riichiPoints)} 點，由供託池領取）`,'付款明細（已含本場）：',...r.payments.map(p=>`${p.who}：${p.count>1?'每位 ':''}${fmt(p.amount)} 點${p.count>1?' × '+p.count+' 人':''}`),`和牌總收入：${fmt(r.total)} 點`,`規則：${state.kiriage?'切上滿貫開':'切上滿貫關'}；13+ 番${state.kazoe==='yakuman'?'累計役滿':'上限三倍滿'}`].join('\n');
     }
     $('copyResult').addEventListener('click',async()=>{const text=resultText();if(!text)return;try{if(!navigator.clipboard?.writeText)throw new Error('manual-copy');await navigator.clipboard.writeText(text);toast('已複製點數與付款明細。');}catch{$('copyArea').value=text;openDialog('copyDialog');$('copyArea').focus();$('copyArea').select();}});
@@ -3177,9 +3626,11 @@ globalThis.YakuData={"version":"3.0","groups":[{"id":"oneclosed","title":"一番
     $('settingsSidebar').open=!smallSettings;
     window.addEventListener('resize',()=>{const small=isSmallLayout();if(small!==smallSettings){smallSettings=small;$('settingsSidebar').open=!small;}});
     YakuGuide.create({getConfig:()=>state,onLoad:(hand,method)=>{state.hand=HandCalc.sanitize(hand,{combineIndicators:true});state.entry='hand';currentTab='hand';state.method=method;state.honba=0;state.riichi=0;handUI.reset();update();},toast});
+    practiceUI=ScorePractice.create({getConfig:()=>state,toast});
     update();
   })();
   
+
 </script>
 </body>
 </html>
