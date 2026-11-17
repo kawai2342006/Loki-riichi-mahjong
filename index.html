@@ -569,6 +569,40 @@ body.soul-playing{overflow:hidden}
   /* Uniform 90% screen zoom; leave print styling and calculation logic unchanged. */
   @media screen { html { zoom: 90%; } }
 </style>
+<style id="hand-entry-refinements">
+  #handEntry{container-type:inline-size;container-name:hand-entry}
+  .tile-entry-head{gap:calc(10px * var(--page-ui-scale,1))}
+  .tile-entry-actions .hand-tool{background:none;color:#687a5d;font-size:calc(10px * var(--page-ui-scale,1));padding:calc(4px * var(--page-ui-scale,1)) 0;min-height:calc(26px * var(--page-ui-scale,1));white-space:nowrap}
+  .tile-entry-actions .hand-tool:hover:not(:disabled){color:var(--green)}
+  .tile-entry-actions .hand-tool:disabled{color:#aab69c;opacity:.65}
+  .hand-extras{display:grid;grid-template-columns:minmax(0,2fr) minmax(0,1fr);gap:calc(16px * var(--page-ui-scale,1));align-items:start;margin-top:calc(16px * var(--page-ui-scale,1))}
+  .meld-section,.hand-extras .bonus-entry{min-width:0}
+  .hand-extras .meld-head{justify-content:flex-start;gap:calc(8px * var(--page-ui-scale,1));margin:0 0 calc(8px * var(--page-ui-scale,1));min-height:calc(29px * var(--page-ui-scale,1));flex-wrap:wrap}
+  .hand-extras .meld-head .section-label{white-space:nowrap}
+  .hand-extras .meld-list{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:calc(7px * var(--page-ui-scale,1))}
+  .hand-extras .meld-group{min-width:0;padding:calc(6px * var(--page-ui-scale,1)) calc(5px * var(--page-ui-scale,1));gap:calc(2px * var(--page-ui-scale,1));justify-content:center}
+  .hand-extras .meld-group .mj-tile{width:calc(25px * var(--page-ui-scale,1));height:auto;aspect-ratio:25/36;min-width:0;flex-shrink:1}
+  .hand-extras .meld-group small,.hand-extras .meld-remove{flex-shrink:0}
+  .hand-extras .meld-empty{grid-column:1/-1}
+  .hand-extras .bonus-entry{border:0;padding:0}
+  .hand-extras .indicator-head{display:flex;align-items:center;justify-content:space-between;gap:calc(4px * var(--page-ui-scale,1));min-height:calc(29px * var(--page-ui-scale,1));margin-bottom:calc(8px * var(--page-ui-scale,1))}
+  .hand-extras .indicator-head .board-label{padding:0;white-space:nowrap;min-height:0}
+  .hand-extras #bonusCount{font-size:calc(8px * var(--page-ui-scale,1));color:#7b8e6f;white-space:nowrap}
+  .hand-extras .indicator-rack{display:grid;grid-template-columns:repeat(4,minmax(0,1fr));gap:calc(6px * var(--page-ui-scale,1));max-width:calc(184px * var(--page-ui-scale,1));min-height:0}
+  .hand-extras .indicator-rack .mj-tile{width:100%;max-width:calc(40px * var(--page-ui-scale,1));height:auto;aspect-ratio:40/56;min-height:0}
+  .mj-tile.mj-dora{border-color:#d8ba64;border-bottom-color:#bea050;background:linear-gradient(135deg,#fffdf0,#fffefb 48%,#fff0ba);box-shadow:0 0 calc(7px * var(--page-ui-scale,1)) #dfb64055,inset 0 0 calc(5px * var(--page-ui-scale,1)) #f4ce6350}
+  .mj-tile.mj-dora:hover:not(:disabled):not(.mj-static){border-color:#c39c31;background:linear-gradient(135deg,#fff9d9,#fffefb 48%,#ffe9a0)}
+  .mj-tile.mj-dora::before{content:"";position:absolute;inset:-40% -80%;background:linear-gradient(110deg,transparent 38%,#fff8 47%,#fffffff0 50%,#fff7 53%,transparent 62%);transform:translateX(-65%);animation:dora-sheen 3.6s ease-in-out infinite;pointer-events:none;z-index:1}
+  .mj-tile.mj-dora::after{content:"✦";position:absolute;top:0;left:calc(2px * var(--page-ui-scale,1));color:#c69c34;font-size:calc(10px * var(--page-ui-scale,1));line-height:1.2;text-shadow:0 0 calc(4px * var(--page-ui-scale,1)) #fff6b6;animation:dora-sparkle 2.4s ease-in-out infinite;pointer-events:none;z-index:2}
+  @keyframes dora-sheen{0%,18%{transform:translateX(-65%)}60%,100%{transform:translateX(65%)}}
+  @keyframes dora-sparkle{0%,100%{opacity:.45;transform:scale(.75)}50%{opacity:1;transform:scale(1.15)}}
+  @container hand-entry (max-width:420px){
+    .hand-extras{grid-template-columns:minmax(0,1fr);gap:12px}
+    .hand-extras .indicator-rack{max-width:184px}
+  }
+  @media(prefers-reduced-motion:reduce){.mj-tile.mj-dora::before{animation:none;transform:translateX(0);opacity:.35}.mj-tile.mj-dora::after{animation:none;opacity:.8;transform:none}}
+  @media print{.mj-tile.mj-dora::before,.mj-tile.mj-dora::after{display:none}}
+</style>
 <script id="page-layout">
 'use strict';
 (() => {
@@ -627,20 +661,27 @@ body.soul-playing{overflow:hidden}
             </div>
             <hr class="divider">
             <div id="handEntry">
-  <div class="tile-entry-head"><span class="section-label">輸入牌面</span><div class="tile-entry-actions"><button type="button" class="text-button reset-button" id="clearHand" title="清空牌面" aria-label="清空牌面"><svg class="icon" aria-hidden="true"><use href="#i-reset"/></svg><span>清空牌面</span></button><span class="hand-closed" id="closedBadge">門前</span></div></div>
+  <div class="tile-entry-head"><span class="section-label">輸入牌面</span><div class="tile-entry-actions"><button type="button" class="hand-tool" id="sortHand" title="整理手牌">理牌</button><button type="button" class="hand-tool hand-undo" id="undoHand" title="撤銷上一步" aria-label="撤銷上一步輸入">撤銷</button><button type="button" class="text-button reset-button" id="clearHand" title="清空牌面" aria-label="清空牌面"><svg class="icon" aria-hidden="true"><use href="#i-reset"/></svg><span>清空牌面</span></button><span class="hand-closed" id="closedBadge">門前</span></div></div>
   <div class="hand-board">
     <div class="concealed-area"><button type="button" class="board-label" data-target="hand" aria-pressed="true">手牌 <span id="handCount">0 / 13</span></button><div class="hand-rack" id="handRack" role="group" aria-label="手牌，點擊牌面可移除"></div></div>
     <div class="winning-area"><button type="button" class="board-label" data-target="win" aria-pressed="false">和牌</button><div id="winRack" class="win-rack" role="group" aria-label="和牌那張牌"></div></div>
   </div>
-  <div class="tile-tools"><span id="handInstruction">先選手牌，最後另選和牌。</span><button type="button" id="sortHand">理牌</button><button type="button" class="hand-undo" id="undoHand" title="撤銷上一步" aria-label="撤銷上一步輸入">撤銷</button></div>
-  <div class="meld-head"><span class="section-label">副露／暗槓 <small id="meldCount">0 組</small></span><button type="button" class="add-meld" id="openMeld">＋ 新增面子</button></div>
-  <div id="meldList" class="meld-list"></div>
+  <div class="hand-extras">
+    <section class="meld-section" aria-label="副露／暗槓">
+      <div class="meld-head"><span class="section-label">副露／暗槓 <small id="meldCount">0 組</small></span><button type="button" class="add-meld" id="openMeld">＋ 吃碰槓</button></div>
+      <div id="meldList" class="meld-list"></div>
+    </section>
+    <section class="bonus-entry" id="bonusEntry" aria-label="寶牌指示牌">
+      <div class="indicator-head"><button type="button" class="board-label" data-target="dora" aria-pressed="false" aria-describedby="doraHelp" title="輸入寶牌指示牌；點擊已輸入的指示牌可移除">寶牌指示牌</button><span id="bonusCount">0 / 8 張</span></div>
+      <div class="indicator-rack" id="doraRack" role="group" aria-label="寶牌指示牌，點擊可移除" aria-describedby="doraHelp"></div>
+      <p class="sr-only" id="doraHelp">請輸入「指示牌」，不是寶牌本身。寶牌與已翻開的裏寶牌指示牌一併放這裡，合共最多 8 張；每張對應寶牌加 1 番，均不影響符數。赤五自動計算。</p>
+    </section>
+  </div>
   <div class="tile-keyboard">
     <div class="entry-targets" role="group" aria-label="選擇輸入位置"><button type="button" data-target="hand" aria-pressed="true">手牌</button><button type="button" data-target="win" aria-pressed="false">和牌</button><button type="button" data-target="dora" aria-pressed="false">寶牌指示</button></div>
     <div class="tile-palette" id="tilePalette" role="group" aria-label="點擊麻雀牌輸入"></div>
     <div class="keyboard-note"><span id="targetHint">目前輸入：手牌</span><button type="button" id="backspaceTile" aria-label="刪除目前位置最後一張牌">⌫ 刪除</button></div>
   </div>
-  <details class="bonus-entry" id="bonusEntry"><summary>寶牌指示牌 <span id="bonusCount">0 / 8 張</span><svg class="icon chevron" aria-hidden="true"><use href="#i-chevron"/></svg></summary><div class="bonus-grid"><div><button type="button" class="board-label" data-target="dora" aria-pressed="false">寶牌指示牌</button><div class="indicator-rack" id="doraRack" role="group" aria-label="寶牌指示牌，點擊可移除"></div></div></div><p class="entry-hint">請輸入「指示牌」，不是寶牌本身。寶牌與已翻開的裏寶牌指示牌一併放這裡，合共最多 8 張；每張對應寶牌加 1 番，均不影響符數。赤五自動計算。</p></details>
   <details class="notation-entry"><summary>文字快速輸入 <span>可選</span><svg class="icon chevron" aria-hidden="true"><use href="#i-chevron"/></svg></summary><label for="handNotation" class="entry-hint">輸入剩餘手牌及和牌，最後一張視作和牌。</label><div class="notation-row"><input id="handNotation" type="text" inputmode="text" autocomplete="off" spellcheck="false" maxlength="90" placeholder="123456m23466p453s" aria-describedby="notationHelp"><button type="button" id="applyNotation">套用</button></div><p class="entry-hint" id="notationHelp">m 萬 · p 筒 · s 索 · z 字；1–7z＝東南西北白發中，0＝赤五。副露請另加。</p></details>
 </div>
 
@@ -2125,7 +2166,7 @@ module.exports = {
 
 }}, cache={};
 function load(id){id=id.replace(/^\.\//, ""); if(cache[id])return cache[id].exports;const m=cache[id]={exports:{}};modules[id](m,m.exports,load);return m.exports;}
-globalThis.MajiangCore=Object.freeze({Shoupai:load("shoupai"),rule:load("rule"),...load("hule")});})();
+globalThis.MajiangCore=Object.freeze({Shoupai:load("shoupai"),Shan:load("shan"),rule:load("rule"),...load("hule")});})();
 </script>
 <script id="hand-engine">
 'use strict';
@@ -2310,7 +2351,7 @@ globalThis.MajiangCore=Object.freeze({Shoupai:load("shoupai"),rule:load("rule"),
   function tile(p,{button=true,onClick,winning=false,back=false,label}={}){
     const e=document.createElement(button?'button':'span');e.className='mj-tile'+(!button?' mj-static':'')+(winning?' mj-winning':'')+(back?' mj-back':'');
     if(button)e.type='button';
-    if(p){e.setAttribute('aria-label',label||HandCalc.tileName(p));e.title=label||HandCalc.tileName(p);if(!button)e.setAttribute('role','img');if(!back)e.append(tileFace(p));}
+    if(p){e.dataset.tile=p;e.dataset.baseLabel=label||HandCalc.tileName(p);e.setAttribute('aria-label',e.dataset.baseLabel);e.title=e.dataset.baseLabel;if(!button)e.setAttribute('role','img');if(!back)e.append(tileFace(p));}
     else{e.classList.add('mj-empty');e.textContent='＋';e.setAttribute('aria-label',label||'選擇牌面');}
     if(onClick)e.addEventListener('click',onClick);return e;
   }
@@ -2320,10 +2361,20 @@ globalThis.MajiangCore=Object.freeze({Shoupai:load("shoupai"),rule:load("rule"),
     const labels={hand:'手牌',win:'和牌',dora:'寶牌指示牌'},meldNames={chi:'吃',pon:'碰',minkan:'明槓',ankan:'暗槓'};
     function snapshot(){history.push(JSON.parse(JSON.stringify(getHand())));if(history.length>40)history.shift();}
     function mutate(fn){snapshot();fn(getHand());onChange();}
-    function chooseTarget(value){target=value;if(target==='dora')$('bonusEntry').open=true;renderTarget();}
+    function chooseTarget(value){target=value;renderTarget();}
     function renderTarget(){
       $$('[data-target]').forEach(b=>b.setAttribute('aria-pressed',String(b.dataset.target===target)));
       $('targetHint').textContent='目前輸入：'+labels[target];
+    }
+    function renderDoraHighlights(){
+      const h=getHand(),counts=new Map();
+      for(const indicator of [...h.dora,...(h.riichi?h.ura:[])]){const p=MajiangCore.Shan.zhenbaopai(indicator);counts.set(p,(counts.get(p)||0)+1);}
+      $$('#handRack .mj-tile, #winRack .mj-tile, #meldList .mj-tile, #tilePalette .mj-tile, #meldDraft .mj-tile, #meldPalette .mj-tile').forEach(e=>{
+        const count=e.dataset.tile&&!e.classList.contains('mj-back')?counts.get(HandCalc.norm(e.dataset.tile))||0:0;
+        e.classList.toggle('mj-dora',count>0);
+        if(count)e.dataset.doraCount=String(count);else delete e.dataset.doraCount;
+        if(e.dataset.baseLabel){const label=e.dataset.baseLabel+(count?'，寶牌'+(count>1?' × '+count:''):'');e.setAttribute('aria-label',label);e.title=label;}
+      });
     }
     function add(p){
       const h=getHand(),next=JSON.parse(JSON.stringify(h)),need=13-h.melds.length*3;
@@ -2365,12 +2416,11 @@ globalThis.MajiangCore=Object.freeze({Shoupai:load("shoupai"),rule:load("rule"),
       renderRack('winRack',h.win?[h.win]:[],h=>{h.win=null;},{empty:1,winning:true});
       renderRack('doraRack',h.dora,(h,i)=>h.dora.splice(i,1),{empty:HandCalc.MAX_INDICATORS,emptyClick:()=>chooseTarget('dora'),emptyLabel:'輸入寶牌指示牌'});
       $('bonusCount').textContent=`${h.dora.length} / ${HandCalc.MAX_INDICATORS} 張`;
-      $('handInstruction').textContent=h.tiles.length===need&&!h.win?'手牌已齊，請選和牌。':'點手牌可移除；和牌另外輸入。';
       for(const [name,value]of [['roundWind',h.round],['seatWind',h.seat],['handRiichi',h.riichi]])$$(`input[name="${name}"]`).forEach(r=>{r.checked=Number(r.value)===value;});
       $('handRiichi').disabled=!closed;
       $('handIppatsu').checked=h.ippatsu;$('handIppatsu').disabled=!closed||!h.riichi;$('handEvent').value=h.event;
       $('undoHand').disabled=!history.length;
-      renderMelds();renderPalette();renderTarget();
+      renderMelds();renderPalette();renderTarget();renderDoraHighlights();
     }
     function renderAnalysis(answer){
       $('analysisEmpty').hidden=answer?.ok===true;$('analysisReady').hidden=!answer?.ok;
@@ -2397,6 +2447,7 @@ globalThis.MajiangCore=Object.freeze({Shoupai:load("shoupai"),rule:load("rule"),
       $('confirmMeld').disabled=!type;
       $('confirmMeld').textContent=type?'加入'+meldNames[type]:'加入面子';
       $('meldDraftHint').textContent=type?(type==='pon'?'已辨識為碰（刻子）；可直接加入，或再選一張相同牌作槓。':`已辨識為${meldNames[type]}，可以加入。`):draft.length<3?'請選三張牌；槓牌請選四張。':'未組成有效面子：請選同花色的三張連續數牌、三張相同牌或四張相同牌。';
+      renderDoraHighlights();
     }
     function initMeldPalette(){
       const box=$('meldPalette');
