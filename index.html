@@ -750,6 +750,16 @@ body.soul-playing{overflow:hidden}
   globalThis.PageLayout=Object.freeze({scale,small});
 })();
 </script>
+<style id="loki-studio-navigation">
+.loki-module-nav{display:flex;flex-wrap:wrap;gap:8px 14px;align-items:center;margin-bottom:calc(22px * var(--page-ui-scale,1))}
+.loki-module-nav .calc-tabs{margin:0;min-width:0}
+.loki-studio-link{display:inline-flex;align-items:center;gap:7px;padding:9px 14px;border:1px solid #2d5946;border-radius:8px;background:#265540;color:#fff9e9;text-decoration:none;font-weight:700;line-height:1.35;font-size:calc(12px * var(--page-ui-scale,1));white-space:nowrap}
+.loki-studio-link svg{flex:none}
+.loki-studio-link:hover{background:#397658;color:white}
+.loki-studio-link:focus-visible{outline:3px solid #ad853d;outline-offset:2px}
+@media(max-width:760px){.loki-module-nav{margin-bottom:14px}.loki-studio-link{padding:7px 10px}}
+@media print{.loki-module-nav{display:none!important}}
+</style>
 </head>
 <body>
   <svg width="0" height="0" aria-hidden="true" style="position:absolute;overflow:hidden"><defs id="mj-running-defs">
@@ -851,11 +861,17 @@ body.soul-playing{overflow:hidden}
     <main>
       <div class="intro"><div><div class="eyebrow">四人日本麻雀 / SCORE CALCULATOR</div><h1>日麻手牌點數計算器</h1><p id="introHint">揀好手牌，自動拆解役種、番數與符數。</p></div><label class="presentation-picker" for="presentationMode"><span>顯示模式 · 只適用於手牌計算</span><select id="presentationMode"><option value="default">預設模式</option><option value="soul" selected>雀魂和牌模式</option></select></label></div>
       <noscript><p class="noscript">請在瀏覽器開啟 JavaScript，才可使用計算器。所有計算均在裝置內完成。</p></noscript>
+      <div class="loki-module-nav">
       <div class="calc-tabs" role="tablist" aria-label="計算器與役種提示卡">
         <button type="button" id="tabHand" role="tab" data-tab="hand" aria-controls="calculatorWorkspace" aria-selected="true" tabindex="0">手牌計算</button>
         <button type="button" id="tabManual" role="tab" data-tab="manual" aria-controls="calculatorWorkspace" aria-selected="false" tabindex="-1">番符速算</button>
         <button type="button" id="tabPractice" role="tab" data-tab="practice" aria-controls="scorePractice" aria-selected="false" tabindex="-1">番符計算練習</button>
         <button type="button" id="tabGuide" role="tab" data-tab="guide" aria-controls="yakuGuide" aria-selected="false" tabindex="-1">新手役種提示卡</button>
+      </div>
+        <a class="loki-studio-link" href="./riichi-studio.html">
+          <svg viewBox="0 0 24 24" width="20" height="20" aria-hidden="true" fill="none" stroke="currentColor" stroke-width="1.7" stroke-linecap="round"><rect x="4" y="3" width="13" height="16" rx="2"/><path d="M8 7v8m5-9v10m7-9v12a3 3 0 0 1-3 3H8"/></svg>
+          雀研室 · 單機對局
+        </a>
       </div>
       <div class="workspace" id="calculatorWorkspace" role="tabpanel" aria-labelledby="tabHand">
         <details class="settings-sidebar panel" id="settingsSidebar" open><summary><span class="settings-title"><svg class="icon" aria-hidden="true"><use href="#i-sliders"/></svg>牌局設定</span><span class="settings-brief" id="settingsBrief">東場・南家</span><svg class="icon chevron" aria-hidden="true"><use href="#i-chevron"/></svg></summary><div class="settings-body"><div id="sideHandSettings">  <div class="wind-grid"><fieldset class="field-group" id="roundWind"><legend class="field-label">場風</legend><div class="choice-options"><label class="choice-option"><input type="radio" name="roundWind" value="0" checked><span>東</span></label><label class="choice-option"><input type="radio" name="roundWind" value="1"><span>南</span></label><label class="choice-option"><input type="radio" name="roundWind" value="2"><span>西</span></label><label class="choice-option"><input type="radio" name="roundWind" value="3"><span>北</span></label></div></fieldset><fieldset class="field-group" id="seatWind"><legend class="field-label">自風</legend><div class="choice-options"><label class="choice-option"><input type="radio" name="seatWind" value="0"><span>東</span></label><label class="choice-option"><input type="radio" name="seatWind" value="1" checked><span>南</span></label><label class="choice-option"><input type="radio" name="seatWind" value="2"><span>西</span></label><label class="choice-option"><input type="radio" name="seatWind" value="3"><span>北</span></label></div></fieldset></div>
