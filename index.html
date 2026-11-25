@@ -760,6 +760,303 @@ body.soul-playing{overflow:hidden}
 @media(max-width:760px){.loki-module-nav{margin-bottom:14px}.loki-studio-link{padding:7px 10px}}
 @media print{.loki-module-nav{display:none!important}}
 </style>
+<style id="live-scoreboard-styles">
+  .loki-live-link {
+    background: #eaf2e8;
+    border-color: #a9c2ad;
+    color: #234d3b;
+  }
+  .loki-live-link:hover { background: #dcebdc; color: #193f33; }
+
+  @media screen { html.tenwa-live-open { zoom: 100%; } }
+  .tenwa-live-open body { padding: 0; background: #10251e; }
+  .tenwa-live-open .mobile-dock,
+  .tenwa-live-open #toast { display: none !important; }
+
+  .live-board {
+    --live-bg: #10251e;
+    --live-panel: #19382d;
+    --live-surface: #122b22;
+    --live-border: #3e5c4d;
+    --live-text: #fff8e9;
+    --live-muted: #bfcec1;
+    --live-gold: #efca87;
+    --live-accent: #bde7c8;
+    --live-loss: #ffc0ac;
+    min-height: 100vh;
+    min-height: 100dvh;
+    background: radial-gradient(ellipse at top right, #1c392d 0%, var(--live-bg) 60%);
+    color: var(--live-text);
+    color-scheme: dark;
+    font-size: 1rem;
+    line-height: 1.45;
+  }
+  .live-board:fullscreen { width: 100%; height: 100%; overflow: auto; }
+  .live-board :is(h1, h2, p, dl, dd) { margin: 0; }
+  .live-board :is(button, input, select):focus-visible {
+    outline: 2px solid var(--live-gold);
+    outline-offset: 3px;
+  }
+  .live-board-inner {
+    width: min(100%, 1920px);
+    min-height: 100vh;
+    min-height: 100dvh;
+    display: flex;
+    flex-direction: column;
+    gap: clamp(1rem, 3vh, 2.5rem);
+    margin-inline: auto;
+    padding: clamp(1rem, 3.7vw, 4.5rem);
+    padding-block: clamp(1.25rem, 3.4vh, 3.25rem);
+  }
+  .live-header, .live-brand, .live-header-actions, .live-round-bar,
+  .live-player-meta, .live-player-footer, .live-match-actions, .live-match-footer,
+  .live-dialog-header, .live-dialog-actions, .live-setup-footer {
+    display: flex;
+    align-items: center;
+    gap: .75rem;
+  }
+  .live-header, .live-round-bar, .live-player-footer, .live-match-footer,
+  .live-dialog-header, .live-setup-footer { justify-content: space-between; }
+  .live-header, .live-match-footer, .live-setup-footer { flex-wrap: wrap; }
+  .live-brand { gap: .9rem; min-width: 0; }
+  .live-brand-tile {
+    display: grid;
+    place-items: center;
+    flex: 0 0 auto;
+    width: 2.85rem;
+    height: 3.4rem;
+    border-radius: .52rem;
+    border-bottom: .26rem solid #c8a875;
+    background: #fbebc8;
+    color: #913c35;
+    font-size: 1.85rem;
+    font-weight: 800;
+  }
+  .live-brand-name { display: block; color: var(--live-muted); font-size: .88rem; font-weight: 700; }
+  .live-brand h1 { font-size: clamp(1.5rem, 2.7vw, 2.45rem); line-height: 1.12; }
+  .live-header-actions { flex-wrap: wrap; }
+  .live-button, .live-choice, .live-option {
+    min-height: 2.75rem;
+    border: 1px solid var(--live-border);
+    border-radius: .55rem;
+    background: var(--live-surface);
+    color: var(--live-text);
+    padding: .55rem .86rem;
+    font-weight: 680;
+  }
+  .live-button:not(:disabled):hover, .live-choice:not(:disabled):hover, .live-option:hover {
+    border-color: var(--live-accent);
+    background: #244638;
+  }
+  .live-board button:disabled { opacity: .5; }
+  .live-board button.live-player-select:disabled { opacity: 1; }
+  .live-primary {
+    border-color: var(--live-gold);
+    background: var(--live-gold);
+    color: #242117;
+  }
+  .live-board .live-primary:not(:disabled):hover { border-color: #ffe3b0; background: #ffe3b0; }
+
+  .live-setup {
+    align-self: center;
+    width: min(100%, 45rem);
+    margin-block: auto;
+    padding: clamp(1rem, 4.1vw, 2.5rem);
+    border: 1px solid var(--live-border);
+    border-radius: 1rem;
+    background: var(--live-panel);
+  }
+  .live-setup h2 { font-size: clamp(1.5rem, 3vw, 2rem); }
+  .live-setup > p { margin-block: .35rem 1.4rem; color: var(--live-muted); }
+  .live-setup form, .live-action { display: grid; gap: 1.15rem; }
+  .live-fieldset { min-width: 0; margin: 0; padding: 0; border: 0; }
+  .live-fieldset legend { margin-bottom: .5rem; padding: 0; font-weight: 700; color: var(--live-muted); }
+  .live-options { display: grid; grid-template-columns: repeat(2, minmax(0, 1fr)); gap: .5rem; }
+  .live-option { display: flex; align-items: center; justify-content: center; gap: .5rem; cursor: pointer; }
+  .live-option:has(:checked) { border-color: var(--live-gold); background: #314638; }
+  .live-board input[type="radio"] { margin: 0; width: 1.05em; height: 1.05em; accent-color: var(--live-gold); }
+  .live-setup-seats { display: grid; gap: .6rem; }
+  .live-setup-seat { display: grid; grid-template-columns: auto minmax(0, 1fr) auto; align-items: center; gap: .65rem; }
+  .live-wind {
+    display: grid;
+    place-items: center;
+    flex: 0 0 auto;
+    width: 2.4rem;
+    min-height: 2.55rem;
+    border: 1px solid #547263;
+    border-radius: .42rem;
+    background: #274638;
+    color: var(--live-text);
+    font-size: 1.2rem;
+    font-weight: 750;
+  }
+  .live-setup-seat:has(:checked) .live-wind, .live-player.is-dealer .live-wind {
+    border-color: var(--live-gold);
+    background: var(--live-gold);
+    color: #302211;
+  }
+  .live-name-field input, .live-hand-row select {
+    min-height: 2.75rem;
+    width: 100%;
+    border: 1px solid var(--live-border);
+    border-radius: .5rem;
+    background: var(--live-surface);
+    color: var(--live-text);
+    padding: .5rem .66rem;
+  }
+  .live-name-field input::placeholder { color: #a4b7ab; }
+  .live-dealer-label { display: flex; align-items: center; gap: .4rem; min-height: 2.75rem; cursor: pointer; }
+  .live-setup-footer p, .live-notice { color: var(--live-muted); font-size: .93rem; }
+
+  .live-match { display: grid; flex: 1; grid-template-rows: auto minmax(min-content, 1fr) auto; gap: clamp(.65rem, 1.8vh, 1.6rem); }
+  .live-round-bar {
+    padding: 0 .1rem clamp(.6rem, 1.5vh, 1rem);
+    border-bottom: 1px solid var(--live-border);
+  }
+  .live-round-bar p { color: var(--live-gold); font-size: clamp(.85rem, 1.3vw, 1.15rem); font-weight: 700; }
+  .live-round-bar h2 { font-size: clamp(1.75rem, 4.6vw, 4.8rem); line-height: 1.1; margin-top: .17em; }
+  .live-counters { display: flex; gap: clamp(.7rem, 3.4vw, 4rem); color: var(--live-muted); }
+  .live-counters > div { min-width: 3.2rem; }
+  .live-counters dt { font-size: clamp(.83rem, 1.2vw, 1.08rem); }
+  .live-counters dd { display: flex; align-items: baseline; gap: .25em; }
+  .live-counters strong { font-size: clamp(1.6rem, 3.5vw, 3.7rem); line-height: 1.14; color: var(--live-text); }
+  .live-counters strong, .live-player-points, .live-player-delta { font-variant-numeric: tabular-nums; }
+
+  .live-score-grid { display: grid; grid-template-columns: repeat(2, minmax(0, 1fr)); gap: clamp(.5rem, 1.45vw, 1.5rem); }
+  .live-player {
+    min-width: 0;
+    display: grid;
+    grid-template-rows: 1fr auto;
+    border: 1px solid var(--live-border);
+    border-radius: .85rem;
+    background: var(--live-panel);
+  }
+  .live-player.is-dealer { border-color: #ad905e; box-shadow: inset 0 2px 0 #ad905e; }
+  .live-player-select {
+    width: 100%;
+    display: grid;
+    align-content: start;
+    justify-items: start;
+    gap: clamp(.25rem, 1vh, .75rem);
+    padding: clamp(.65rem, 1.6vw, 1.65rem);
+    border-radius: .8rem .8rem 0 0;
+    background: transparent;
+    color: var(--live-text);
+    text-align: start;
+  }
+  .live-player-select:not(:disabled):hover { background: #244638; }
+  .live-player-meta { width: 100%; align-self: start; }
+  .live-player-name { min-width: 0; overflow-wrap: anywhere; font-size: clamp(1.13rem, 2.6vw, 3rem); font-weight: 750; line-height: 1.18; }
+  .live-player-select .live-wind {
+    width: clamp(1.75rem, 3.4vw, 3.7rem);
+    min-height: clamp(1.95rem, 3.8vw, 4rem);
+    font-size: clamp(.95rem, 1.8vw, 1.9rem);
+  }
+  .live-dealer-mark, .live-rank { margin-inline-start: auto; flex: 0 0 auto; color: var(--live-gold); font-weight: 750; }
+  .live-player-points {
+    align-self: center;
+    font-size: clamp(1.85rem, 6.05vw, 7.5rem);
+    line-height: 1;
+    letter-spacing: -.045em;
+    font-weight: 750;
+    white-space: nowrap;
+  }
+  .live-player-points.is-negative { color: var(--live-loss); }
+  .live-player-footer {
+    min-height: 2.75rem;
+    padding: 0 clamp(.65rem, 1.6vw, 1.65rem);
+    background: #122b2270;
+    border-top: 1px solid #3e5c4d;
+    border-radius: 0 0 .8rem .8rem;
+  }
+  .live-player-delta { font-size: clamp(.85rem, 1.6vw, 1.32rem); font-weight: 700; }
+  .live-player-delta.gain { color: var(--live-accent); }
+  .live-player-delta.loss { color: var(--live-loss); }
+  .live-riichi { background: transparent; color: var(--live-muted); font-weight: 660; min-height: 2.75rem; padding: 0 .1rem; white-space: nowrap; }
+  .live-riichi:not(:disabled):hover { color: var(--live-text); text-decoration: underline; }
+  .live-board .live-riichi.is-declared { color: var(--live-gold); opacity: 1; }
+  .live-match-footer { min-height: 2.75rem; }
+  .live-match-actions { flex-wrap: wrap; gap: .45rem; }
+  .live-last { flex: 1 1 19rem; overflow-wrap: anywhere; color: var(--live-muted); }
+  .live-notice { color: var(--live-gold); }
+
+  .live-dialog {
+    width: min(39rem, calc(100% - 1.25rem));
+    max-height: 92dvh;
+    margin: auto;
+    padding: clamp(1rem, 3.4vw, 1.65rem);
+    border: 1px solid #5c7565;
+    border-radius: .9rem;
+    background: var(--live-panel);
+    color: var(--live-text);
+    box-shadow: 0 1.25rem 5rem #07130fc7;
+  }
+  .live-dialog::backdrop { background: #07160dcc; backdrop-filter: blur(3px); }
+  .live-dialog-header { margin-bottom: .85rem; }
+  .live-dialog-header h2 { font-size: clamp(1.35rem, 3vw, 1.8rem); }
+  .live-close { display: grid; place-items: center; flex: 0 0 auto; width: 2.75rem; padding: 0; }
+  .live-action p { color: var(--live-muted); overflow-wrap: anywhere; }
+  .live-action fieldset p { margin-top: .6rem; }
+  .live-choice-grid { display: grid; grid-template-columns: repeat(2, minmax(0, 1fr)); gap: .5rem; }
+  .live-choice {
+    display: flex;
+    align-items: center;
+    gap: .5rem;
+    text-align: start;
+    min-width: 0;
+    overflow-wrap: anywhere;
+  }
+  .live-choice-seat { flex: 0 0 auto; color: var(--live-muted); font-size: .88rem; }
+  .live-choice[aria-pressed="true"] { border-color: var(--live-gold); background: #344c3c; }
+  .live-choice[aria-pressed="true"] .live-choice-seat { color: var(--live-gold); }
+  .live-win-rows { display: grid; gap: .6rem; }
+  .live-win-rows:empty { display: none; }
+  .live-hand-row {
+    min-width: 0;
+    display: grid;
+    align-items: center;
+    grid-template-columns: minmax(0, 1fr) minmax(0, 1fr) minmax(0, 1fr);
+    gap: .55rem;
+    padding: .65rem;
+    border: 1px solid var(--live-border);
+    border-radius: .55rem;
+    background: #214135;
+  }
+  .live-hand-name { overflow-wrap: anywhere; }
+  .live-hand-row label { display: grid; gap: .2rem; color: var(--live-muted); font-size: .93rem; }
+  .live-hand-row select { padding-inline: .38rem; }
+  .live-hand-row select:disabled { opacity: .6; }
+  .live-action .live-error { color: var(--live-loss); }
+  .live-dialog-actions { justify-content: flex-end; flex-wrap: wrap; gap: .45rem; }
+
+  @media (max-width: 560px) {
+    .live-header { align-items: flex-start; }
+    .live-header-actions { gap: .35rem; }
+    .live-button, .live-option { padding-inline: .58rem; }
+    .live-brand { gap: .5rem; }
+    .live-brand-tile { width: 2.1rem; height: 2.6rem; font-size: 1.45rem; }
+    .live-brand-name { font-size: .77rem; }
+    .live-brand h1 { font-size: 1.35rem; }
+    .live-player-meta, .live-player-footer { gap: .24rem; }
+    .live-player-footer { padding-inline: .38rem; }
+    .live-player-name { font-size: 1.05rem; }
+    .live-riichi { font-size: .86rem; }
+    .live-dealer-mark, .live-rank { font-size: .76rem; }
+    .live-dealer-label { font-size: .83rem; }
+    .live-counters { font-size: .83rem; }
+    .live-choice { gap: .35rem; padding-inline: .53rem; }
+    .live-hand-row { grid-template-columns: repeat(2, minmax(0, 1fr)); }
+    .live-hand-name { grid-column: 1 / -1; }
+  }
+  @media (max-width: 370px) {
+    .live-board-inner { padding-inline: .7rem; }
+    .live-player-points { font-size: 1.68rem; }
+  }
+  @media print {
+    .tenwa-live-open .live-board { background: #fff; color: #163327; }
+    .live-board :is(.live-header-actions, .live-match-actions, .live-riichi) { display: none; }
+  }
+</style>
 </head>
 <body>
   <svg width="0" height="0" aria-hidden="true" style="position:absolute;overflow:hidden"><defs id="mj-running-defs">
@@ -850,7 +1147,7 @@ body.soul-playing{overflow:hidden}
     <symbol id="i-download" viewBox="0 0 24 24"><path d="M12 3v12m-5-5 5 5 5-5M4 16v4a1 1 0 0 0 1 1h14a1 1 0 0 0 1-1v-4"/></symbol>
     <symbol id="i-stick" viewBox="0 0 24 24"><rect x="2" y="8" width="20" height="8" rx="2"/><circle cx="12" cy="12" r="1"/></symbol>
   </defs></svg>
-  <div class="shell">
+  <div class="shell" id="tenwaCalculator">
     <header class="topbar">
       <div class="brand" aria-label="點和 Riichi Score"><span class="brand-tile" aria-hidden="true">中</span><div><span class="brand-name">點和</span><span class="brand-sub">RIICHI SCORE</span></div></div>
       <nav class="top-actions" aria-label="輔助工具">
@@ -872,6 +1169,10 @@ body.soul-playing{overflow:hidden}
           <svg viewBox="0 0 24 24" width="20" height="20" aria-hidden="true" fill="none" stroke="currentColor" stroke-width="1.7" stroke-linecap="round"><rect x="4" y="3" width="13" height="16" rx="2"/><path d="M8 7v8m5-9v10m7-9v12a3 3 0 0 1-3 3H8"/></svg>
           雀研室 · 單機對局
         </a>
+        <button type="button" class="loki-studio-link loki-live-link" id="openLiveScoreboard">
+          <svg class="icon" aria-hidden="true"><use href="#i-table"/></svg>
+          直播記分板
+        </button>
       </div>
       <div class="workspace" id="calculatorWorkspace" role="tabpanel" aria-labelledby="tabHand">
         <details class="settings-sidebar panel" id="settingsSidebar" open><summary><span class="settings-title"><svg class="icon" aria-hidden="true"><use href="#i-sliders"/></svg>牌局設定</span><span class="settings-brief" id="settingsBrief">東場・南家</span><svg class="icon chevron" aria-hidden="true"><use href="#i-chevron"/></svg></summary><div class="settings-body"><div id="sideHandSettings">  <div class="wind-grid"><fieldset class="field-group" id="roundWind"><legend class="field-label">場風</legend><div class="choice-options"><label class="choice-option"><input type="radio" name="roundWind" value="0" checked><span>東</span></label><label class="choice-option"><input type="radio" name="roundWind" value="1"><span>南</span></label><label class="choice-option"><input type="radio" name="roundWind" value="2"><span>西</span></label><label class="choice-option"><input type="radio" name="roundWind" value="3"><span>北</span></label></div></fieldset><fieldset class="field-group" id="seatWind"><legend class="field-label">自風</legend><div class="choice-options"><label class="choice-option"><input type="radio" name="seatWind" value="0"><span>東</span></label><label class="choice-option"><input type="radio" name="seatWind" value="1" checked><span>南</span></label><label class="choice-option"><input type="radio" name="seatWind" value="2"><span>西</span></label><label class="choice-option"><input type="radio" name="seatWind" value="3"><span>北</span></label></div></fieldset></div>
@@ -997,6 +1298,148 @@ body.soul-playing{overflow:hidden}
     <footer class="footer"><div class="footer-info"><svg class="icon" aria-hidden="true"><use href="#i-lock"/></svg>所有計算均在此裝置內完成</div><div class="footer-right"><span id="storageNote">設定保留於此裝置</span><button type="button" class="download-button" id="download"><svg class="icon" aria-hidden="true"><use href="#i-download"/></svg>下載離線版</button><span class="version">v3.4</span></div></footer>
   </div>
   <div class="mobile-dock" aria-label="即時點數摘要"><div><small>和牌總收入</small><strong id="mobileTotal">5,200</strong><span class="dock-unit" id="mobileUnit">點</span></div><a id="mobileViewResult" href="#resultCard">查看付款<svg class="icon" aria-hidden="true"><use href="#i-chevron"/></svg></a><button type="button" class="mobile-calculate" id="mobileCalculate" hidden>計算</button></div>
+  <main class="live-board" id="liveScoreboard" aria-labelledby="liveBoardTitle" hidden>
+    <div class="live-board-inner">
+      <header class="live-header">
+        <div class="live-brand">
+          <span class="live-brand-tile" aria-hidden="true">中</span>
+          <div><span class="live-brand-name">點和</span><h1 id="liveBoardTitle" tabindex="-1">直播記分板</h1></div>
+        </div>
+        <div class="live-header-actions">
+          <button type="button" class="live-button" id="liveExit">返回點和</button>
+          <button type="button" class="live-button" id="liveFullscreen">全螢幕</button>
+        </div>
+      </header>
+
+      <section class="live-setup" id="liveSetup" aria-labelledby="liveSetupTitle">
+        <h2 id="liveSetupTitle">開局設定</h2>
+        <p>依出牌順序輸入四位玩家，再選擇首任莊家。</p>
+        <form id="liveSetupForm" autocomplete="off">
+          <fieldset class="live-fieldset">
+            <legend>對局類型</legend>
+            <div class="live-options">
+              <label class="live-option"><input type="radio" name="liveMode" value="east" checked>四人東</label>
+              <label class="live-option"><input type="radio" name="liveMode" value="south">四人南</label>
+            </div>
+          </fieldset>
+          <fieldset class="live-fieldset">
+            <legend>玩家與首任莊家</legend>
+            <div class="live-setup-seats" id="liveSetupSeats"></div>
+          </fieldset>
+          <div class="live-setup-footer">
+            <p id="liveSetupRules"></p>
+            <button type="submit" class="live-button live-primary">開始對局</button>
+          </div>
+        </form>
+      </section>
+
+      <section class="live-match" id="liveMatch" aria-labelledby="liveRoundLabel" hidden>
+        <div class="live-round-bar">
+          <div>
+            <p id="liveMatchMode"></p>
+            <h2 id="liveRoundLabel" tabindex="-1"></h2>
+          </div>
+          <dl class="live-counters">
+            <div><dt>本場</dt><dd><strong id="liveHonba">0</strong><span>本</span></dd></div>
+            <div><dt>供託</dt><dd><strong id="liveSticks">0</strong><span>支</span></dd></div>
+          </dl>
+        </div>
+        <div class="live-score-grid" id="livePlayers"></div>
+        <div class="live-match-footer">
+          <p id="liveLastAction" class="live-last" role="status"></p>
+          <div class="live-match-actions">
+            <button type="button" class="live-button" id="liveUndo" disabled>撤銷上一步</button>
+            <button type="button" class="live-button" id="liveNewMatch" aria-haspopup="dialog">新對局</button>
+            <button type="button" class="live-button live-primary" id="liveDraw" aria-haspopup="dialog">流局</button>
+          </div>
+        </div>
+      </section>
+      <p id="liveNotice" class="live-notice" role="status" hidden></p>
+    </div>
+
+    <dialog class="live-dialog" id="liveActionDialog" aria-labelledby="liveActionTitle">
+      <header class="live-dialog-header">
+        <h2 id="liveActionTitle"></h2>
+        <button type="button" class="live-button live-close" id="liveCloseAction" aria-label="關閉">
+          <svg class="icon" aria-hidden="true"><use href="#i-x"/></svg>
+        </button>
+      </header>
+      <form id="liveWinForm" class="live-action" hidden>
+        <p id="liveWinHelp"></p>
+        <fieldset class="live-fieldset">
+          <legend>和牌者</legend>
+          <div class="live-choice-grid" id="liveWinnerChoices"></div>
+        </fieldset>
+        <div class="live-win-rows" id="liveWinRows"></div>
+        <p id="liveWinError" class="live-error" role="alert" hidden></p>
+        <div class="live-dialog-actions">
+          <button type="button" class="live-button" data-live-cancel>取消</button>
+          <button type="submit" class="live-button live-primary" id="liveConfirmWin" disabled>確認和牌</button>
+        </div>
+      </form>
+      <form id="liveDrawForm" class="live-action" hidden>
+        <fieldset class="live-fieldset">
+          <legend>流局類型</legend>
+          <div class="live-options">
+            <label class="live-option"><input type="radio" name="liveDrawType" value="exhaustive" checked>荒牌流局</label>
+            <label class="live-option"><input type="radio" name="liveDrawType" value="abortive">途中流局</label>
+          </div>
+        </fieldset>
+        <fieldset class="live-fieldset" id="liveTenpaiField">
+          <legend>聽牌者</legend>
+          <div class="live-choice-grid" id="liveTenpaiChoices"></div>
+          <p>無人聽牌時可留空。部分玩家聽牌時，由不聽者支付合共 3,000 點。</p>
+        </fieldset>
+        <p id="liveAbortHelp" hidden>莊家連莊，本場加一。供託保留至下局。</p>
+        <div class="live-dialog-actions">
+          <button type="button" class="live-button" data-live-cancel>取消</button>
+          <button type="submit" class="live-button live-primary">確認流局</button>
+        </div>
+      </form>
+      <form id="liveRestartForm" class="live-action" hidden>
+        <p>開始新對局會清除目前的記分及撤銷紀錄。</p>
+        <div class="live-dialog-actions">
+          <button type="button" class="live-button" data-live-cancel>取消</button>
+          <button type="submit" class="live-button live-primary">清除並設定新對局</button>
+        </div>
+      </form>
+    </dialog>
+
+    <template id="liveSetupSeatTemplate">
+      <div class="live-setup-seat">
+        <span class="live-wind" aria-hidden="true"></span>
+        <label class="live-name-field"><span class="sr-only"></span><input type="text" maxlength="24" required></label>
+        <label class="live-dealer-label"><input type="radio" name="liveFirstDealer" required><span>首任莊家</span></label>
+      </div>
+    </template>
+    <template id="livePlayerTemplate">
+      <article class="live-player">
+        <button type="button" class="live-player-select" aria-haspopup="dialog">
+          <span class="live-player-meta">
+            <span class="live-wind"></span><span class="live-player-name"></span>
+            <span class="live-dealer-mark" hidden>莊家</span><span class="live-rank" hidden></span>
+          </span>
+          <span class="live-player-points"></span>
+        </button>
+        <div class="live-player-footer">
+          <span class="live-player-delta"></span>
+          <button type="button" class="live-riichi">登記立直</button>
+        </div>
+      </article>
+    </template>
+    <template id="liveChoiceTemplate">
+      <button type="button" class="live-choice" aria-pressed="false">
+        <span class="live-choice-seat"></span><strong></strong>
+      </button>
+    </template>
+    <template id="liveHandTemplate">
+      <div class="live-hand-row">
+        <strong class="live-hand-name"></strong>
+        <label><span>番數</span><select required><option value="">請選擇</option></select></label>
+        <label><span>符數</span><select required><option value="">請選擇</option></select></label>
+      </div>
+    </template>
+  </main>
 <dialog id="soulDialog" class="soul-dialog" aria-labelledby="soulTitle" aria-describedby="soulProgress">
   <div class="soul-scene" id="soulScene">
     <div class="soul-impact-fx" id="soulImpactFX" aria-hidden="true"></div>
@@ -3695,6 +4138,550 @@ globalThis.PracticeProfile=Object.freeze({"version":2,"source":{"title":"天鳳�
   globalThis.ScorePractice=Object.freeze({create,referencePoints,bonusCount});
 })();
 
+</script>
+<script id="live-score-engine">
+'use strict';
+(() => {
+  const seats = Object.freeze([0, 1, 2, 3]);
+  const winds = Object.freeze(['東', '南', '西', '北']);
+  const numbers = ['一', '二', '三', '四'];
+  const startingPoints = 25000;
+  const riichiPoints = 1000;
+  const seatFrom = (player, reference) => (player - reference + 4) % 4;
+  const dealerOf = match => (match.firstDealer + match.round) % 4;
+  const seatWind = (match, player) => winds[seatFrom(player, dealerOf(match))];
+  const roundLabel = match => winds[Math.floor(match.round / 4)] + numbers[match.round % 4] + '局';
+  const lastRound = mode => mode === 'south' ? 7 : 3;
+  const ranking = match => [...seats].sort((a, b) =>
+    match.points[b] - match.points[a] || seatFrom(a, match.firstDealer) - seatFrom(b, match.firstDealer));
+
+  function start(names, mode, firstDealer, rules) {
+    return {
+      names, mode, firstDealer, rules, round: 0, honba: 0, sticks: 0,
+      points: seats.map(() => startingPoints), declared: [], ended: false, last: null
+    };
+  }
+
+  function record(match, changes, points, label) {
+    const delta = points.map((score, player) => score - match.points[player]);
+    return {...match, ...changes, points, last: {label, delta}};
+  }
+
+  function canDeclare(match, player) {
+    return !match.ended && seats.includes(player) && !match.declared.includes(player) &&
+      match.points[player] >= riichiPoints;
+  }
+
+  function declare(match, player) {
+    if (!canDeclare(match, player)) return null;
+    const points = [...match.points];
+    points[player] -= riichiPoints;
+    return record(match, {sticks: match.sticks + 1, declared: [...match.declared, player]},
+      points, match.names[player] + ' 登記立直');
+  }
+
+  function nextHand(match, points, sticks, repeat, drawn, label) {
+    const ended = !repeat && match.round === lastRound(match.mode);
+    const round = match.round + (repeat || ended ? 0 : 1);
+    const honba = ended ? match.honba : (repeat || drawn ? match.honba + 1 : 0);
+    const notes = [label, ended ? '對局結束' : (repeat ? '莊家連莊' : '輪莊')];
+    if (ended && sticks) {
+      const leader = ranking({...match, points})[0];
+      points[leader] += sticks * riichiPoints;
+      notes.push(match.names[leader] + ' 領取 ' + sticks + ' 支餘棒');
+      sticks = 0;
+    }
+    return record(match, {round, honba, sticks, ended, declared: []}, points, notes.join(' · '));
+  }
+
+  function win(match, source, hands) {
+    const winners = hands.map(hand => hand.player);
+    const tsumo = winners.includes(source);
+    if (match.ended || !seats.includes(source) || !winners.length || winners.length > 2 ||
+        new Set(winners).size !== winners.length || winners.some(player => !seats.includes(player)) ||
+        (tsumo && winners.length !== 1)) {
+      return {error: '請選擇一位自摸者，或一至兩位榮和者。'};
+    }
+    const method = tsumo ? 'tsumo' : 'ron';
+    const dealer = dealerOf(match);
+    const points = [...match.points];
+    // The shared calculator accepts at most 99 honba per calculation.
+    const honba = Math.min(match.honba, 99);
+    const extra = (match.honba - honba) * (tsumo ? 100 : 300);
+    for (const hand of hands) {
+      const winner = hand.player;
+      const score = Riichi.calculate({
+        ...match.rules, dealer: winner === dealer, method, honba,
+        mode: hand.yakuman ? 'yakuman' : 'normal',
+        yakuman: hand.yakuman, han: hand.han, fu: hand.fu
+      });
+      if (!score.valid) return {error: match.names[winner] + '：' + score.error, player: winner};
+
+      for (const payer of tsumo ? seats.filter(player => player !== winner) : [source]) {
+        const payment = score.payments[score.payments.length === 1 || payer === dealer ? 0 : 1];
+        const amount = payment.amount + extra;
+        points[payer] -= amount;
+        points[winner] += amount;
+      }
+    }
+
+    const potWinner = [...winners].sort((a, b) => seatFrom(a, source) - seatFrom(b, source))[0];
+    points[potWinner] += match.sticks * riichiPoints;
+    const type = tsumo ? '自摸' : (winners.length === 2 ? '雙響' : '榮和');
+    const names = winners.map(player => match.names[player]).join('、');
+    const sourceLabel = tsumo ? '' : '，' + match.names[source] + ' 放銃';
+    const potLabel = match.sticks ? ' · ' + match.names[potWinner] + ' 領取 ' + match.sticks + ' 支供託' : '';
+    return {match: nextHand(match, points, 0, winners.includes(dealer), false, names + ' ' + type + sourceLabel + potLabel)};
+  }
+
+  function draw(match, tenpai, abortive) {
+    if (match.ended) return null;
+    const points = [...match.points];
+    if (abortive) return nextHand(match, points, match.sticks, true, true, '途中流局');
+
+    const count = tenpai.length;
+    if (count > 0 && count < seats.length) {
+      for (const player of seats) {
+        points[player] += tenpai.includes(player) ? 3000 / count : -3000 / (seats.length - count);
+      }
+    }
+    const ready = count ? '聽牌 ' + tenpai.map(player => match.names[player]).join('、') : '無人聽牌';
+    return nextHand(match, points, match.sticks, tenpai.includes(dealerOf(match)), true, '荒牌流局 · ' + ready);
+  }
+
+  function isMatch(match) {
+    const fourIntegers = value => Array.isArray(value) && value.length === 4 && value.every(Number.isSafeInteger);
+    const counter = value => Number.isSafeInteger(value) && value >= 0;
+    return !!match && Array.isArray(match.names) && match.names.length === 4 &&
+      match.names.every(name => typeof name === 'string' && name.trim() && name.length <= 24) &&
+      ['east', 'south'].includes(match.mode) && seats.includes(match.firstDealer) &&
+      counter(match.round) && match.round <= lastRound(match.mode) && counter(match.honba) &&
+      counter(match.sticks) && fourIntegers(match.points) &&
+      match.points.reduce((sum, value) => sum + value, match.sticks * riichiPoints) === startingPoints * seats.length &&
+      Array.isArray(match.declared) && match.declared.every(player => seats.includes(player)) &&
+      new Set(match.declared).size === match.declared.length && match.sticks >= match.declared.length &&
+      typeof match.ended === 'boolean' && typeof match.rules?.kiriage === 'boolean' &&
+      ['yakuman', 'sanbaiman'].includes(match.rules?.kazoe) &&
+      (match.last === null || (typeof match.last?.label === 'string' && fourIntegers(match.last.delta)));
+  }
+
+  globalThis.LiveScore = Object.freeze({
+    seats, winds, dealerOf, seatWind, roundLabel, ranking, start, canDeclare, declare, win, draw, isMatch
+  });
+})();
+</script>
+<script id="live-scoreboard">
+'use strict';
+window.addEventListener('DOMContentLoaded', () => {
+  const $ = id => document.getElementById(id);
+  const board = $('liveScoreboard');
+  const dialog = $('liveActionDialog');
+  const setupForm = $('liveSetupForm');
+  const drawForm = $('liveDrawForm');
+  const winForm = $('liveWinForm');
+  const restartForm = $('liveRestartForm');
+  const actionForms = [winForm, drawForm, restartForm];
+  const undoLimit = 30;
+  const storageKey = 'tenwa.live-scoreboard.v1';
+  const hash = '#liveScoreboard';
+  const format = new Intl.NumberFormat('en-US');
+  const seatNumbers = ['一', '二', '三', '四'];
+  const matchTitles = {east: '四人東風戰', south: '四人南半莊戰'};
+  const clone = id => $(id).content.firstElementChild.cloneNode(true);
+
+  let match = null, undo = [], saved = null;
+  let storageUnavailable = false, saving = false, calculatorScroll = 0;
+  let source = null, winners = [], winnerChoices = [], tenpai = new Set();
+  const handRows = new Map();
+
+  const setupSeats = LiveScore.seats.map(player => {
+    const row = clone('liveSetupSeatTemplate');
+    const name = row.querySelector('input[type="text"]');
+    const dealer = row.querySelector('input[type="radio"]');
+    const label = '第' + seatNumbers[player] + '位玩家';
+    row.querySelector('.sr-only').textContent = label + '姓名';
+    name.placeholder = '玩家' + seatNumbers[player];
+    name.addEventListener('input', () => name.setCustomValidity(''));
+    dealer.value = String(player);
+    dealer.checked = player === 0;
+    dealer.setAttribute('aria-label', label + '為首任莊家');
+    dealer.addEventListener('change', showSetupWinds);
+    $('liveSetupSeats').append(row);
+    return {name, dealer, wind: row.querySelector('.live-wind')};
+  });
+
+  const playerCards = LiveScore.seats.map(player => {
+    const card = clone('livePlayerTemplate');
+    const select = card.querySelector('.live-player-select');
+    const riichi = card.querySelector('.live-riichi');
+    select.addEventListener('click', () => openWin(player));
+    riichi.addEventListener('click', () => commit(LiveScore.declare(match, player)));
+    $('livePlayers').append(card);
+    return {
+      card, select, riichi, name: card.querySelector('.live-player-name'),
+      wind: card.querySelector('.live-wind'), points: card.querySelector('.live-player-points'),
+      dealerMark: card.querySelector('.live-dealer-mark'),
+      rank: card.querySelector('.live-rank'), delta: card.querySelector('.live-player-delta')
+    };
+  });
+
+  function showSetupWinds() {
+    const firstDealer = Number(setupForm.elements.liveFirstDealer.value);
+    setupSeats.forEach(({wind}, player) => {
+      wind.textContent = LiveScore.seatWind({firstDealer, round: 0}, player);
+    });
+  }
+
+  function calculatorRules() {
+    return {kiriage: $('kiriage').checked, kazoe: $('kazoe').value};
+  }
+
+  function load(value) {
+    saved = value;
+    let data;
+    try { data = JSON.parse(value); } catch { data = null; }
+    match = data?.version === 1 && LiveScore.isMatch(data.match) ? data.match : null;
+    undo = match && Array.isArray(data.undo) ? data.undo.filter(LiveScore.isMatch).slice(-undoLimit) : [];
+  }
+
+  function notice(message = '') {
+    const lines = [message];
+    if (storageUnavailable) lines.push('瀏覽器未能儲存進度。請保持本頁開啟。');
+    const area = $('liveNotice');
+    area.textContent = lines.filter(Boolean).join(' ');
+    area.hidden = !area.textContent;
+  }
+
+  function reload(value) {
+    if (value === saved) return;
+    load(value);
+    if (dialog.open) dialog.close();
+    render();
+    notice('對局已在其他分頁更新。');
+  }
+
+  function save(next, nextUndo, expected) {
+    if (!storageUnavailable) {
+      try {
+        const current = localStorage.getItem(storageKey);
+        if (current !== expected) {
+          reload(current);
+          return false;
+        }
+        const value = next ? JSON.stringify({version: 1, match: next, undo: nextUndo}) : null;
+        if (value) localStorage.setItem(storageKey, value);
+        else localStorage.removeItem(storageKey);
+        saved = value;
+      } catch { storageUnavailable = true; }
+    }
+    match = next;
+    undo = nextUndo;
+    render();
+    notice();
+    return true;
+  }
+
+  async function store(next, nextUndo) {
+    if (saving) return false;
+    saving = true;
+    const expected = saved;
+    try {
+      // Avoid overwriting another tab's settled hand while this tab is awaiting input.
+      if (!storageUnavailable && navigator.locks?.request) {
+        try { return await navigator.locks.request(storageKey, () => save(next, nextUndo, expected)); }
+        catch (error) {
+          if (!['SecurityError', 'NotSupportedError'].includes(error.name)) throw error;
+        }
+      }
+      return save(next, nextUndo, expected);
+    } finally { saving = false; }
+  }
+
+  function commit(next) {
+    return next ? store(next, [...undo.slice(1 - undoLimit), match]) : Promise.resolve(false);
+  }
+
+  function render() {
+    $('liveSetup').hidden = !!match;
+    $('liveMatch').hidden = !match;
+    if (!match) {
+      const rules = calculatorRules();
+      $('liveSetupRules').textContent = '每家 25,000 點 · ' + (rules.kiriage ? '切上滿貫' : '不切上滿貫') +
+        ' · ' + (rules.kazoe === 'yakuman' ? '13 番起累計役滿' : '累計番數上限三倍滿');
+      showSetupWinds();
+      return;
+    }
+
+    const {ended, names, points, last} = match;
+    const dealer = LiveScore.dealerOf(match);
+    const ranking = ended ? LiveScore.ranking(match) : [];
+    $('liveMatchMode').textContent = matchTitles[match.mode] + (ended ? ' · 終局' : '');
+    $('liveRoundLabel').textContent = LiveScore.roundLabel(match);
+    $('liveHonba').textContent = format.format(match.honba);
+    $('liveSticks').textContent = format.format(match.sticks);
+    $('liveLastAction').textContent = last?.label ?? '選擇放銃者或自摸者的姓名，即可記錄和牌。';
+    $('liveDraw').disabled = ended;
+    $('liveUndo').disabled = undo.length === 0;
+
+    playerCards.forEach((entry, player) => {
+      const {card, select, riichi, name, wind, points: score, dealerMark, rank, delta} = entry;
+      const isDealer = player === dealer;
+      const seat = LiveScore.seatWind(match, player);
+      const change = last?.delta[player] ?? 0;
+      const declared = match.declared.includes(player);
+      const pointText = format.format(points[player]);
+      card.classList.toggle('is-dealer', isDealer && !ended);
+      name.textContent = names[player];
+      wind.textContent = seat;
+      score.textContent = pointText;
+      score.classList.toggle('is-negative', points[player] < 0);
+      dealerMark.hidden = !isDealer || ended;
+      rank.hidden = !ended;
+      rank.textContent = ended ? '第 ' + (ranking.indexOf(player) + 1) + ' 名' : '';
+      select.setAttribute('aria-label', seat + '家 ' + names[player] + (isDealer && !ended ? '，莊家' : '') + '，' + pointText + ' 點');
+      select.disabled = ended;
+      delta.textContent = change ? (change > 0 ? '+' : '') + format.format(change) : '';
+      delta.classList.toggle('gain', change > 0);
+      delta.classList.toggle('loss', change < 0);
+      riichi.hidden = ended;
+      riichi.disabled = !LiveScore.canDeclare(match, player);
+      riichi.textContent = declared ? '已立直' : '登記立直';
+      riichi.setAttribute('aria-label', names[player] + (declared ? ' 已立直' : (riichi.disabled && !ended ? ' 點數不足 1,000，無法立直' : ' 登記立直')));
+      riichi.classList.toggle('is-declared', declared);
+    });
+  }
+
+  function view() {
+    const open = location.hash === hash;
+    if (open === !board.hidden) return;
+    if (open) calculatorScroll = window.scrollY;
+    else {
+      if (dialog.open) dialog.close();
+      if (document.fullscreenElement === board) document.exitFullscreen().catch(() => {});
+    }
+    document.documentElement.classList.toggle('tenwa-live-open', open);
+    $('tenwaCalculator').hidden = open;
+    board.hidden = !open;
+    if (open) {
+      render();
+      notice();
+      window.scrollTo({top: 0, behavior: 'instant'});
+      $('liveBoardTitle').focus({preventScroll: true});
+    } else {
+      window.scrollTo({top: calculatorScroll, behavior: 'instant'});
+      $('openLiveScoreboard').focus({preventScroll: true});
+    }
+  }
+
+  function showAction(form, title) {
+    if (dialog.open) return;
+    actionForms.forEach(action => { action.hidden = action !== form; });
+    $('liveActionTitle').textContent = title;
+    dialog.showModal();
+  }
+
+  function choices(container, selectPlayer, self = null) {
+    const buttons = LiveScore.seats.map(player => {
+      const button = clone('liveChoiceTemplate');
+      const seat = LiveScore.seatWind(match, player) + '家';
+      button.querySelector('.live-choice-seat').textContent = seat;
+      button.querySelector('strong').textContent = match.names[player] + (player === self ? '（自摸）' : '');
+      button.addEventListener('click', () => selectPlayer(player));
+      return button;
+    });
+    container.replaceChildren(...buttons);
+    return buttons;
+  }
+
+  function setWinError(message = '') {
+    const error = $('liveWinError');
+    error.textContent = message;
+    error.hidden = !message;
+  }
+
+  function handRow(player) {
+    if (handRows.has(player)) return handRows.get(player);
+    const row = clone('liveHandTemplate');
+    const [han, fu] = row.querySelectorAll('select');
+    const name = LiveScore.seatWind(match, player) + '家 ' + match.names[player];
+    row.querySelector('.live-hand-name').textContent = name;
+    han.setAttribute('aria-label', name + ' 番數');
+    fu.setAttribute('aria-label', name + ' 符數');
+    for (let i = 1; i <= 13; i++) han.add(new Option(i === 13 ? '13 番以上' : i + ' 番', String(i)));
+    for (let i = 1; i <= 6; i++) han.add(new Option(i === 1 ? '役滿' : i + ' 倍役滿', 'yakuman-' + i));
+    for (const value of [...Riichi.FU, 120, 130, 140]) fu.add(new Option(value + ' 符', String(value)));
+    let previousFu = '';
+    han.addEventListener('change', () => {
+      const yakuman = han.value.startsWith('yakuman-');
+      if (yakuman && !fu.disabled) {
+        previousFu = fu.value;
+        fu.value = '';
+      } else if (!yakuman && fu.disabled) fu.value = previousFu;
+      fu.disabled = yakuman;
+      fu.options[0].textContent = yakuman ? '不適用' : '請選擇';
+      setWinError();
+    });
+    fu.addEventListener('change', () => setWinError());
+    const fields = {row, han, fu};
+    handRows.set(player, fields);
+    return fields;
+  }
+
+  function showWinners() {
+    winnerChoices.forEach((button, player) => {
+      const selected = winners.includes(player);
+      button.setAttribute('aria-pressed', String(selected));
+      button.disabled = player !== source && !selected && winners.length === 2;
+    });
+    $('liveWinRows').replaceChildren(...winners.map(player => handRow(player).row));
+    const confirm = $('liveConfirmWin');
+    confirm.disabled = winners.length === 0;
+    confirm.textContent = winners.includes(source) ? '確認自摸' :
+      (winners.length === 2 ? '確認雙響' : (winners.length ? '確認榮和' : '確認和牌'));
+    setWinError();
+  }
+
+  function chooseWinner(player) {
+    if (winners.includes(player)) winners = winners.filter(value => value !== player);
+    else if (player === source || winners.includes(source)) winners = [player];
+    else if (winners.length < 2) winners = [...winners, player];
+    showWinners();
+  }
+
+  function openWin(player) {
+    if (match.ended) return;
+    source = player;
+    winners = [];
+    handRows.clear();
+    $('liveWinHelp').textContent = '已選擇 ' + LiveScore.seatWind(match, player) + '家 ' + match.names[player] +
+      '。選回同一位為自摸，選其他兩位為雙響。';
+    winnerChoices = choices($('liveWinnerChoices'), chooseWinner, player);
+    showWinners();
+    showAction(winForm, '記錄和牌');
+    winnerChoices[0].focus({preventScroll: true});
+  }
+
+  function showDrawType() {
+    const abortive = drawForm.elements.liveDrawType.value === 'abortive';
+    $('liveTenpaiField').hidden = abortive;
+    $('liveAbortHelp').hidden = !abortive;
+  }
+
+  function openDraw() {
+    tenpai = new Set(match.declared);
+    const buttons = choices($('liveTenpaiChoices'), player => {
+      if (tenpai.has(player)) tenpai.delete(player);
+      else tenpai.add(player);
+      buttons[player].setAttribute('aria-pressed', String(tenpai.has(player)));
+    });
+    buttons.forEach((button, player) => button.setAttribute('aria-pressed', String(tenpai.has(player))));
+    drawForm.reset();
+    showDrawType();
+    showAction(drawForm, '記錄流局');
+  }
+
+  setupForm.addEventListener('submit', async event => {
+    event.preventDefault();
+    if (match) return;
+    const names = setupSeats.map(({name}) => name.value.trim());
+    const missing = names.indexOf('');
+    if (missing >= 0) {
+      const {name} = setupSeats[missing];
+      name.setCustomValidity('請輸入玩家姓名。');
+      name.reportValidity();
+      return;
+    }
+    const {liveMode, liveFirstDealer} = setupForm.elements;
+    if (await store(LiveScore.start(names, liveMode.value, Number(liveFirstDealer.value), calculatorRules()), [])) {
+      $('liveRoundLabel').focus();
+    }
+  });
+
+  winForm.addEventListener('submit', async event => {
+    event.preventDefault();
+    if (!dialog.open || !match || !winners.length) return;
+    const hands = winners.map(player => {
+      const {han, fu} = handRows.get(player);
+      return {player, han: Number(han.value), fu: Number(fu.value), yakuman: Number(han.value.split('-')[1]) || 0};
+    });
+    const result = LiveScore.win(match, source, hands);
+    if (result.error) {
+      setWinError(result.error);
+      handRows.get(result.player)?.fu.focus();
+    } else if (await commit(result.match)) {
+      dialog.close();
+      if (match.ended) $('liveRoundLabel').focus();
+    }
+  });
+
+  drawForm.addEventListener('change', showDrawType);
+  drawForm.addEventListener('submit', async event => {
+    event.preventDefault();
+    if (!dialog.open || !match) return;
+    const abortive = drawForm.elements.liveDrawType.value === 'abortive';
+    if (await commit(LiveScore.draw(match, LiveScore.seats.filter(player => tenpai.has(player)), abortive))) {
+      dialog.close();
+      if (match.ended) $('liveRoundLabel').focus();
+    }
+  });
+
+  restartForm.addEventListener('submit', async event => {
+    event.preventDefault();
+    if (!dialog.open || !match) return;
+    const previous = match;
+    if (await store(null, [])) {
+      dialog.close();
+      setupForm.elements.liveMode.value = previous.mode;
+      setupForm.elements.liveFirstDealer.value = String(previous.firstDealer);
+      setupSeats.forEach(({name}, player) => { name.value = previous.names[player]; });
+      showSetupWinds();
+      setupSeats[0].name.focus();
+    }
+  });
+
+  $('liveDraw').addEventListener('click', openDraw);
+  $('liveNewMatch').addEventListener('click', () => showAction(restartForm, '開始新對局'));
+  $('liveUndo').addEventListener('click', async () => {
+    if (undo.length && await store(undo.at(-1), undo.slice(0, -1))) notice('已撤銷上一步。');
+  });
+  $('liveCloseAction').addEventListener('click', () => dialog.close());
+  dialog.querySelectorAll('[data-live-cancel]').forEach(button => button.addEventListener('click', () => dialog.close()));
+
+  $('openLiveScoreboard').addEventListener('click', () => {
+    history.pushState({liveScoreboard: true}, '', hash);
+    view();
+  });
+  $('liveExit').addEventListener('click', () => {
+    if (history.state?.liveScoreboard) history.back();
+    else {
+      history.replaceState(null, '', location.href.split('#')[0]);
+      view();
+    }
+  });
+  window.addEventListener('popstate', view);
+  window.addEventListener('hashchange', view);
+
+  const fullscreen = $('liveFullscreen');
+  fullscreen.hidden = !document.fullscreenEnabled || !board.requestFullscreen;
+  fullscreen.addEventListener('click', async () => {
+    try {
+      if (document.fullscreenElement === board) await document.exitFullscreen();
+      else await board.requestFullscreen();
+    } catch { notice('瀏覽器未能切換全螢幕。'); }
+  });
+  document.addEventListener('fullscreenchange', () => {
+    fullscreen.textContent = document.fullscreenElement === board ? '離開全螢幕' : '全螢幕';
+  });
+
+  try { load(localStorage.getItem(storageKey)); } catch { storageUnavailable = true; }
+  window.addEventListener('storage', event => {
+    if (!storageUnavailable && (event.key === storageKey || event.key === null)) {
+      try { reload(localStorage.getItem(storageKey)); }
+      catch { storageUnavailable = true; notice(); }
+    }
+  });
+  view();
+});
 </script>
 <script id="app">
 
