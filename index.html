@@ -808,14 +808,14 @@ body.soul-playing{overflow:hidden}
     padding: clamp(1rem, 3.7vw, 4.5rem);
     padding-block: clamp(1.25rem, 3.4vh, 3.25rem);
   }
-  .live-header, .live-brand, .live-header-actions, .live-round-bar,
+  .live-header, .live-brand, .live-header-actions,
   .live-player-meta, .live-player-footer, .live-match-actions, .live-match-footer,
   .live-dialog-header, .live-dialog-actions, .live-setup-footer {
     display: flex;
     align-items: center;
     gap: .75rem;
   }
-  .live-header, .live-round-bar, .live-player-footer, .live-match-footer,
+  .live-header, .live-player-footer, .live-match-footer,
   .live-dialog-header, .live-setup-footer { justify-content: space-between; }
   .live-header, .live-match-footer, .live-setup-footer { flex-wrap: wrap; }
   .live-brand { gap: .9rem; min-width: 0; }
@@ -895,6 +895,13 @@ body.soul-playing{overflow:hidden}
     background: var(--live-gold);
     color: #302211;
   }
+  .live-name-field {
+    display: grid;
+    grid-template-columns: auto minmax(0, 1fr);
+    align-items: center;
+    gap: .55rem;
+  }
+  .live-seat-position { color: var(--live-muted); font-size: .9rem; white-space: nowrap; }
   .live-name-field input, .live-hand-row select {
     min-height: 2.75rem;
     width: 100%;
@@ -908,73 +915,294 @@ body.soul-playing{overflow:hidden}
   .live-dealer-label { display: flex; align-items: center; gap: .4rem; min-height: 2.75rem; cursor: pointer; }
   .live-setup-footer p, .live-notice { color: var(--live-muted); font-size: .93rem; }
 
-  .live-match { display: grid; flex: 1; grid-template-rows: auto minmax(min-content, 1fr) auto; gap: clamp(.65rem, 1.8vh, 1.6rem); }
-  .live-round-bar {
-    padding: 0 .1rem clamp(.6rem, 1.5vh, 1rem);
-    border-bottom: 1px solid var(--live-border);
+  .live-match {
+    display: grid;
+    flex: 1;
+    grid-template-rows: minmax(min-content, 1fr) auto;
+    gap: clamp(.65rem, 1.55vh, 1.3rem);
   }
-  .live-round-bar p { color: var(--live-gold); font-size: clamp(.85rem, 1.3vw, 1.15rem); font-weight: 700; }
-  .live-round-bar h2 { font-size: clamp(1.75rem, 4.6vw, 4.8rem); line-height: 1.1; margin-top: .17em; }
-  .live-counters { display: flex; gap: clamp(.7rem, 3.4vw, 4rem); color: var(--live-muted); }
-  .live-counters > div { min-width: 3.2rem; }
-  .live-counters dt { font-size: clamp(.83rem, 1.2vw, 1.08rem); }
-  .live-counters dd { display: flex; align-items: baseline; gap: .25em; }
-  .live-counters strong { font-size: clamp(1.6rem, 3.5vw, 3.7rem); line-height: 1.14; color: var(--live-text); }
-  .live-counters strong, .live-player-points, .live-player-delta { font-variant-numeric: tabular-nums; }
+  .live-table {
+    --table-line: #7a967e;
+    position: relative;
+    isolation: isolate;
+    display: grid;
+    align-items: center;
+    padding: clamp(.5rem, 1.65vw, 1.8rem);
+    border: 1px solid #597463;
+    border-radius: clamp(.9rem, 2vw, 1.6rem);
+    background:
+      radial-gradient(ellipse at 45% 32%, #2e634b 0%, #214f3b 46%, #183e2e 100%);
+    box-shadow: inset 0 0 2.5rem #102e2390, 0 .8rem 2rem #07130d45;
+  }
+  .live-table::before {
+    position: absolute;
+    inset: clamp(.25rem, .65vw, .72rem);
+    border: 1px solid var(--table-line);
+    border-radius: inherit;
+    opacity: .35;
+    pointer-events: none;
+    content: '';
+  }
+  .live-score-grid {
+    position: relative;
+    display: grid;
+    grid-template-areas: ". top ." "left wind right" ". bottom .";
+    grid-template-columns: minmax(0, 1fr) minmax(0, .93fr) minmax(0, 1fr);
+    align-items: center;
+    gap: clamp(.38rem, 1.65vw, 2rem);
+    row-gap: clamp(.45rem, 2vh, 1.9rem);
+  }
+  .live-player[data-position="bottom"] { grid-area: bottom; }
+  .live-player[data-position="right"] { grid-area: right; }
+  .live-player[data-position="top"] { grid-area: top; }
+  .live-player[data-position="left"] { grid-area: left; }
 
-  .live-score-grid { display: grid; grid-template-columns: repeat(2, minmax(0, 1fr)); gap: clamp(.5rem, 1.45vw, 1.5rem); }
+  .live-wind-panel {
+    grid-area: wind;
+    container-type: inline-size;
+    position: relative;
+    margin-inline: clamp(0rem, .6vw, .65rem);
+    padding: clamp(.58rem, 1.4vw, 1.47rem);
+    min-width: 0;
+    border: 1px solid #9b875b;
+    border-radius: clamp(.65rem, 1.6vw, 1.45rem);
+    background: linear-gradient(155deg, #36493a, #1b2c24 70%);
+    box-shadow: inset 0 0 0 2px #172b23, 0 .32rem .7rem #0b251a90;
+    text-align: center;
+  }
+  .live-wind-face {
+    padding: clamp(.32rem, 1vw, .9rem) clamp(.18rem, .85vw, .8rem);
+    min-width: 0;
+    border: 1px solid #526450;
+    border-radius: clamp(.36rem, .85vw, .75rem);
+    background: #142822;
+    box-shadow: inset 0 2px 9px #0d1b16, 0 1px 0 #556454;
+  }
+  .live-wind-face p {
+    color: #d4d8c2;
+    font-size: clamp(.58rem, 5cqi, 1.06rem);
+    font-weight: 650;
+    line-height: 1.25;
+    overflow-wrap: anywhere;
+  }
+  .live-wind-face h2 {
+    margin: .13em 0 .22em;
+    color: var(--live-gold);
+    font-size: clamp(1rem, 22cqi, 4.5rem);
+    line-height: 1.14;
+    white-space: nowrap;
+  }
+  .live-counters {
+    display: grid;
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+    gap: .13rem;
+    color: var(--live-muted);
+  }
+  .live-counters > div { position: relative; min-width: 0; padding: .3rem 0; border-top: 1px solid #3e5546; }
+  .live-counters > div + div { border-left: 1px solid #3e5546; }
+  .live-counters dt { font-size: clamp(.62rem, 4.5cqi, .98rem); line-height: 1.1; }
+  .live-counters dd { display: flex; align-items: baseline; justify-content: center; gap: .15em; line-height: 1.35; }
+  .live-counters dd span { font-size: clamp(.56rem, 4cqi, .91rem); }
+  .live-counters strong { font-size: clamp(.84rem, 8.2cqi, 2.2rem); color: var(--live-text); }
+  .live-counters strong, .live-player-points, .live-player-delta, .live-transfer-amount { font-variant-numeric: tabular-nums; }
+
+  .live-stick-tray {
+    position: absolute;
+    display: grid;
+    place-items: center;
+    border: 1px solid #6f7458;
+    border-radius: .24rem;
+    background: #13251e;
+    box-shadow: inset 0 1px 3px #071710;
+  }
+  .live-stick-tray:is([data-position="bottom"], [data-position="top"]) {
+    left: 50%;
+    transform: translateX(-50%);
+    width: 42%;
+    height: clamp(.34rem, .88vw, .82rem);
+  }
+  .live-stick-tray[data-position="bottom"] { bottom: clamp(.12rem, .3vw, .31rem); }
+  .live-stick-tray[data-position="top"] { top: clamp(.12rem, .3vw, .31rem); }
+  .live-stick-tray:is([data-position="left"], [data-position="right"]) {
+    top: 50%;
+    transform: translateY(-50%);
+    width: clamp(.34rem, .88vw, .82rem);
+    height: 40%;
+  }
+  .live-stick-tray[data-position="left"] { left: clamp(.12rem, .3vw, .31rem); }
+  .live-stick-tray[data-position="right"] { right: clamp(.12rem, .3vw, .31rem); }
+  .live-stick {
+    position: relative;
+    display: block;
+    border: 1px solid #e3d1ad;
+    border-radius: .13rem;
+    background: linear-gradient(145deg, #fff8e4 32%, #ddd6bf);
+    box-shadow: 0 1px 2px #0b130e9e;
+  }
+  .live-stick::after {
+    position: absolute;
+    inset: 50% auto auto 50%;
+    transform: translate(-50%, -50%);
+    width: var(--dot-size, .3rem);
+    height: var(--dot-size, .3rem);
+    border-radius: 50%;
+    background: #b53837;
+    content: '';
+  }
+  .live-stick-tray .live-stick {
+    --dot-size: clamp(.16rem, .44vw, .42rem);
+    width: 100%;
+    height: 100%;
+  }
+  .live-carry-stick {
+    --dot-size: .2rem;
+    position: absolute;
+    bottom: -.2rem;
+    left: 50%;
+    transform: translateX(-50%);
+    width: 37%;
+    height: .28rem;
+    box-shadow: 0 2px 0 #a49d86;
+  }
+
   .live-player {
+    container-type: inline-size;
     min-width: 0;
     display: grid;
     grid-template-rows: 1fr auto;
-    border: 1px solid var(--live-border);
-    border-radius: .85rem;
-    background: var(--live-panel);
+    border: 1px solid #647d6d;
+    border-radius: clamp(.55rem, 1.1vw, .92rem);
+    background: linear-gradient(155deg, #214537, #162e26);
+    box-shadow: 0 .18rem .45rem #10281d55;
   }
-  .live-player.is-dealer { border-color: #ad905e; box-shadow: inset 0 2px 0 #ad905e; }
+  .live-player.is-dealer {
+    border-color: #d6b274;
+    box-shadow: inset 0 2px 0 #d6b274, 0 .18rem .55rem #10281d55;
+  }
   .live-player-select {
     width: 100%;
     display: grid;
-    align-content: start;
-    justify-items: start;
-    gap: clamp(.25rem, 1vh, .75rem);
-    padding: clamp(.65rem, 1.6vw, 1.65rem);
-    border-radius: .8rem .8rem 0 0;
+    justify-items: stretch;
+    min-width: 0;
+    gap: clamp(.25rem, .65vh, .55rem);
+    padding: clamp(.38rem, 1.12vw, 1.2rem);
+    border-radius: .7rem .7rem 0 0;
     background: transparent;
     color: var(--live-text);
     text-align: start;
   }
-  .live-player-select:not(:disabled):hover { background: #244638; }
-  .live-player-meta { width: 100%; align-self: start; }
-  .live-player-name { min-width: 0; overflow-wrap: anywhere; font-size: clamp(1.13rem, 2.6vw, 3rem); font-weight: 750; line-height: 1.18; }
-  .live-player-select .live-wind {
-    width: clamp(1.75rem, 3.4vw, 3.7rem);
-    min-height: clamp(1.95rem, 3.8vw, 4rem);
-    font-size: clamp(.95rem, 1.8vw, 1.9rem);
+  .live-player-select:not(:disabled):hover { background: #2d503f; }
+  .live-player-meta {
+    display: grid;
+    grid-template-columns: auto minmax(0, 1fr) auto;
+    gap: clamp(.2rem, .7vw, .68rem);
+    min-width: 0;
   }
-  .live-dealer-mark, .live-rank { margin-inline-start: auto; flex: 0 0 auto; color: var(--live-gold); font-weight: 750; }
-  .live-player-points {
-    align-self: center;
-    font-size: clamp(1.85rem, 6.05vw, 7.5rem);
-    line-height: 1;
-    letter-spacing: -.045em;
+  .live-player-name {
+    min-width: 0;
+    overflow-wrap: anywhere;
+    font-size: clamp(.84rem, 7.6cqi, 2.7rem);
     font-weight: 750;
+    line-height: 1.18;
+  }
+  .live-player-select .live-wind {
+    width: clamp(1.18rem, 10cqi, 3rem);
+    min-height: clamp(1.3rem, 11cqi, 3.3rem);
+    font-size: clamp(.77rem, 6.8cqi, 1.6rem);
+  }
+  .live-dealer-mark, .live-rank {
+    color: var(--live-gold);
+    font-size: clamp(.65rem, 4.55cqi, 1.07rem);
+    font-weight: 750;
+    white-space: nowrap;
+  }
+  .live-player-points {
+    justify-self: center;
+    font-size: clamp(.92rem, 17cqi, 5.85rem);
+    line-height: 1.04;
+    letter-spacing: -.045em;
+    font-weight: 760;
     white-space: nowrap;
   }
   .live-player-points.is-negative { color: var(--live-loss); }
   .live-player-footer {
-    min-height: 2.75rem;
-    padding: 0 clamp(.65rem, 1.6vw, 1.65rem);
-    background: #122b2270;
-    border-top: 1px solid #3e5c4d;
-    border-radius: 0 0 .8rem .8rem;
+    min-height: 2.55rem;
+    padding: 0 clamp(.36rem, 1.12vw, 1.2rem);
+    background: #0d251d68;
+    border-top: 1px solid #456251;
+    border-radius: 0 0 .65rem .65rem;
   }
-  .live-player-delta { font-size: clamp(.85rem, 1.6vw, 1.32rem); font-weight: 700; }
+  .live-player-delta { font-size: clamp(.73rem, 5.1cqi, 1.23rem); font-weight: 700; }
   .live-player-delta.gain { color: var(--live-accent); }
   .live-player-delta.loss { color: var(--live-loss); }
-  .live-riichi { background: transparent; color: var(--live-muted); font-weight: 660; min-height: 2.75rem; padding: 0 .1rem; white-space: nowrap; }
+  .live-riichi {
+    margin-left: auto;
+    background: transparent;
+    color: var(--live-muted);
+    font-size: clamp(.68rem, 4.85cqi, 1.1rem);
+    font-weight: 700;
+    min-height: 2.55rem;
+    padding: 0 .1rem;
+    white-space: nowrap;
+  }
   .live-riichi:not(:disabled):hover { color: var(--live-text); text-decoration: underline; }
   .live-board .live-riichi.is-declared { color: var(--live-gold); opacity: 1; }
+
+  .live-transfer-layer {
+    position: absolute;
+    inset: 0;
+    z-index: 2;
+    overflow: hidden;
+    border-radius: inherit;
+    pointer-events: none;
+  }
+  .live-transfer-lines { position: absolute; inset: 0; display: block; overflow: visible; }
+  .live-transfer-route, .live-transfer-token { --motion-color: #b2ffe6; --motion-glow: #64e5b9; }
+  .live-transfer-route.is-kyotaku, .live-transfer-token.is-kyotaku { --motion-color: #ffebbe; --motion-glow: #e6b763; }
+  .live-transfer-trail {
+    fill: none;
+    stroke: var(--motion-color);
+    stroke-width: clamp(2px, .32vw, 5px);
+    stroke-linecap: round;
+    filter: drop-shadow(0 0 4px var(--motion-glow));
+  }
+  .live-transfer-tip {
+    fill: var(--motion-color);
+    filter: drop-shadow(0 0 4px var(--motion-glow));
+  }
+  .live-transfer-token {
+    position: absolute;
+    display: grid;
+    justify-items: center;
+    align-items: center;
+    gap: .2rem;
+    left: 0;
+    top: 0;
+    will-change: transform, opacity;
+  }
+  .live-transfer-amount {
+    padding: .13em .48em;
+    border: 1px solid var(--motion-color);
+    border-radius: 1em;
+    background: #132e25;
+    color: var(--motion-color);
+    box-shadow: 0 0 .55rem color-mix(in srgb, var(--motion-glow), transparent 46%);
+    font-size: clamp(.74rem, 1.55vw, 1.45rem);
+    font-weight: 800;
+    line-height: 1.35;
+    white-space: nowrap;
+  }
+  .live-transfer-token .live-stick {
+    --dot-size: clamp(.24rem, .48vw, .41rem);
+    position: absolute;
+    left: 50%;
+    top: 50%;
+    width: clamp(2.2rem, 6vw, 5.4rem);
+    height: clamp(.4rem, .88vw, .82rem);
+    box-shadow: 0 0 .55rem #ffd68aa0;
+  }
+  .live-transfer-token.is-stick .live-transfer-amount { transform: translateY(-1.48rem); }
+
   .live-match-footer { min-height: 2.75rem; }
   .live-match-actions { flex-wrap: wrap; gap: .45rem; }
   .live-last { flex: 1 1 19rem; overflow-wrap: anywhere; color: var(--live-muted); }
@@ -1037,24 +1265,34 @@ body.soul-playing{overflow:hidden}
     .live-brand-tile { width: 2.1rem; height: 2.6rem; font-size: 1.45rem; }
     .live-brand-name { font-size: .77rem; }
     .live-brand h1 { font-size: 1.35rem; }
-    .live-player-meta, .live-player-footer { gap: .24rem; }
-    .live-player-footer { padding-inline: .38rem; }
-    .live-player-name { font-size: 1.05rem; }
-    .live-riichi { font-size: .86rem; }
-    .live-dealer-mark, .live-rank { font-size: .76rem; }
+    .live-score-grid {
+      grid-template-columns: minmax(0, 1fr) minmax(0, 1.1fr) minmax(0, 1fr);
+      gap: .42rem;
+    }
+    .live-player[data-position="top"], .live-player[data-position="bottom"] {
+      grid-column: 1 / -1;
+      justify-self: center;
+      width: 48%;
+    }
+    .live-player-meta { grid-template-columns: auto minmax(0, 1fr); }
+    .live-dealer-mark, .live-rank { grid-column: 2; }
+    .live-player-footer { display: grid; justify-items: center; gap: 0; padding: 0 .2rem; }
+    .live-player-delta:empty { display: none; }
+    .live-riichi { min-height: 2.34rem; margin-left: 0; }
     .live-dealer-label { font-size: .83rem; }
-    .live-counters { font-size: .83rem; }
+    .live-seat-position { font-size: .76rem; }
+    .live-name-field { gap: .28rem; }
     .live-choice { gap: .35rem; padding-inline: .53rem; }
     .live-hand-row { grid-template-columns: repeat(2, minmax(0, 1fr)); }
     .live-hand-name { grid-column: 1 / -1; }
   }
   @media (max-width: 370px) {
     .live-board-inner { padding-inline: .7rem; }
-    .live-player-points { font-size: 1.68rem; }
   }
   @media print {
     .tenwa-live-open .live-board { background: #fff; color: #163327; }
-    .live-board :is(.live-header-actions, .live-match-actions, .live-riichi) { display: none; }
+    .live-board :is(.live-header-actions, .live-match-actions, .live-riichi, .live-transfer-layer) { display: none; }
+    .live-table { print-color-adjust: exact; }
   }
 </style>
 </head>
@@ -1313,7 +1551,7 @@ body.soul-playing{overflow:hidden}
 
       <section class="live-setup" id="liveSetup" aria-labelledby="liveSetupTitle">
         <h2 id="liveSetupTitle">開局設定</h2>
-        <p>依出牌順序輸入四位玩家，再選擇首任莊家。</p>
+        <p>由記分板下方開始，依出牌順序輸入下、右、上、左四位玩家，再選擇首任莊家。</p>
         <form id="liveSetupForm" autocomplete="off">
           <fieldset class="live-fieldset">
             <legend>對局類型</legend>
@@ -1334,17 +1572,31 @@ body.soul-playing{overflow:hidden}
       </section>
 
       <section class="live-match" id="liveMatch" aria-labelledby="liveRoundLabel" hidden>
-        <div class="live-round-bar">
-          <div>
-            <p id="liveMatchMode"></p>
-            <h2 id="liveRoundLabel" tabindex="-1"></h2>
+        <div class="live-table" id="liveTable">
+          <div class="live-score-grid" id="livePlayers">
+            <div class="live-wind-panel">
+              <div class="live-wind-face">
+                <p id="liveMatchMode"></p>
+                <h2 id="liveRoundLabel" tabindex="-1"></h2>
+                <dl class="live-counters">
+                  <div><dt>本場</dt><dd><strong id="liveHonba">0</strong><span>本</span></dd></div>
+                  <div id="livePot">
+                    <dt>供託</dt>
+                    <dd>
+                      <strong id="liveSticks">0</strong><span>支</span>
+                      <span class="live-carry-stick live-stick" id="liveCarryStick" title="前局留下的供託" aria-hidden="true" hidden></span>
+                    </dd>
+                  </div>
+                </dl>
+              </div>
+              <div class="live-stick-tray" data-position="bottom" aria-hidden="true"><span class="live-stick" hidden></span></div>
+              <div class="live-stick-tray" data-position="right" aria-hidden="true"><span class="live-stick" hidden></span></div>
+              <div class="live-stick-tray" data-position="top" aria-hidden="true"><span class="live-stick" hidden></span></div>
+              <div class="live-stick-tray" data-position="left" aria-hidden="true"><span class="live-stick" hidden></span></div>
+            </div>
           </div>
-          <dl class="live-counters">
-            <div><dt>本場</dt><dd><strong id="liveHonba">0</strong><span>本</span></dd></div>
-            <div><dt>供託</dt><dd><strong id="liveSticks">0</strong><span>支</span></dd></div>
-          </dl>
+          <div class="live-transfer-layer" id="liveTransferLayer" aria-hidden="true"></div>
         </div>
-        <div class="live-score-grid" id="livePlayers"></div>
         <div class="live-match-footer">
           <p id="liveLastAction" class="live-last" role="status"></p>
           <div class="live-match-actions">
@@ -1408,7 +1660,7 @@ body.soul-playing{overflow:hidden}
     <template id="liveSetupSeatTemplate">
       <div class="live-setup-seat">
         <span class="live-wind" aria-hidden="true"></span>
-        <label class="live-name-field"><span class="sr-only"></span><input type="text" maxlength="24" required></label>
+        <label class="live-name-field"><span class="live-seat-position"></span><input type="text" maxlength="24" required></label>
         <label class="live-dealer-label"><input type="radio" name="liveFirstDealer" required><span>首任莊家</span></label>
       </div>
     </template>
@@ -4162,9 +4414,15 @@ globalThis.PracticeProfile=Object.freeze({"version":2,"source":{"title":"天鳳�
     };
   }
 
-  function record(match, changes, points, label) {
+  function transfer(points, transfers, from, to, amount, kind = 'payment') {
+    if (from !== null) points[from] -= amount;
+    if (to !== null) points[to] += amount;
+    transfers.push({from, to, amount, kind});
+  }
+
+  function record(match, changes, points, label, transfers) {
     const delta = points.map((score, player) => score - match.points[player]);
-    return {...match, ...changes, points, last: {label, delta}};
+    return {...match, ...changes, points, last: {label, delta, transfers}};
   }
 
   function canDeclare(match, player) {
@@ -4175,23 +4433,24 @@ globalThis.PracticeProfile=Object.freeze({"version":2,"source":{"title":"天鳳�
   function declare(match, player) {
     if (!canDeclare(match, player)) return null;
     const points = [...match.points];
-    points[player] -= riichiPoints;
+    const transfers = [];
+    transfer(points, transfers, player, null, riichiPoints, 'riichi');
     return record(match, {sticks: match.sticks + 1, declared: [...match.declared, player]},
-      points, match.names[player] + ' 登記立直');
+      points, match.names[player] + ' 登記立直', transfers);
   }
 
-  function nextHand(match, points, sticks, repeat, drawn, label) {
+  function nextHand(match, points, sticks, repeat, drawn, label, transfers) {
     const ended = !repeat && match.round === lastRound(match.mode);
     const round = match.round + (repeat || ended ? 0 : 1);
     const honba = ended ? match.honba : (repeat || drawn ? match.honba + 1 : 0);
     const notes = [label, ended ? '對局結束' : (repeat ? '莊家連莊' : '輪莊')];
     if (ended && sticks) {
       const leader = ranking({...match, points})[0];
-      points[leader] += sticks * riichiPoints;
+      transfer(points, transfers, null, leader, sticks * riichiPoints, 'pot');
       notes.push(match.names[leader] + ' 領取 ' + sticks + ' 支餘棒');
       sticks = 0;
     }
-    return record(match, {round, honba, sticks, ended, declared: []}, points, notes.join(' · '));
+    return record(match, {round, honba, sticks, ended, declared: []}, points, notes.join(' · '), transfers);
   }
 
   function win(match, source, hands) {
@@ -4205,6 +4464,7 @@ globalThis.PracticeProfile=Object.freeze({"version":2,"source":{"title":"天鳳�
     const method = tsumo ? 'tsumo' : 'ron';
     const dealer = dealerOf(match);
     const points = [...match.points];
+    const transfers = [];
     // The shared calculator accepts at most 99 honba per calculation.
     const honba = Math.min(match.honba, 99);
     const extra = (match.honba - honba) * (tsumo ? 100 : 300);
@@ -4219,34 +4479,53 @@ globalThis.PracticeProfile=Object.freeze({"version":2,"source":{"title":"天鳳�
 
       for (const payer of tsumo ? seats.filter(player => player !== winner) : [source]) {
         const payment = score.payments[score.payments.length === 1 || payer === dealer ? 0 : 1];
-        const amount = payment.amount + extra;
-        points[payer] -= amount;
-        points[winner] += amount;
+        transfer(points, transfers, payer, winner, payment.amount + extra);
       }
     }
 
     const potWinner = [...winners].sort((a, b) => seatFrom(a, source) - seatFrom(b, source))[0];
-    points[potWinner] += match.sticks * riichiPoints;
+    if (match.sticks) transfer(points, transfers, null, potWinner, match.sticks * riichiPoints, 'pot');
     const type = tsumo ? '自摸' : (winners.length === 2 ? '雙響' : '榮和');
     const names = winners.map(player => match.names[player]).join('、');
     const sourceLabel = tsumo ? '' : '，' + match.names[source] + ' 放銃';
     const potLabel = match.sticks ? ' · ' + match.names[potWinner] + ' 領取 ' + match.sticks + ' 支供託' : '';
-    return {match: nextHand(match, points, 0, winners.includes(dealer), false, names + ' ' + type + sourceLabel + potLabel)};
+    const label = names + ' ' + type + sourceLabel + potLabel;
+    return {match: nextHand(match, points, 0, winners.includes(dealer), false, label, transfers)};
   }
 
   function draw(match, tenpai, abortive) {
     if (match.ended) return null;
     const points = [...match.points];
-    if (abortive) return nextHand(match, points, match.sticks, true, true, '途中流局');
+    const transfers = [];
+    if (abortive) return nextHand(match, points, match.sticks, true, true, '途中流局', transfers);
 
     const count = tenpai.length;
     if (count > 0 && count < seats.length) {
-      for (const player of seats) {
-        points[player] += tenpai.includes(player) ? 3000 / count : -3000 / (seats.length - count);
+      const payment = 3000 / (count * (seats.length - count));
+      for (const payer of seats.filter(player => !tenpai.includes(player))) {
+        for (const winner of tenpai) transfer(points, transfers, payer, winner, payment);
       }
     }
     const ready = count ? '聽牌 ' + tenpai.map(player => match.names[player]).join('、') : '無人聽牌';
-    return nextHand(match, points, match.sticks, tenpai.includes(dealerOf(match)), true, '荒牌流局 · ' + ready);
+    return nextHand(match, points, match.sticks, tenpai.includes(dealerOf(match)), true, '荒牌流局 · ' + ready, transfers);
+  }
+
+  function validTransfers(last) {
+    if (last.transfers === undefined) return true;
+    if (!Array.isArray(last.transfers) || last.transfers.length > 5) return false;
+    const delta = [0, 0, 0, 0];
+    for (const entry of last.transfers) {
+      if (!entry) return false;
+      const {from, to, amount, kind} = entry;
+      if (!Number.isSafeInteger(amount) || amount <= 0) return false;
+      const valid = kind === 'payment' ? seats.includes(from) && seats.includes(to) && from !== to :
+        kind === 'riichi' ? seats.includes(from) && to === null && amount === riichiPoints :
+          kind === 'pot' && from === null && seats.includes(to) && amount % riichiPoints === 0;
+      if (!valid) return false;
+      if (from !== null) delta[from] -= amount;
+      if (to !== null) delta[to] += amount;
+    }
+    return delta.every((amount, player) => amount === last.delta[player]);
   }
 
   function isMatch(match) {
@@ -4262,12 +4541,169 @@ globalThis.PracticeProfile=Object.freeze({"version":2,"source":{"title":"天鳳�
       new Set(match.declared).size === match.declared.length && match.sticks >= match.declared.length &&
       typeof match.ended === 'boolean' && typeof match.rules?.kiriage === 'boolean' &&
       ['yakuman', 'sanbaiman'].includes(match.rules?.kazoe) &&
-      (match.last === null || (typeof match.last?.label === 'string' && fourIntegers(match.last.delta)));
+      (match.last === null ||
+        (typeof match.last?.label === 'string' && fourIntegers(match.last.delta) && validTransfers(match.last)));
   }
 
   globalThis.LiveScore = Object.freeze({
     seats, winds, dealerOf, seatWind, roundLabel, ranking, start, canDeclare, declare, win, draw, isMatch
   });
+})();
+</script>
+<script id="live-score-motion">
+'use strict';
+(() => {
+  const svg = tag => document.createElementNS('http://www.w3.org/2000/svg', tag);
+  const limit = (value, low, high) => Math.min(high, Math.max(low, value));
+  const unit = value => limit(value, 0, 1);
+  const easeOut = value => 1 - (1 - value) ** 2;
+
+  function bounds(element, frame) {
+    const rect = element.getBoundingClientRect();
+    return {x: rect.left - frame.left + rect.width / 2, y: rect.top - frame.top + rect.height / 2,
+      width: rect.width, height: rect.height};
+  }
+
+  // Start and finish at the edge facing the other seat, with the figures clear of the route.
+  function edge(box, toward) {
+    const dx = toward.x - box.x;
+    const dy = toward.y - box.y;
+    const ratio = Math.min(Math.abs((box.width / 2 + 2) / dx), Math.abs((box.height / 2 + 2) / dy));
+    if (!Number.isFinite(ratio)) return box;
+    return {x: box.x + dx * ratio, y: box.y + dy * ratio};
+  }
+
+  function route(transfer, seats, trays, pot, frame) {
+    const {from, to, kind} = transfer;
+    const central = player => kind === 'riichi' ? trays[player] : pot;
+    const fromBox = bounds(from === null ? central(to) : seats[from], frame);
+    const toBox = bounds(to === null ? central(from) : seats[to], frame);
+    const start = from === null || kind === 'riichi' ? fromBox : edge(fromBox, toBox);
+    const end = to === null || kind === 'riichi' ? toBox : edge(toBox, fromBox);
+    const control = {x: (start.x + end.x) / 2, y: (start.y + end.y) / 2};
+
+    if (from !== null && to !== null) {
+      const dx = end.x - start.x, dy = end.y - start.y;
+      const distance = Math.hypot(dx, dy) || 1;
+      const normal = {x: -dy / distance, y: dx / distance};
+      const center = bounds(pot, frame);
+      const side = (control.x - center.x) * normal.x + (control.y - center.y) * normal.y < 0 ? -1 : 1;
+      const curve = side * Math.min(85, distance * .24);
+      control.x = limit(control.x + normal.x * curve, 12, frame.width - 12);
+      control.y = limit(control.y + normal.y * curve, 12, frame.height - 12);
+    }
+    return {start, control, end};
+  }
+
+  function createMove(transfer, geometry, lines, layer, format) {
+    const {kind, amount, from, to} = transfer;
+    const onTray = kind === 'riichi';
+    const rotate = onTray && (from ?? to) % 2 === 1 ? 90 : 0;
+    const {start, control, end} = geometry;
+    const group = svg('g');
+    const trail = svg('path');
+    const tip = svg('path');
+    const token = document.createElement('div');
+    const value = document.createElement('span');
+    const stick = onTray ? document.createElement('span') : null;
+    const potClass = kind === 'payment' ? '' : ' is-kyotaku';
+    group.setAttribute('class', 'live-transfer-route' + potClass);
+    group.setAttribute('opacity', '0');
+    trail.setAttribute('class', 'live-transfer-trail');
+    group.append(trail);
+    if (!onTray) {
+      tip.setAttribute('class', 'live-transfer-tip');
+      tip.setAttribute('d', 'M 2 0 L -12 -5 L -9 0 L -12 5 Z');
+      group.append(tip);
+    }
+    lines.append(group);
+
+    token.className = 'live-transfer-token' + potClass + (onTray ? ' is-stick' : '');
+    token.style.opacity = '0';
+    value.className = 'live-transfer-amount';
+    value.textContent = format(amount);
+    token.append(value);
+    if (stick) {
+      stick.className = 'live-stick';
+      token.append(stick);
+    }
+    layer.append(token);
+
+    function paint(progress) {
+      const t = easeOut(progress);
+      const leading = 1 - t;
+      const x = leading * leading * start.x + 2 * leading * t * control.x + t * t * end.x;
+      const y = leading * leading * start.y + 2 * leading * t * control.y + t * t * end.y;
+      const angle = Math.atan2(leading * (control.y - start.y) + t * (end.y - control.y),
+        leading * (control.x - start.x) + t * (end.x - control.x)) * 180 / Math.PI;
+      const opacity = unit(progress / .12) * unit((1 - progress) / .17);
+      group.setAttribute('opacity', String(opacity * .87));
+      trail.setAttribute('d', `M ${start.x} ${start.y} Q ${leading * start.x + t * control.x} ${leading * start.y + t * control.y} ${x} ${y}`);
+      if (!onTray) tip.setAttribute('transform', `translate(${x} ${y}) rotate(${angle})`);
+
+      const float = onTray ? 0 : 12 + 9 * Math.sin(Math.PI * t);
+      token.style.opacity = String(onTray ? unit(progress / .11) : opacity);
+      token.style.transform = `translate(${x}px, ${y - float}px) translate(-50%, -50%)`;
+      if (stick) {
+        const stickAngle = rotate * (from === null ? 1 - t : t);
+        stick.style.transform = `translate(-50%, -50%) rotate(${stickAngle}deg)`;
+        value.style.opacity = String(opacity);
+      }
+    }
+    return {transfer, paint};
+  }
+
+  function run({layer, seats, trays, pot, transfers, points, format, onPoints, onEnd}) {
+    const frame = layer.getBoundingClientRect();
+    if (!transfers.length || !frame.width || !frame.height) return null;
+
+    const lines = svg('svg');
+    lines.setAttribute('class', 'live-transfer-lines');
+    lines.setAttribute('viewBox', `0 0 ${frame.width} ${frame.height}`);
+    lines.setAttribute('width', '100%');
+    lines.setAttribute('height', '100%');
+    layer.append(lines);
+    const moves = transfers.map(transfer =>
+      createMove(transfer, route(transfer, seats, trays, pot, frame), lines, layer, format));
+    const duration = moves[0].transfer.kind === 'riichi' ? 680 : 830;
+    const gap = 124;
+    const total = duration + gap * (moves.length - 1);
+    let firstFrame, request;
+    let lastPoints = points;
+
+    function stop() {
+      window.cancelAnimationFrame(request);
+      layer.replaceChildren();
+    }
+
+    function step(time) {
+      firstFrame ??= time;
+      const elapsed = time - firstFrame;
+      const visible = [...points];
+      moves.forEach(({transfer, paint}, index) => {
+        const progress = unit((elapsed - index * gap) / duration);
+        paint(progress);
+        const fraction = easeOut(unit((progress - .58) / .42));
+        const paid = Math.round(transfer.amount * fraction);
+        if (transfer.from !== null) visible[transfer.from] -= paid;
+        if (transfer.to !== null) visible[transfer.to] += paid;
+      });
+      if (visible.some((amount, player) => amount !== lastPoints[player])) {
+        onPoints(visible);
+        lastPoints = visible;
+      }
+      if (elapsed < total) request = window.requestAnimationFrame(step);
+      else {
+        stop();
+        onEnd();
+      }
+    }
+
+    request = window.requestAnimationFrame(step);
+    return stop;
+  }
+
+  globalThis.LiveScoreMotion = Object.freeze({run});
 })();
 </script>
 <script id="live-scoreboard">
@@ -4286,20 +4722,26 @@ window.addEventListener('DOMContentLoaded', () => {
   const hash = '#liveScoreboard';
   const format = new Intl.NumberFormat('en-US');
   const seatNumbers = ['一', '二', '三', '四'];
+  const positions = ['bottom', 'right', 'top', 'left'];
+  const positionNames = ['下方', '右方', '上方', '左方'];
   const matchTitles = {east: '四人東風戰', south: '四人南半莊戰'};
   const clone = id => $(id).content.firstElementChild.cloneNode(true);
+  const trays = [...$('livePlayers').querySelectorAll('.live-stick-tray')];
+  const sticks = trays.map(tray => tray.querySelector('.live-stick'));
 
   let match = null, undo = [], saved = null;
   let storageUnavailable = false, saving = false, calculatorScroll = 0;
   let source = null, winners = [], winnerChoices = [], tenpai = new Set();
+  let stopMotion = null;
   const handRows = new Map();
 
   const setupSeats = LiveScore.seats.map(player => {
     const row = clone('liveSetupSeatTemplate');
     const name = row.querySelector('input[type="text"]');
     const dealer = row.querySelector('input[type="radio"]');
-    const label = '第' + seatNumbers[player] + '位玩家';
-    row.querySelector('.sr-only').textContent = label + '姓名';
+    const label = positionNames[player] + '玩家';
+    row.querySelector('.live-seat-position').textContent = positionNames[player];
+    name.setAttribute('aria-label', label + '姓名');
     name.placeholder = '玩家' + seatNumbers[player];
     name.addEventListener('input', () => name.setCustomValidity(''));
     dealer.value = String(player);
@@ -4312,6 +4754,7 @@ window.addEventListener('DOMContentLoaded', () => {
 
   const playerCards = LiveScore.seats.map(player => {
     const card = clone('livePlayerTemplate');
+    card.setAttribute('data-position', positions[player]);
     const select = card.querySelector('.live-player-select');
     const riichi = card.querySelector('.live-riichi');
     select.addEventListener('click', () => openWin(player));
@@ -4397,11 +4840,58 @@ window.addEventListener('DOMContentLoaded', () => {
     } finally { saving = false; }
   }
 
-  function commit(next) {
-    return next ? store(next, [...undo.slice(1 - undoLimit), match]) : Promise.resolve(false);
+  function paintScores(points) {
+    playerCards.forEach(({points: score}, player) => {
+      score.textContent = format.format(points[player]);
+      score.classList.toggle('is-negative', points[player] < 0);
+    });
+  }
+
+  function paintSticks(state, movingPlayer = null) {
+    $('liveSticks').textContent = format.format(state.sticks);
+    $('liveCarryStick').hidden = state.sticks <= state.declared.length;
+    sticks.forEach((stick, player) => {
+      stick.hidden = player === movingPlayer || !state.declared.includes(player);
+    });
+  }
+
+  function cancelMotion() {
+    if (!stopMotion) return;
+    stopMotion();
+    stopMotion = null;
+  }
+
+  function finishMotion() {
+    stopMotion = null;
+    if (!match) return;
+    paintScores(match.points);
+    paintSticks(match);
+  }
+
+  function animateChange(previous, next, transfers) {
+    if (board.hidden || match !== next || !transfers?.length || !window.requestAnimationFrame ||
+        window.matchMedia?.('(prefers-reduced-motion: reduce)').matches) return;
+    stopMotion = LiveScoreMotion.run({
+      layer: $('liveTransferLayer'), seats: playerCards.map(({card}) => card), trays, pot: $('livePot'),
+      transfers, points: previous.points, format: format.format, onPoints: paintScores, onEnd: finishMotion
+    });
+    if (!stopMotion) return;
+    paintScores(previous.points);
+    const movingStick = transfers.find(transfer => transfer.kind === 'riichi' && transfer.from === null);
+    paintSticks(previous, movingStick?.to);
+  }
+
+  async function commit(next, action) {
+    if (!next) return false;
+    const previous = match;
+    if (!await store(next, [...undo.slice(1 - undoLimit), previous])) return false;
+    if (match === next && action && !action.hidden && dialog.open) dialog.close();
+    animateChange(previous, next, next.last.transfers);
+    return true;
   }
 
   function render() {
+    cancelMotion();
     $('liveSetup').hidden = !!match;
     $('liveMatch').hidden = !match;
     if (!match) {
@@ -4418,13 +4908,14 @@ window.addEventListener('DOMContentLoaded', () => {
     $('liveMatchMode').textContent = matchTitles[match.mode] + (ended ? ' · 終局' : '');
     $('liveRoundLabel').textContent = LiveScore.roundLabel(match);
     $('liveHonba').textContent = format.format(match.honba);
-    $('liveSticks').textContent = format.format(match.sticks);
+    paintScores(points);
+    paintSticks(match);
     $('liveLastAction').textContent = last?.label ?? '選擇放銃者或自摸者的姓名，即可記錄和牌。';
     $('liveDraw').disabled = ended;
     $('liveUndo').disabled = undo.length === 0;
 
     playerCards.forEach((entry, player) => {
-      const {card, select, riichi, name, wind, points: score, dealerMark, rank, delta} = entry;
+      const {card, select, riichi, name, wind, dealerMark, rank, delta} = entry;
       const isDealer = player === dealer;
       const seat = LiveScore.seatWind(match, player);
       const change = last?.delta[player] ?? 0;
@@ -4433,12 +4924,11 @@ window.addEventListener('DOMContentLoaded', () => {
       card.classList.toggle('is-dealer', isDealer && !ended);
       name.textContent = names[player];
       wind.textContent = seat;
-      score.textContent = pointText;
-      score.classList.toggle('is-negative', points[player] < 0);
       dealerMark.hidden = !isDealer || ended;
       rank.hidden = !ended;
       rank.textContent = ended ? '第 ' + (ranking.indexOf(player) + 1) + ' 名' : '';
-      select.setAttribute('aria-label', seat + '家 ' + names[player] + (isDealer && !ended ? '，莊家' : '') + '，' + pointText + ' 點');
+      select.setAttribute('aria-label', positionNames[player] + '，' + seat + '家 ' + names[player] +
+        (isDealer && !ended ? '，莊家' : '') + '，' + pointText + ' 點');
       select.disabled = ended;
       delta.textContent = change ? (change > 0 ? '+' : '') + format.format(change) : '';
       delta.classList.toggle('gain', change > 0);
@@ -4456,6 +4946,7 @@ window.addEventListener('DOMContentLoaded', () => {
     if (open === !board.hidden) return;
     if (open) calculatorScroll = window.scrollY;
     else {
+      cancelMotion();
       if (dialog.open) dialog.close();
       if (document.fullscreenElement === board) document.exitFullscreen().catch(() => {});
     }
@@ -4608,10 +5099,7 @@ window.addEventListener('DOMContentLoaded', () => {
     if (result.error) {
       setWinError(result.error);
       handRows.get(result.player)?.fu.focus();
-    } else if (await commit(result.match)) {
-      dialog.close();
-      if (match.ended) $('liveRoundLabel').focus();
-    }
+    } else if (await commit(result.match, winForm) && match?.ended) $('liveRoundLabel').focus();
   });
 
   drawForm.addEventListener('change', showDrawType);
@@ -4619,10 +5107,8 @@ window.addEventListener('DOMContentLoaded', () => {
     event.preventDefault();
     if (!dialog.open || !match) return;
     const abortive = drawForm.elements.liveDrawType.value === 'abortive';
-    if (await commit(LiveScore.draw(match, LiveScore.seats.filter(player => tenpai.has(player)), abortive))) {
-      dialog.close();
-      if (match.ended) $('liveRoundLabel').focus();
-    }
+    const next = LiveScore.draw(match, LiveScore.seats.filter(player => tenpai.has(player)), abortive);
+    if (await commit(next, drawForm) && match?.ended) $('liveRoundLabel').focus();
   });
 
   restartForm.addEventListener('submit', async event => {
@@ -4642,7 +5128,14 @@ window.addEventListener('DOMContentLoaded', () => {
   $('liveDraw').addEventListener('click', openDraw);
   $('liveNewMatch').addEventListener('click', () => showAction(restartForm, '開始新對局'));
   $('liveUndo').addEventListener('click', async () => {
-    if (undo.length && await store(undo.at(-1), undo.slice(0, -1))) notice('已撤銷上一步。');
+    if (!undo.length) return;
+    const previous = match;
+    const next = undo.at(-1);
+    if (!await store(next, undo.slice(0, -1))) return;
+    const reversed = previous.last?.transfers?.slice().reverse().map(({from, to, ...transfer}) =>
+      ({...transfer, from: to, to: from}));
+    animateChange(previous, next, reversed);
+    notice('已撤銷上一步。');
   });
   $('liveCloseAction').addEventListener('click', () => dialog.close());
   dialog.querySelectorAll('[data-live-cancel]').forEach(button => button.addEventListener('click', () => dialog.close()));
@@ -4660,6 +5153,11 @@ window.addEventListener('DOMContentLoaded', () => {
   });
   window.addEventListener('popstate', view);
   window.addEventListener('hashchange', view);
+  window.addEventListener('resize', () => {
+    if (!stopMotion) return;
+    cancelMotion();
+    finishMotion();
+  });
 
   const fullscreen = $('liveFullscreen');
   fullscreen.hidden = !document.fullscreenEnabled || !board.requestFullscreen;
