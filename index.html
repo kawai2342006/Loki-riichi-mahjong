@@ -874,7 +874,14 @@ body.soul-playing{overflow:hidden}
   .live-options { display: grid; grid-template-columns: repeat(2, minmax(0, 1fr)); gap: .5rem; }
   .live-option { display: flex; align-items: center; justify-content: center; gap: .5rem; cursor: pointer; }
   .live-option:has(:checked) { border-color: var(--live-gold); background: #314638; }
-  .live-board input[type="radio"] { margin: 0; width: 1.05em; height: 1.05em; accent-color: var(--live-gold); }
+  .live-extension-option { justify-content: flex-start; margin-top: .5rem; }
+  .live-board input:is([type="radio"], [type="checkbox"]) {
+    flex: 0 0 auto;
+    margin: 0;
+    width: 1.05em;
+    height: 1.05em;
+    accent-color: var(--live-gold);
+  }
   .live-setup-seats { display: grid; gap: .6rem; }
   .live-setup-seat { display: grid; grid-template-columns: auto minmax(0, 1fr) auto; align-items: center; gap: .65rem; }
   .live-wind {
@@ -1251,9 +1258,9 @@ body.soul-playing{overflow:hidden}
     background: #214135;
   }
   .live-hand-name { overflow-wrap: anywhere; }
+  .live-hand-row:has(.live-fu-field[hidden]) { grid-template-columns: repeat(2, minmax(0, 1fr)); }
   .live-hand-row label { display: grid; gap: .2rem; color: var(--live-muted); font-size: .93rem; }
   .live-hand-row select { padding-inline: .38rem; }
-  .live-hand-row select:disabled { opacity: .6; }
   .live-action .live-error { color: var(--live-loss); }
   .live-dialog-actions { justify-content: flex-end; flex-wrap: wrap; gap: .45rem; }
 
@@ -1468,7 +1475,7 @@ body.soul-playing{overflow:hidden}
             </div>
             <div class="validation" id="validation" role="status" hidden><svg class="icon" aria-hidden="true"><use href="#i-info"/></svg><span id="validationText"></span></div>
 <div id="soulControls" class="soul-controls" hidden><div class="soul-control-top"><strong>雀魂和牌模式</strong><label class="soul-sound-option"><input type="checkbox" id="soundEnabled" checked>女聲・音效</label></div><button type="button" class="calculate-win" id="calculateWin" disabled><svg class="icon" aria-hidden="true"><use href="#i-spark"/></svg><span id="calculateWinLabel">計算</span></button><p id="soulHint">按「計算」，聽日文女聲逐項揭曉役種與得點。</p></div>
-            <details class="rules" id="rules"><summary><svg class="icon" aria-hidden="true"><use href="#i-sliders"/></svg>計分規則<span class="rules-brief" id="rulesBrief">不切上 · 累計役滿</span><svg class="icon chevron" aria-hidden="true"><use href="#i-chevron"/></svg></summary><div class="rules-body"><div class="rule-row"><div class="rule-copy"><label for="doubleWind2">連風雀頭計 2 符</label><p>關閉時計 4 符；只影響手牌自動計符。</p></div><span class="switch"><input type="checkbox" id="doubleWind2"></span></div><div class="rule-row"><div class="rule-copy"><label for="doubleYakuman">雙倍役滿</label><p>國士十三面、四暗刻單騎、大四喜及純正九蓮。</p></div><span class="switch"><input type="checkbox" id="doubleYakuman" checked></span></div><div class="rule-row"><div class="rule-copy"><label for="kuitan">允許食斷</label><p>副露的斷么九可作為 1 番的役。</p></div><span class="switch"><input type="checkbox" id="kuitan" checked></span></div><div class="rule-row"><div class="rule-copy"><label for="kiriage">切上滿貫</label><p id="kiriageDescription">將 4 番 30 符、3 番 60 符視為滿貫。</p></div><span class="switch"><input type="checkbox" id="kiriage" aria-describedby="kiriageDescription"></span></div><div class="rule-row"><div class="rule-copy"><label for="kazoe">13 番或以上</label><p>只適用於累計番數；實際役滿另計。</p></div><select class="rule-select" id="kazoe"><option value="yakuman">累計役滿</option><option value="sanbaiman">上限三倍滿</option></select></div></div></details>
+            <details class="rules" id="rules"><summary><svg class="icon" aria-hidden="true"><use href="#i-sliders"/></svg>計分規則<span class="rules-brief" id="rulesBrief">不切上 · 累計役滿</span><svg class="icon chevron" aria-hidden="true"><use href="#i-chevron"/></svg></summary><div class="rules-body"><div class="rule-row"><div class="rule-copy"><label for="doubleWind2">連風雀頭計 2 符</label><p>關閉時計 4 符；適用於手牌計符及直播記分板的符數選項。</p></div><span class="switch"><input type="checkbox" id="doubleWind2"></span></div><div class="rule-row"><div class="rule-copy"><label for="doubleYakuman">雙倍役滿</label><p>國士十三面、四暗刻單騎、大四喜及純正九蓮。</p></div><span class="switch"><input type="checkbox" id="doubleYakuman" checked></span></div><div class="rule-row"><div class="rule-copy"><label for="kuitan">允許食斷</label><p>副露的斷么九可作為 1 番的役。</p></div><span class="switch"><input type="checkbox" id="kuitan" checked></span></div><div class="rule-row"><div class="rule-copy"><label for="kiriage">切上滿貫</label><p id="kiriageDescription">將 4 番 30 符、3 番 60 符視為滿貫。</p></div><span class="switch"><input type="checkbox" id="kiriage" aria-describedby="kiriageDescription"></span></div><div class="rule-row"><div class="rule-copy"><label for="kazoe">13 番或以上</label><p>只適用於累計番數；實際役滿另計。</p></div><select class="rule-select" id="kazoe"><option value="yakuman">累計役滿</option><option value="sanbaiman">上限三倍滿</option></select></div></div></details>
           </section>
           <div class="presets" id="manualPresets" role="group" aria-label="載入常用例子" hidden><span>試試常用例子</span><button type="button" class="preset" data-preset="pinfu">平和自摸<small>2 番 20 符</small></button><button type="button" class="preset" data-preset="riichi">立直榮和<small>1 番 30 符</small></button><button type="button" class="preset" data-preset="mangan">滿貫<small>5 番</small></button></div>
           <div class="presets" id="handPresets" role="group" aria-label="載入手牌例子"><span>試試手牌例子</span><button type="button" class="preset" data-hand-preset="pinfu">立直平和</button><button type="button" class="preset" data-hand-preset="pairs">七對子</button><button type="button" class="preset" data-hand-preset="yakuman">國士十三面</button></div>
@@ -1559,6 +1566,10 @@ body.soul-playing{overflow:hidden}
               <label class="live-option"><input type="radio" name="liveMode" value="east" checked>四人東</label>
               <label class="live-option"><input type="radio" name="liveMode" value="south">四人南</label>
             </div>
+            <label class="live-option live-extension-option">
+              <input type="checkbox" id="liveExtension" checked>
+              <span>末局輪莊時，首名未達 30,000 點則延長</span>
+            </label>
           </fieldset>
           <fieldset class="live-fieldset">
             <legend>玩家與首任莊家</legend>
@@ -1688,7 +1699,7 @@ body.soul-playing{overflow:hidden}
       <div class="live-hand-row">
         <strong class="live-hand-name"></strong>
         <label><span>番數</span><select required><option value="">請選擇</option></select></label>
-        <label><span>符數</span><select required><option value="">請選擇</option></select></label>
+        <label class="live-fu-field" hidden><span>符數</span><select required disabled></select></label>
       </div>
     </template>
   </main>
@@ -4399,11 +4410,16 @@ globalThis.PracticeProfile=Object.freeze({"version":2,"source":{"title":"天鳳�
   const numbers = ['一', '二', '三', '四'];
   const startingPoints = 25000;
   const riichiPoints = 1000;
+  const targetPoints = 30000;
   const seatFrom = (player, reference) => (player - reference + 4) % 4;
   const dealerOf = match => (match.firstDealer + match.round) % 4;
   const seatWind = (match, player) => winds[seatFrom(player, dealerOf(match))];
-  const roundLabel = match => winds[Math.floor(match.round / 4)] + numbers[match.round % 4] + '局';
-  const lastRound = mode => mode === 'south' ? 7 : 3;
+  const roundWind = match => winds[Math.floor(match.round / 4)];
+  const roundLabel = match => roundWind(match) + numbers[match.round % 4] + '局';
+  const lastScheduledRound = mode => mode === 'south' ? 7 : 3;
+  const usesExtension = match => match.rules.extension !== false;
+  const isExtension = match => match.round > lastScheduledRound(match.mode);
+  const lastRound = match => lastScheduledRound(match.mode) + (usesExtension(match) ? 4 : 0);
   const ranking = match => [...seats].sort((a, b) =>
     match.points[b] - match.points[a] || seatFrom(a, match.firstDealer) - seatFrom(b, match.firstDealer));
 
@@ -4439,11 +4455,29 @@ globalThis.PracticeProfile=Object.freeze({"version":2,"source":{"title":"天鳳�
       points, match.names[player] + ' 登記立直', transfers);
   }
 
-  function nextHand(match, points, sticks, repeat, drawn, label, transfers) {
-    const ended = !repeat && match.round === lastRound(match.mode);
+  function endLabel(match, points, {repeat, drawn, abortive, doubleRon}) {
+    if (abortive || match.round < lastScheduledRound(match.mode)) return '';
+    if (!usesExtension(match)) return repeat ? '' : '對局結束';
+
+    const leader = ranking({...match, points})[0];
+    const reachedTarget = points[leader] >= targetPoints;
+    if (!repeat && match.round === lastRound(match)) return '延長賽結束';
+    if (!reachedTarget) return '';
+    if (isExtension(match) && repeat && doubleRon) return '';
+    if (repeat && leader === dealerOf(match)) return drawn ? '莊家聽牌止' : '莊家和了止';
+    return !repeat || isExtension(match) ? '達到 30,000 點，對局結束' : '';
+  }
+
+  function nextHand(match, points, result, label, transfers) {
+    let {sticks} = result;
+    const {repeat, drawn} = result;
+    const ending = endLabel(match, points, result);
+    const ended = !!ending;
     const round = match.round + (repeat || ended ? 0 : 1);
     const honba = ended ? match.honba : (repeat || drawn ? match.honba + 1 : 0);
-    const notes = [label, ended ? '對局結束' : (repeat ? '莊家連莊' : '輪莊')];
+    const enteringExtension = !isExtension(match) && isExtension({...match, round});
+    const next = enteringExtension ? '延長賽 · ' + roundLabel({round}) : (repeat ? '莊家連莊' : '輪莊');
+    const notes = [label, ending || next];
     if (ended && sticks) {
       const leader = ranking({...match, points})[0];
       transfer(points, transfers, null, leader, sticks * riichiPoints, 'pot');
@@ -4451,6 +4485,47 @@ globalThis.PracticeProfile=Object.freeze({"version":2,"source":{"title":"天鳳�
       sticks = 0;
     }
     return record(match, {round, honba, sticks, ended, declared: []}, points, notes.join(' · '), transfers);
+  }
+
+  const minHan = (match, player, method) => method === 'tsumo' && match.declared.includes(player) ? 2 : 1;
+
+  function maxLowHanFu(match, player, method, han) {
+    const fourFuPair = !match.rules.doubleWind2 && seatWind(match, player) === roundWind(match);
+    if (han === 1 || (han === 2 && match.declared.includes(player))) {
+      // Three concealed triplets or three quads would already add two han.
+      if (method === 'ron') return fourFuPair ? 110 : 100;
+      if (han === 2) return fourFuPair ? 100 : 90;
+      return 100;
+    }
+    return 110;
+  }
+
+  function handContextError(match, player, {han, fu, method}) {
+    if (han < minHan(match, player, method)) return '立直後自摸至少 2 番。';
+    if (han >= 5) return '';
+    if (match.declared.includes(player)) {
+      if (fu === 20 && han < 3) return '立直、平和及自摸合計至少 3 番。';
+      if (fu === 25 && han < (method === 'tsumo' ? 4 : 3)) {
+        return '立直後的七對子至少為榮和 3 番、自摸 4 番。';
+      }
+    }
+    if (han <= 2 && fu > maxLowHanFu(match, player, method, han)) return '請選擇符合座風與和牌方式的符數。';
+    return '';
+  }
+
+  function fuChoices(match, player, method, han) {
+    if (!Number.isInteger(han) || han < minHan(match, player, method) || han >= 5) return [];
+    const input = {...match.rules, dealer: player === dealerOf(match), method, han};
+    const choices = [];
+    for (const fu of Riichi.FU) {
+      const scoring = {...input, fu};
+      const score = Riichi.calculate(scoring);
+      if (!score.valid || handContextError(match, player, scoring)) continue;
+      const orHigher = score.limit === '滿貫';
+      choices.push({fu, orHigher});
+      if (orHigher) break;
+    }
+    return choices;
   }
 
   function win(match, source, hands) {
@@ -4470,12 +4545,14 @@ globalThis.PracticeProfile=Object.freeze({"version":2,"source":{"title":"天鳳�
     const extra = (match.honba - honba) * (tsumo ? 100 : 300);
     for (const hand of hands) {
       const winner = hand.player;
-      const score = Riichi.calculate({
+      const scoring = {
         ...match.rules, dealer: winner === dealer, method, honba,
         mode: hand.yakuman ? 'yakuman' : 'normal',
         yakuman: hand.yakuman, han: hand.han, fu: hand.fu
-      });
-      if (!score.valid) return {error: match.names[winner] + '：' + score.error, player: winner};
+      };
+      const score = Riichi.calculate(scoring);
+      const error = score.error || (!hand.yakuman && handContextError(match, winner, scoring));
+      if (error) return {error: match.names[winner] + '：' + error, player: winner};
 
       for (const payer of tsumo ? seats.filter(player => player !== winner) : [source]) {
         const payment = score.payments[score.payments.length === 1 || payer === dealer ? 0 : 1];
@@ -4490,14 +4567,16 @@ globalThis.PracticeProfile=Object.freeze({"version":2,"source":{"title":"天鳳�
     const sourceLabel = tsumo ? '' : '，' + match.names[source] + ' 放銃';
     const potLabel = match.sticks ? ' · ' + match.names[potWinner] + ' 領取 ' + match.sticks + ' 支供託' : '';
     const label = names + ' ' + type + sourceLabel + potLabel;
-    return {match: nextHand(match, points, 0, winners.includes(dealer), false, label, transfers)};
+    const result = {sticks: 0, repeat: winners.includes(dealer), doubleRon: winners.length === 2};
+    return {match: nextHand(match, points, result, label, transfers)};
   }
 
   function draw(match, tenpai, abortive) {
     if (match.ended) return null;
     const points = [...match.points];
     const transfers = [];
-    if (abortive) return nextHand(match, points, match.sticks, true, true, '途中流局', transfers);
+    const result = {sticks: match.sticks, repeat: abortive || tenpai.includes(dealerOf(match)), drawn: true, abortive};
+    if (abortive) return nextHand(match, points, result, '途中流局', transfers);
 
     const count = tenpai.length;
     if (count > 0 && count < seats.length) {
@@ -4507,7 +4586,7 @@ globalThis.PracticeProfile=Object.freeze({"version":2,"source":{"title":"天鳳�
       }
     }
     const ready = count ? '聽牌 ' + tenpai.map(player => match.names[player]).join('、') : '無人聽牌';
-    return nextHand(match, points, match.sticks, tenpai.includes(dealerOf(match)), true, '荒牌流局 · ' + ready, transfers);
+    return nextHand(match, points, result, '荒牌流局 · ' + ready, transfers);
   }
 
   function validTransfers(last) {
@@ -4531,22 +4610,24 @@ globalThis.PracticeProfile=Object.freeze({"version":2,"source":{"title":"天鳳�
   function isMatch(match) {
     const fourIntegers = value => Array.isArray(value) && value.length === 4 && value.every(Number.isSafeInteger);
     const counter = value => Number.isSafeInteger(value) && value >= 0;
+    const optionalFlag = value => value === undefined || typeof value === 'boolean';
     return !!match && Array.isArray(match.names) && match.names.length === 4 &&
       match.names.every(name => typeof name === 'string' && name.trim() && name.length <= 24) &&
       ['east', 'south'].includes(match.mode) && seats.includes(match.firstDealer) &&
-      counter(match.round) && match.round <= lastRound(match.mode) && counter(match.honba) &&
+      typeof match.rules?.kiriage === 'boolean' && ['yakuman', 'sanbaiman'].includes(match.rules.kazoe) &&
+      optionalFlag(match.rules.extension) && optionalFlag(match.rules.doubleWind2) &&
+      counter(match.round) && match.round <= lastRound(match) && counter(match.honba) &&
       counter(match.sticks) && fourIntegers(match.points) &&
       match.points.reduce((sum, value) => sum + value, match.sticks * riichiPoints) === startingPoints * seats.length &&
       Array.isArray(match.declared) && match.declared.every(player => seats.includes(player)) &&
       new Set(match.declared).size === match.declared.length && match.sticks >= match.declared.length &&
-      typeof match.ended === 'boolean' && typeof match.rules?.kiriage === 'boolean' &&
-      ['yakuman', 'sanbaiman'].includes(match.rules?.kazoe) &&
+      typeof match.ended === 'boolean' &&
       (match.last === null ||
         (typeof match.last?.label === 'string' && fourIntegers(match.last.delta) && validTransfers(match.last)));
   }
 
   globalThis.LiveScore = Object.freeze({
-    seats, winds, dealerOf, seatWind, roundLabel, ranking, start, canDeclare, declare, win, draw, isMatch
+    seats, winds, dealerOf, seatWind, roundLabel, isExtension, ranking, start, canDeclare, declare, minHan, fuChoices, win, draw, isMatch
   });
 })();
 </script>
@@ -4776,7 +4857,10 @@ window.addEventListener('DOMContentLoaded', () => {
   }
 
   function calculatorRules() {
-    return {kiriage: $('kiriage').checked, kazoe: $('kazoe').value};
+    return {
+      kiriage: $('kiriage').checked, kazoe: $('kazoe').value, doubleWind2: $('doubleWind2').checked,
+      extension: $('liveExtension').checked
+    };
   }
 
   function load(value) {
@@ -4897,7 +4981,8 @@ window.addEventListener('DOMContentLoaded', () => {
     if (!match) {
       const rules = calculatorRules();
       $('liveSetupRules').textContent = '每家 25,000 點 · ' + (rules.kiriage ? '切上滿貫' : '不切上滿貫') +
-        ' · ' + (rules.kazoe === 'yakuman' ? '13 番起累計役滿' : '累計番數上限三倍滿');
+        ' · ' + (rules.kazoe === 'yakuman' ? '13 番起累計役滿' : '累計番數上限三倍滿') +
+        ' · 連風雀頭 ' + (rules.doubleWind2 ? '2' : '4') + ' 符';
       showSetupWinds();
       return;
     }
@@ -4905,7 +4990,8 @@ window.addEventListener('DOMContentLoaded', () => {
     const {ended, names, points, last} = match;
     const dealer = LiveScore.dealerOf(match);
     const ranking = ended ? LiveScore.ranking(match) : [];
-    $('liveMatchMode').textContent = matchTitles[match.mode] + (ended ? ' · 終局' : '');
+    $('liveMatchMode').textContent = matchTitles[match.mode] +
+      (LiveScore.isExtension(match) ? ' · 延長賽' : '') + (ended ? ' · 終局' : '');
     $('liveRoundLabel').textContent = LiveScore.roundLabel(match);
     $('liveHonba').textContent = format.format(match.honba);
     paintScores(points);
@@ -4994,25 +5080,32 @@ window.addEventListener('DOMContentLoaded', () => {
     if (handRows.has(player)) return handRows.get(player);
     const row = clone('liveHandTemplate');
     const [han, fu] = row.querySelectorAll('select');
+    const fuField = row.querySelector('.live-fu-field');
+    const method = player === source ? 'tsumo' : 'ron';
     const name = LiveScore.seatWind(match, player) + '家 ' + match.names[player];
     row.querySelector('.live-hand-name').textContent = name;
     han.setAttribute('aria-label', name + ' 番數');
     fu.setAttribute('aria-label', name + ' 符數');
-    for (let i = 1; i <= 13; i++) han.add(new Option(i === 13 ? '13 番以上' : i + ' 番', String(i)));
+    const minimum = LiveScore.minHan(match, player, method);
+    for (let i = minimum; i <= 13; i++) han.add(new Option(i === 13 ? '13 番以上' : i + ' 番', String(i)));
     for (let i = 1; i <= 6; i++) han.add(new Option(i === 1 ? '役滿' : i + ' 倍役滿', 'yakuman-' + i));
-    for (const value of [...Riichi.FU, 120, 130, 140]) fu.add(new Option(value + ' 符', String(value)));
-    let previousFu = '';
+    let choices = [], previousFu;
     han.addEventListener('change', () => {
-      const yakuman = han.value.startsWith('yakuman-');
-      if (yakuman && !fu.disabled) {
-        previousFu = fu.value;
-        fu.value = '';
-      } else if (!yakuman && fu.disabled) fu.value = previousFu;
-      fu.disabled = yakuman;
-      fu.options[0].textContent = yakuman ? '不適用' : '請選擇';
+      choices = LiveScore.fuChoices(match, player, method, Number(han.value));
+      const options = choices.map(choice => new Option(
+        choice.fu + ' 符' + (choice.orHigher ? '以上' : ''), String(choice.fu)));
+      fu.replaceChildren(...(options.length ? [new Option('請選擇', ''), ...options] : []));
+      fuField.hidden = !choices.length;
+      fu.disabled = fuField.hidden;
+      const compatible = choices.find(choice => previousFu && (
+        (!previousFu.orHigher && previousFu.fu === choice.fu) || (choice.orHigher && previousFu.fu >= choice.fu)));
+      fu.value = compatible ? String(compatible.fu) : '';
       setWinError();
     });
-    fu.addEventListener('change', () => setWinError());
+    fu.addEventListener('change', () => {
+      previousFu = choices.find(choice => String(choice.fu) === fu.value);
+      setWinError();
+    });
     const fields = {row, han, fu};
     handRows.set(player, fields);
     return fields;
@@ -5119,6 +5212,7 @@ window.addEventListener('DOMContentLoaded', () => {
       dialog.close();
       setupForm.elements.liveMode.value = previous.mode;
       setupForm.elements.liveFirstDealer.value = String(previous.firstDealer);
+      $('liveExtension').checked = previous.rules.extension !== false;
       setupSeats.forEach(({name}, player) => { name.value = previous.names[player]; });
       showSetupWinds();
       setupSeats[0].name.focus();
