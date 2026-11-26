@@ -928,6 +928,7 @@ body.soul-playing{overflow:hidden}
     grid-template-rows: minmax(min-content, 1fr) auto;
     gap: clamp(.65rem, 1.55vh, 1.3rem);
   }
+  .live-table-slot { display: contents; }
   .live-table {
     position: relative;
     isolation: isolate;
@@ -2280,8 +2281,9 @@ body.soul-playing{overflow:hidden}
     --series-frame: #6a522a;
     --series-shadow: #020a05d6;
     --series-ray: #d6aa52;
-    --series-page: var(--live-loki-classic-bg) center / cover no-repeat fixed var(--series-bg);
-    --series-felt: var(--live-loki-classic-felt) center / contain no-repeat var(--series-bg);
+    --series-page: var(--live-loki-classic-bg) center /
+      min(2560px, max(100%, calc(100dvh * 16 / 9))) auto no-repeat fixed var(--series-bg);
+    --series-felt: var(--live-loki-classic-felt) center / cover no-repeat var(--series-bg);
     --series-table-shadow: 0 1rem 2.8rem rgba(1, 7, 4, 0.82),
       0 0 0 1px rgba(235, 198, 118, 0.32);
   }
@@ -2308,13 +2310,17 @@ body.soul-playing{overflow:hidden}
   .live-board[data-theme="loki-classic"] .live-table {
     border: 2px solid #cfa960;
     border-radius: clamp(.75rem, 1.6vw, 1.35rem);
-    padding: clamp(.75rem, 2.3vw, 2.4rem);
+    background-origin: border-box;
+    padding: 0;
   }
-  .live-board[data-theme="loki-classic"] .live-table::before {
-    inset: clamp(.24rem, .58vw, .58rem);
-    border: 1px solid rgba(246, 212, 134, 0.34);
-    border-radius: calc(clamp(.75rem, 1.6vw, 1.35rem) - .22rem);
-    opacity: .62;
+  .live-board[data-theme="loki-classic"] .live-table::before { content: none; }
+  .live-board[data-theme="loki-classic"] .live-score-grid {
+    margin-inline: 5.8%;
+    padding-block: clamp(3rem, 7vw, 4.5rem);
+  }
+  .live-board[data-theme="loki-classic"] .live-player:is([data-position="top"], [data-position="bottom"]) .live-riichi {
+    inset: 50% auto auto calc(100% + .35rem);
+    translate: 0 -50%;
   }
   .live-board[data-theme="loki-classic"] .live-player {
     --live-card:
@@ -2338,25 +2344,41 @@ body.soul-playing{overflow:hidden}
   }
   .live-board[data-theme="loki-classic"] .live-player-select {
     border-radius: .35rem .35rem 0 0;
-    padding: clamp(.34rem, .95vw, 1rem);
+    padding: clamp(.34rem, .8vw, .8rem) clamp(.34rem, .95vw, 1rem) .15rem;
+    gap: .28rem;
+  }
+  .live-board[data-theme="loki-classic"] .live-player-name {
+    display: -webkit-box;
+    -webkit-box-orient: vertical;
+    -webkit-line-clamp: 2;
+    overflow: hidden;
+    font-size: clamp(.78rem, 5.8cqi, 1.65rem);
   }
   .live-board[data-theme="loki-classic"] .live-player-footer {
-    border-radius: 0 0 .35rem .35rem;
-    min-height: 2.3rem;
+    justify-content: center;
+    min-height: clamp(1.15rem, 5.8cqi, 1.65rem);
+    padding: 0 .2rem .22rem;
+    text-align: center;
+  }
+  .live-board[data-theme="loki-classic"] .live-player-delta {
+    line-height: 1.1;
   }
   .live-board[data-theme="loki-classic"] .live-player-points {
     color: #fff6df;
+    font-size: clamp(.92rem, 14cqi, 3.85rem);
     text-shadow: 0 2px 10px rgba(0, 0, 0, 0.82), 0 0 14px rgba(235, 195, 104, 0.34);
   }
   .live-board[data-theme="loki-classic"] .live-wind-panel {
     --live-wind-frame: var(--live-loki-classic-wind) center / 100% 100% no-repeat;
     border: 2px solid #e2be72;
     border-radius: clamp(.7rem, 1.5vw, 1.3rem);
-    padding: clamp(.88rem, 2.2vw, 2.1rem);
     box-shadow:
       inset 0 0 0 1px rgba(255, 232, 168, 0.36),
       0 .48rem 1.7rem rgba(1, 7, 4, 0.86),
       0 0 1.45rem rgba(80, 212, 138, 0.22);
+  }
+  .live-board[data-theme="loki-classic"] .live-table .live-wind-panel {
+    padding: clamp(.65rem, 1.7vw, 1.65rem);
   }
   .live-board[data-theme="loki-classic"] .live-wind-face {
     border: 1px solid rgba(242, 206, 126, 0.58);
@@ -2376,6 +2398,40 @@ body.soul-playing{overflow:hidden}
     letter-spacing: .04em;
     color: #ffe4a1;
     text-shadow: 0 2px 10px rgba(0, 0, 0, 0.84), 0 0 16px rgba(235, 192, 96, 0.42);
+  }
+  @media (max-width: 560px) {
+    .live-board[data-theme="loki-classic"] .live-score-grid {
+      margin-inline: clamp(.4rem, 2.1vw, .65rem);
+    }
+  }
+  @media (min-width: 900px) {
+    .live-board[data-theme="loki-classic"] .live-table-slot {
+      display: grid;
+      place-items: center;
+      min-block-size: 29rem;
+      container-type: size;
+    }
+    .live-board[data-theme="loki-classic"] .live-table {
+      inline-size: min(100%, calc(100cqh * 16 / 9));
+      aspect-ratio: 16 / 9;
+      container-type: inline-size;
+      grid-template-rows: minmax(0, 1fr);
+    }
+    .live-board[data-theme="loki-classic"] .live-score-grid {
+      margin-block: 5cqw;
+      padding-block: 0;
+      gap: clamp(.5rem, 1.25cqw, 1.15rem);
+    }
+    .live-board[data-theme="loki-classic"] .live-player {
+      justify-self: center;
+      inline-size: min(100%, 23cqw, 24rem);
+      padding: clamp(.28rem, .66cqw, .66rem);
+    }
+    .live-board[data-theme="loki-classic"] .live-wind-panel {
+      justify-self: center;
+      margin-inline: 0;
+      inline-size: min(100%, 21cqw, 18rem);
+    }
   }
 
   :is(.live-board[data-theme="cat"], .live-theme-preview[data-preview="cat"]) {
@@ -3639,30 +3695,32 @@ body.soul-playing{overflow:hidden}
       </section>
 
       <section class="live-match" id="liveMatch" aria-labelledby="liveRoundLabel" hidden>
-        <div class="live-table" id="liveTable">
-          <div class="live-score-grid" id="livePlayers">
-            <div class="live-wind-panel">
-              <div class="live-wind-face">
-                <p id="liveMatchMode"></p>
-                <h2 id="liveRoundLabel" tabindex="-1"></h2>
-                <dl class="live-counters">
-                  <div><dt>本場</dt><dd><strong id="liveHonba">0</strong><span>本</span></dd></div>
-                  <div id="livePot">
-                    <dt>供託</dt>
-                    <dd>
-                      <strong id="liveSticks">0</strong><span>支</span>
-                      <span class="live-carry-stick live-stick" id="liveCarryStick" title="前局留下的供託" aria-hidden="true" hidden></span>
-                    </dd>
-                  </div>
-                </dl>
+        <div class="live-table-slot">
+          <div class="live-table" id="liveTable">
+            <div class="live-score-grid" id="livePlayers">
+              <div class="live-wind-panel">
+                <div class="live-wind-face">
+                  <p id="liveMatchMode"></p>
+                  <h2 id="liveRoundLabel" tabindex="-1"></h2>
+                  <dl class="live-counters">
+                    <div><dt>本場</dt><dd><strong id="liveHonba">0</strong><span>本</span></dd></div>
+                    <div id="livePot">
+                      <dt>供託</dt>
+                      <dd>
+                        <strong id="liveSticks">0</strong><span>支</span>
+                        <span class="live-carry-stick live-stick" id="liveCarryStick" title="前局留下的供託" aria-hidden="true" hidden></span>
+                      </dd>
+                    </div>
+                  </dl>
+                </div>
+                <div class="live-stick-tray" data-position="bottom" aria-hidden="true"><span class="live-stick" hidden></span></div>
+                <div class="live-stick-tray" data-position="right" aria-hidden="true"><span class="live-stick" hidden></span></div>
+                <div class="live-stick-tray" data-position="top" aria-hidden="true"><span class="live-stick" hidden></span></div>
+                <div class="live-stick-tray" data-position="left" aria-hidden="true"><span class="live-stick" hidden></span></div>
               </div>
-              <div class="live-stick-tray" data-position="bottom" aria-hidden="true"><span class="live-stick" hidden></span></div>
-              <div class="live-stick-tray" data-position="right" aria-hidden="true"><span class="live-stick" hidden></span></div>
-              <div class="live-stick-tray" data-position="top" aria-hidden="true"><span class="live-stick" hidden></span></div>
-              <div class="live-stick-tray" data-position="left" aria-hidden="true"><span class="live-stick" hidden></span></div>
             </div>
+            <div class="live-transfer-layer" id="liveTransferLayer" aria-hidden="true"></div>
           </div>
-          <div class="live-transfer-layer" id="liveTransferLayer" aria-hidden="true"></div>
         </div>
         <div class="live-match-footer">
           <p id="liveLastAction" class="live-last" role="status"></p>
