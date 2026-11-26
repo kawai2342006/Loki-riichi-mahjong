@@ -1817,19 +1817,12 @@ body.soul-playing{overflow:hidden}
     --series-frame: #0c2b3c;
     --series-shadow: #001a2bd8;
     --series-ray: #27d7f7;
-    --series-page:
-      linear-gradient(180deg, rgba(2, 10, 20, 0.18) 0%, rgba(2, 10, 20, 0.06) 48%, rgba(1, 7, 15, 0.26) 100%),
-      var(--live-tron-bg) center / cover no-repeat fixed;
-    --series-felt:
-      radial-gradient(ellipse at center, rgba(2, 12, 22, 0.03) 0%, rgba(1, 8, 16, 0.15) 100%),
-      var(--live-tron-felt) center / 100% 100% no-repeat;
-    --series-table-shadow:
-      inset 0 0 2.4rem rgba(41, 225, 250, 0.16),
-      0 0 1.8rem rgba(24, 198, 232, 0.34),
+    --series-page: var(--live-tron-bg) center / cover no-repeat fixed var(--series-bg);
+    --series-felt: var(--live-tron-felt) center / contain no-repeat var(--series-bg);
+    --series-table-shadow: 0 0 1.8rem rgba(24, 198, 232, 0.34),
       0 1rem 2.8rem rgba(0, 6, 14, 0.84);
   }
   .live-theme-preview[data-preview="tron"] {
-    --sample-felt: var(--live-tron-felt) center / 100% 100% no-repeat;
     --sample-card: var(--live-tron-card) center / 100% 100% no-repeat;
     --sample-center: var(--live-tron-wind) center / 100% 100% no-repeat;
     --sample-outline: #3ad4ee;
@@ -1934,19 +1927,12 @@ body.soul-playing{overflow:hidden}
     --series-frame: #3a234c;
     --series-shadow: #070612d8;
     --series-ray: #f55bc3;
-    --series-page:
-      linear-gradient(180deg, rgba(12, 10, 24, 0.18) 0%, rgba(12, 11, 26, 0.06) 48%, rgba(8, 7, 18, 0.26) 100%),
-      var(--live-cyberpunk-bg) center / cover no-repeat fixed;
-    --series-felt:
-      radial-gradient(ellipse at center, rgba(12, 12, 26, 0.03) 0%, rgba(8, 8, 18, 0.15) 100%),
-      var(--live-cyberpunk-felt) center / 100% 100% no-repeat;
-    --series-table-shadow:
-      inset 0 0 2.4rem rgba(242, 92, 198, 0.16),
-      0 0 1.6rem rgba(62, 228, 248, 0.22),
+    --series-page: var(--live-cyberpunk-bg) center / cover no-repeat fixed var(--series-bg);
+    --series-felt: var(--live-cyberpunk-felt) center / contain no-repeat var(--series-bg);
+    --series-table-shadow: 0 0 1.6rem rgba(62, 228, 248, 0.22),
       0 1rem 2.8rem rgba(4, 4, 12, 0.86);
   }
   .live-theme-preview[data-preview="cyberpunk"] {
-    --sample-felt: var(--live-cyberpunk-felt) center / 100% 100% no-repeat;
     --sample-card: var(--live-cyberpunk-card) center / 100% 100% no-repeat;
     --sample-center: var(--live-cyberpunk-wind) center / 100% 100% no-repeat;
     --sample-outline: #e866c5;
@@ -2060,19 +2046,12 @@ body.soul-playing{overflow:hidden}
     --series-frame: #11341d;
     --series-shadow: #011207da;
     --series-ray: #46e26f;
-    --series-page:
-      linear-gradient(180deg, rgba(2, 10, 4, 0.18) 0%, rgba(2, 10, 4, 0.06) 48%, rgba(1, 7, 3, 0.26) 100%),
-      var(--live-matrix-bg) center / cover no-repeat fixed;
-    --series-felt:
-      radial-gradient(ellipse at center, rgba(2, 12, 5, 0.03) 0%, rgba(1, 8, 3, 0.15) 100%),
-      var(--live-matrix-felt) center / 100% 100% no-repeat;
-    --series-table-shadow:
-      inset 0 0 2.4rem rgba(66, 236, 110, 0.16),
-      0 0 1.6rem rgba(54, 214, 96, 0.28),
+    --series-page: var(--live-matrix-bg) center / cover no-repeat fixed var(--series-bg);
+    --series-felt: var(--live-matrix-felt) center / contain no-repeat var(--series-bg);
+    --series-table-shadow: 0 0 1.6rem rgba(54, 214, 96, 0.28),
       0 1rem 2.8rem rgba(0, 8, 2, 0.86);
   }
   .live-theme-preview[data-preview="matrix"] {
-    --sample-felt: var(--live-matrix-felt) center / 100% 100% no-repeat;
     --sample-card: var(--live-matrix-card) center / 100% 100% no-repeat;
     --sample-center: var(--live-matrix-wind) center / 100% 100% no-repeat;
     --sample-outline: #42cf6b;
@@ -2185,19 +2164,12 @@ body.soul-playing{overflow:hidden}
     --series-frame: #6a3826;
     --series-shadow: #120704d6;
     --series-ray: #f28c4b;
-    --series-page:
-      linear-gradient(180deg, rgba(19, 10, 7, 0.20) 0%, rgba(18, 9, 6, 0.06) 48%, rgba(14, 7, 5, 0.28) 100%),
-      var(--live-loki-tva-bg) center / cover no-repeat fixed;
-    --series-felt:
-      radial-gradient(ellipse at center, rgba(22, 11, 7, 0.03) 0%, rgba(16, 8, 5, 0.16) 100%),
-      var(--live-loki-tva-felt) center / 100% 100% no-repeat;
-    --series-table-shadow:
-      inset 0 0 2.2rem rgba(244, 150, 74, 0.16),
-      0 1rem 2.8rem rgba(8, 3, 2, 0.78),
+    --series-page: var(--live-loki-tva-bg) center / cover no-repeat fixed var(--series-bg);
+    --series-felt: var(--live-loki-tva-felt) center bottom / contain no-repeat var(--series-bg);
+    --series-table-shadow: 0 1rem 2.8rem rgba(8, 3, 2, 0.78),
       0 0 0 1px rgba(236, 165, 103, 0.28);
   }
   .live-theme-preview[data-preview="loki-tva"] {
-    --sample-felt: var(--live-loki-tva-felt) center / 100% 100% no-repeat;
     --sample-card: var(--live-loki-tva-card) center / 100% 100% no-repeat;
     --sample-center: var(--live-loki-tva-wind) center / 100% 100% no-repeat;
     --sample-outline: #d2905d;
@@ -2308,19 +2280,12 @@ body.soul-playing{overflow:hidden}
     --series-frame: #6a522a;
     --series-shadow: #020a05d6;
     --series-ray: #d6aa52;
-    --series-page:
-      linear-gradient(180deg, rgba(4, 14, 9, 0.18) 0%, rgba(4, 13, 9, 0.06) 48%, rgba(3, 10, 6, 0.26) 100%),
-      var(--live-loki-classic-bg) center / cover no-repeat fixed;
-    --series-felt:
-      radial-gradient(ellipse at center, rgba(4, 16, 10, 0.03) 0%, rgba(3, 11, 7, 0.15) 100%),
-      var(--live-loki-classic-felt) center / 100% 100% no-repeat;
-    --series-table-shadow:
-      inset 0 0 2.2rem rgba(229, 189, 104, 0.18),
-      0 1rem 2.8rem rgba(1, 7, 4, 0.82),
+    --series-page: var(--live-loki-classic-bg) center / cover no-repeat fixed var(--series-bg);
+    --series-felt: var(--live-loki-classic-felt) center / contain no-repeat var(--series-bg);
+    --series-table-shadow: 0 1rem 2.8rem rgba(1, 7, 4, 0.82),
       0 0 0 1px rgba(235, 198, 118, 0.32);
   }
   .live-theme-preview[data-preview="loki-classic"] {
-    --sample-felt: var(--live-loki-classic-felt) center / 100% 100% no-repeat;
     --sample-card: var(--live-loki-classic-card) center / 100% 100% no-repeat;
     --sample-center: var(--live-loki-classic-wind) center / 100% 100% no-repeat;
     --sample-outline: #d2ae66;
@@ -2431,15 +2396,11 @@ body.soul-playing{overflow:hidden}
     --series-tray: #745588;
     --series-shadow: #6b467546;
     --series-ray: #fff1dc;
-    --series-page:
-      linear-gradient(180deg, rgba(248, 240, 252, 0.18) 0%, rgba(245, 236, 250, 0.08) 50%, rgba(238, 224, 246, 0.22) 100%),
-      var(--live-cat-bg) center / cover no-repeat fixed;
-    --series-felt:
-      var(--live-cat-felt) center / 100% 100% no-repeat;
-    --series-table-shadow: inset 0 0 1.6rem rgba(255, 255, 255, 0.45), 0 .9rem 2.4rem rgba(96, 62, 118, 0.24);
+    --series-page: var(--live-cat-bg) center / cover no-repeat fixed var(--series-bg);
+    --series-felt: var(--live-cat-felt) center bottom / contain no-repeat var(--series-bg);
+    --series-table-shadow: 0 .9rem 2.4rem rgba(96, 62, 118, 0.24);
   }
   .live-theme-preview[data-preview="cat"] {
-    --sample-felt: var(--live-cat-felt) center / 100% 100% no-repeat;
     --sample-card: var(--live-cat-card) center / 100% 100% no-repeat;
     --sample-center: var(--live-cat-wind) center / 100% 100% no-repeat;
     --sample-outline: #ae8bc4;
@@ -2497,15 +2458,11 @@ body.soul-playing{overflow:hidden}
     --series-tray: #825d39;
     --series-shadow: #74522a40;
     --series-ray: #feefbb;
-    --series-page:
-      linear-gradient(180deg, rgba(255, 249, 232, 0.14) 0%, rgba(255, 245, 222, 0.06) 50%, rgba(250, 236, 202, 0.18) 100%),
-      var(--live-dog-bg) center / cover no-repeat fixed;
-    --series-felt:
-      var(--live-dog-felt) center / 100% 100% no-repeat;
-    --series-table-shadow: inset 0 0 1.6rem rgba(255, 251, 238, 0.44), 0 .9rem 2.4rem rgba(108, 72, 34, 0.24);
+    --series-page: var(--live-dog-bg) center / cover no-repeat fixed var(--series-bg);
+    --series-felt: var(--live-dog-felt) center / contain no-repeat var(--series-bg);
+    --series-table-shadow: 0 .9rem 2.4rem rgba(108, 72, 34, 0.24);
   }
   .live-theme-preview[data-preview="dog"] {
-    --sample-felt: var(--live-dog-felt) center / 100% 100% no-repeat;
     --sample-card: var(--live-dog-card) center / 100% 100% no-repeat;
     --sample-center: var(--live-dog-wind) center / 100% 100% no-repeat;
     --sample-outline: #c29156;
@@ -2561,15 +2518,11 @@ body.soul-playing{overflow:hidden}
     --series-frame: #11435e;
     --series-shadow: #01101cd8;
     --series-ray: #46d8f0;
-    --series-page:
-      linear-gradient(180deg, rgba(4, 24, 40, 0.18) 0%, rgba(4, 24, 40, 0.05) 50%, rgba(2, 16, 28, 0.24) 100%),
-      var(--live-whale-shark-bg) center / cover no-repeat fixed;
-    --series-felt:
-      var(--live-whale-shark-felt) center / cover no-repeat;
+    --series-page: var(--live-whale-shark-bg) center / cover no-repeat fixed var(--series-bg);
+    --series-felt: var(--live-whale-shark-felt) center / cover no-repeat var(--series-bg);
     --series-table-shadow: none;
   }
   .live-theme-preview[data-preview="whale-shark"] {
-    --sample-felt: var(--live-whale-shark-felt) center / cover no-repeat;
     --sample-card: var(--live-whale-shark-card) center / 100% 100% no-repeat;
     --sample-center: var(--live-whale-shark-wind) center / 100% 100% no-repeat;
     --sample-outline: #64cbe3;
@@ -2652,16 +2605,11 @@ body.soul-playing{overflow:hidden}
     --series-frame: #1d2436;
     --series-shadow: #02040ad8;
     --series-ray: #47a3ff;
-    --series-page:
-      linear-gradient(180deg, rgba(8, 10, 16, 0.18) 0%, rgba(8, 10, 16, 0.06) 50%, rgba(5, 7, 12, 0.26) 100%),
-      var(--live-soft-darts-bg) center / cover no-repeat fixed;
-    --series-felt:
-      radial-gradient(ellipse at center, rgba(8, 11, 18, 0.03) 0%, rgba(5, 7, 12, 0.15) 100%),
-      var(--live-soft-darts-felt) center / 100% 100% no-repeat;
-    --series-table-shadow: inset 0 0 2.2rem rgba(74, 152, 255, 0.16), 0 0 1.6rem rgba(255, 68, 98, 0.24), 0 1rem 2.8rem rgba(2, 4, 10, 0.86);
+    --series-page: var(--live-soft-darts-bg) center / cover no-repeat fixed var(--series-bg);
+    --series-felt: var(--live-soft-darts-felt) center / contain no-repeat var(--series-bg);
+    --series-table-shadow: 0 0 1.6rem rgba(255, 68, 98, 0.24), 0 1rem 2.8rem rgba(2, 4, 10, 0.86);
   }
   .live-theme-preview[data-preview="soft-darts"] {
-    --sample-felt: var(--live-soft-darts-felt) center / 100% 100% no-repeat;
     --sample-card: var(--live-soft-darts-card) center / 100% 100% no-repeat;
     --sample-center: var(--live-soft-darts-wind) center / 100% 100% no-repeat;
     --sample-outline: #4e94ff;
@@ -2722,16 +2670,11 @@ body.soul-playing{overflow:hidden}
     --series-frame: #1b314a;
     --series-shadow: #020814dc;
     --series-ray: #6edcf5;
-    --series-page:
-      linear-gradient(180deg, rgba(7, 13, 24, 0.18) 0%, rgba(7, 13, 24, 0.06) 50%, rgba(4, 9, 18, 0.26) 100%),
-      var(--live-miyabi-frost-bg) center / cover no-repeat fixed;
-    --series-felt:
-      radial-gradient(ellipse at center, rgba(7, 15, 28, 0.03) 0%, rgba(4, 10, 20, 0.15) 100%),
-      var(--live-miyabi-frost-felt) center / 100% 100% no-repeat;
-    --series-table-shadow: inset 0 0 2.2rem rgba(138, 228, 255, 0.16), 0 1rem 2.8rem rgba(2, 6, 14, 0.86);
+    --series-page: var(--live-miyabi-frost-bg) center / cover no-repeat fixed var(--series-bg);
+    --series-felt: var(--live-miyabi-frost-felt) center / contain no-repeat var(--series-bg);
+    --series-table-shadow: 0 1rem 2.8rem rgba(2, 6, 14, 0.86);
   }
   .live-theme-preview[data-preview="miyabi-frost"] {
-    --sample-felt: var(--live-miyabi-frost-felt) center / 100% 100% no-repeat;
     --sample-card: var(--live-miyabi-frost-card) center / 100% 100% no-repeat;
     --sample-center: var(--live-miyabi-frost-wind) center / 100% 100% no-repeat;
     --sample-outline: #7fd4f0;
@@ -2796,16 +2739,11 @@ body.soul-playing{overflow:hidden}
     --series-frame: #4b1d5c;
     --series-shadow: #0d0416dc;
     --series-ray: #ff69b8;
-    --series-page:
-      linear-gradient(180deg, rgba(22, 9, 32, 0.18) 0%, rgba(22, 9, 32, 0.06) 50%, rgba(14, 6, 22, 0.26) 100%),
-      var(--live-vice-sunset-bg) center / cover no-repeat fixed;
-    --series-felt:
-      radial-gradient(ellipse at center, rgba(24, 10, 36, 0.03) 0%, rgba(14, 6, 22, 0.15) 100%),
-      var(--live-vice-sunset-felt) center / 100% 100% no-repeat;
-    --series-table-shadow: inset 0 0 2.2rem rgba(255, 106, 186, 0.18), 0 0 1.6rem rgba(86, 232, 248, 0.24), 0 1rem 2.8rem rgba(10, 3, 18, 0.86);
+    --series-page: var(--live-vice-sunset-bg) center / cover no-repeat fixed var(--series-bg);
+    --series-felt: var(--live-vice-sunset-felt) center / contain no-repeat var(--series-bg);
+    --series-table-shadow: 0 0 1.6rem rgba(86, 232, 248, 0.24), 0 1rem 2.8rem rgba(10, 3, 18, 0.86);
   }
   .live-theme-preview[data-preview="vice-sunset"] {
-    --sample-felt: var(--live-vice-sunset-felt) center / 100% 100% no-repeat;
     --sample-card: var(--live-vice-sunset-card) center / 100% 100% no-repeat;
     --sample-center: var(--live-vice-sunset-wind) center / 100% 100% no-repeat;
     --sample-outline: #f572be;
@@ -2877,17 +2815,11 @@ body.soul-playing{overflow:hidden}
     --series-tray: #a35a74;
     --series-shadow: #9b4f6e48;
     --series-ray: #fff3d1;
-    --series-page:
-      linear-gradient(180deg, rgba(255, 245, 247, 0.14) 0%, rgba(255, 240, 244, 0.06) 50%, rgba(255, 236, 241, 0.18) 100%),
-      var(--live-cake-bg) center / cover no-repeat fixed;
-    --series-felt:
-      var(--live-cake-felt) center / 100% 100% no-repeat;
-    --series-table-shadow:
-      inset 0 0 1.6rem rgba(255, 255, 255, 0.45),
-      0 .9rem 2.4rem rgba(130, 62, 88, 0.26);
+    --series-page: var(--live-cake-bg) center / cover no-repeat fixed var(--series-bg);
+    --series-felt: var(--live-cake-felt) center / contain no-repeat var(--series-bg);
+    --series-table-shadow: 0 .9rem 2.4rem rgba(130, 62, 88, 0.26);
   }
   .live-theme-preview[data-preview="cake"] {
-    --sample-felt: var(--live-cake-felt) center / 100% 100% no-repeat;
     --sample-card: var(--live-cake-card) center / 100% 100% no-repeat;
     --sample-center: var(--live-cake-wind) center / 100% 100% no-repeat;
     --sample-outline: #d588a0;
@@ -2975,17 +2907,11 @@ body.soul-playing{overflow:hidden}
     --series-tray: #8e6136;
     --series-shadow: #7a522848;
     --series-ray: #fff5d1;
-    --series-page:
-      linear-gradient(180deg, rgba(255, 247, 230, 0.14) 0%, rgba(255, 243, 218, 0.06) 50%, rgba(252, 235, 200, 0.18) 100%),
-      var(--live-bread-bg) center / cover no-repeat fixed;
-    --series-felt:
-      var(--live-bread-felt) center / 100% 100% no-repeat;
-    --series-table-shadow:
-      inset 0 0 1.6rem rgba(255, 250, 236, 0.42),
-      0 .9rem 2.4rem rgba(102, 66, 30, 0.26);
+    --series-page: var(--live-bread-bg) center / cover no-repeat fixed var(--series-bg);
+    --series-felt: var(--live-bread-felt) center / contain no-repeat var(--series-bg);
+    --series-table-shadow: 0 .9rem 2.4rem rgba(102, 66, 30, 0.26);
   }
   .live-theme-preview[data-preview="bread"] {
-    --sample-felt: var(--live-bread-felt) center / 100% 100% no-repeat;
     --sample-card: var(--live-bread-card) center / 100% 100% no-repeat;
     --sample-center: var(--live-bread-wind) center / 100% 100% no-repeat;
     --sample-outline: #c69152;
@@ -3073,17 +2999,11 @@ body.soul-playing{overflow:hidden}
     --series-tray: #637e43;
     --series-shadow: #4a6f3a44;
     --series-ray: #fff3ce;
-    --series-page:
-      linear-gradient(180deg, rgba(246, 251, 232, 0.14) 0%, rgba(244, 250, 226, 0.06) 50%, rgba(235, 245, 214, 0.18) 100%),
-      var(--live-fruit-bg) center / cover no-repeat fixed;
-    --series-felt:
-      var(--live-fruit-felt) center / 100% 100% no-repeat;
-    --series-table-shadow:
-      inset 0 0 1.6rem rgba(255, 255, 244, 0.45),
-      0 .9rem 2.4rem rgba(62, 96, 48, 0.24);
+    --series-page: var(--live-fruit-bg) center / cover no-repeat fixed var(--series-bg);
+    --series-felt: var(--live-fruit-felt) center / contain no-repeat var(--series-bg);
+    --series-table-shadow: 0 .9rem 2.4rem rgba(62, 96, 48, 0.24);
   }
   .live-theme-preview[data-preview="fruit"] {
-    --sample-felt: var(--live-fruit-felt) center / 100% 100% no-repeat;
     --sample-card: var(--live-fruit-card) center / 100% 100% no-repeat;
     --sample-center: var(--live-fruit-wind) center / 100% 100% no-repeat;
     --sample-outline: #89aa6d;
