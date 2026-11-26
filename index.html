@@ -6,7 +6,7 @@
   <meta name="color-scheme" content="light">
   <meta name="theme-color" content="#f4f5ef">
   <meta name="description" content="四人日麻手牌點數計算器。手牌計算預設雀魂和牌動畫、番符速算即時計算。附隨機番符練習、圖像牌面及逐項符數拆解。">
-  <meta http-equiv="Content-Security-Policy" content="default-src 'none'; script-src 'unsafe-inline'; style-src 'unsafe-inline'; img-src 'self' data:; connect-src 'none'; base-uri 'none'; form-action 'none'">
+  <meta http-equiv="Content-Security-Policy" content="default-src 'none'; script-src 'unsafe-inline'; style-src 'unsafe-inline'; img-src 'self' data:; connect-src 'self'; base-uri 'none'; form-action 'none'">
   <title>點和 · 日麻點數計算器</title>
   <link rel="icon" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 64 64'%3E%3Crect x='9' y='3' width='46' height='58' rx='10' fill='%231f5644'/%3E%3Crect x='9' y='3' width='46' height='51' rx='10' fill='%23fffefb'/%3E%3Cpath d='M21 19h22v19H21zM32 11v36' fill='none' stroke='%23b85d4b' stroke-width='5'/%3E%3C/svg%3E">
   <style>
@@ -1804,6 +1804,55 @@ body.soul-playing{overflow:hidden}
     --live-hand-fields: var(--series-card);
   }
 
+  :is(.live-board[data-custom-theme], .live-theme-preview[data-custom-theme]) {
+    --series-scheme: dark;
+    --series-bg: #111a21;
+    --series-panel: #19252e;
+    --series-card: #17252c;
+    --series-screen: #101e26;
+    --series-hover: #2b3d48;
+    --series-text: #fff9ec;
+    --series-muted: #c7d3db;
+    --series-accent: #e8ca88;
+    --series-ink: #1a211e;
+    --series-edge: color-mix(in srgb, var(--series-accent) 60%, var(--series-screen));
+    --series-frame: #344753;
+    --series-shadow: #08101685;
+    --series-gain: #a3eed0;
+    --series-loss: #ffb5aa;
+    --series-page: var(--custom-theme-bg) center /
+      min(2560px, max(100%, calc(100dvh * 16 / 9))) auto no-repeat fixed var(--series-bg);
+    --series-felt: var(--custom-theme-felt) center / cover no-repeat var(--series-bg);
+  }
+  :is(.live-board[data-custom-theme="light"], .live-theme-preview[data-custom-theme="light"]) {
+    --series-scheme: light;
+    --series-bg: #f1e8ec;
+    --series-panel: #fffaf7;
+    --series-card: #fff9ef;
+    --series-screen: #f6eef3;
+    --series-hover: #eadceb;
+    --series-text: #352637;
+    --series-muted: #664c62;
+    --series-accent: #704682;
+    --series-ink: #fffaff;
+    --series-frame: #bfa9c6;
+    --series-shadow: #6b4a713a;
+    --series-gain: #21654b;
+    --series-loss: #a43750;
+  }
+  .live-theme-preview[data-custom-theme] {
+    --sample-card: var(--custom-theme-card) center / 100% 100% no-repeat var(--series-card);
+    --sample-center: var(--custom-theme-wind) center / contain no-repeat var(--series-frame);
+  }
+  .live-board[data-custom-theme] .live-table { border-width: 2px; }
+  .live-board[data-custom-theme] .live-player {
+    --live-card: var(--custom-theme-card) center / 100% 100% no-repeat var(--series-card);
+    --live-card-hover: color-mix(in srgb, var(--series-accent) 14%, transparent);
+  }
+  .live-board[data-custom-theme] .live-wind-panel {
+    --live-wind-frame: var(--custom-theme-wind) center / 100% 100% no-repeat var(--series-frame);
+  }
+
   :is(.live-board[data-theme="tron"], .live-theme-preview[data-preview="tron"]) {
     --series-bg: #020914;
     --series-panel: #081826;
@@ -2309,18 +2358,19 @@ body.soul-playing{overflow:hidden}
     border-color: #ffeaad;
     color: #1f1709;
   }
-  .live-board[data-theme="loki-classic"] .live-table {
-    border: 2px solid #cfa960;
+  .live-board[data-theme="loki-classic"] .live-table { border: 2px solid #cfa960; }
+  .live-board:is([data-theme="loki-classic"], [data-custom-theme]) .live-table {
     border-radius: clamp(.75rem, 1.6vw, 1.35rem);
     background-origin: border-box;
     padding: 0;
   }
-  .live-board[data-theme="loki-classic"] .live-table::before { content: none; }
-  .live-board[data-theme="loki-classic"] .live-score-grid {
+  .live-board:is([data-theme="loki-classic"], [data-custom-theme]) .live-table::before { content: none; }
+  .live-board:is([data-theme="loki-classic"], [data-custom-theme]) .live-score-grid {
     margin-inline: 5.8%;
     padding-block: clamp(3rem, 7vw, 4.5rem);
   }
-  .live-board[data-theme="loki-classic"] .live-player:is([data-position="top"], [data-position="bottom"]) .live-riichi {
+  .live-board:is([data-theme="loki-classic"], [data-custom-theme])
+    .live-player:is([data-position="top"], [data-position="bottom"]) .live-riichi {
     inset: 50% auto auto calc(100% + .35rem);
     translate: 0 -50%;
   }
@@ -2329,12 +2379,14 @@ body.soul-playing{overflow:hidden}
       linear-gradient(180deg, rgba(6, 18, 12, 0.18), rgba(4, 12, 8, 0.42)),
       var(--live-loki-classic-card) center / 100% 100% no-repeat;
     --live-card-hover: rgba(120, 232, 168, 0.10);
-    --classic-delta-row: clamp(1.55rem, 1.7vw, 2.7rem);
-    grid-template-columns: minmax(0, 1fr);
-    grid-template-rows: auto var(--classic-delta-row);
     border: 1px solid #d0aa60;
-    border-radius: clamp(.5rem, 1vw, .85rem);
     box-shadow: 0 .35rem 1.25rem rgba(2, 8, 5, 0.78), inset 0 0 .9rem rgba(62, 198, 126, 0.12);
+  }
+  .live-board:is([data-theme="loki-classic"], [data-custom-theme]) .live-player {
+    --live-card-delta-row: clamp(1.55rem, 1.7vw, 2.7rem);
+    grid-template-columns: minmax(0, 1fr);
+    grid-template-rows: auto var(--live-card-delta-row);
+    border-radius: clamp(.5rem, 1vw, .85rem);
   }
   .live-board[data-theme="loki-classic"] .live-player.is-dealer {
     border-color: #ffe39b;
@@ -2343,21 +2395,21 @@ body.soul-playing{overflow:hidden}
       0 0 1.55rem rgba(235, 190, 92, 0.52),
       0 .4rem 1.3rem rgba(2, 8, 5, 0.82);
   }
-  .live-board[data-theme="loki-classic"] .live-player-select {
+  .live-board:is([data-theme="loki-classic"], [data-custom-theme]) .live-player-select {
     grid-area: 1 / 1 / -1 / -1;
     border-radius: inherit;
     padding: clamp(.55rem, 1.1vw, 1.35rem) clamp(.55rem, 1.45vw, 1.65rem)
-      calc(var(--classic-delta-row) + .15rem);
+      calc(var(--live-card-delta-row) + .15rem);
     gap: .28rem;
   }
-  .live-board[data-theme="loki-classic"] .live-player-name {
+  .live-board:is([data-theme="loki-classic"], [data-custom-theme]) .live-player-name {
     display: -webkit-box;
     -webkit-box-orient: vertical;
     -webkit-line-clamp: 2;
     overflow: hidden;
     font-size: clamp(.78rem, 5.8cqi, 1.65rem);
   }
-  .live-board[data-theme="loki-classic"] .live-player-footer {
+  .live-board:is([data-theme="loki-classic"], [data-custom-theme]) .live-player-footer {
     grid-area: 2 / 1;
     display: grid;
     place-content: center;
@@ -2365,16 +2417,18 @@ body.soul-playing{overflow:hidden}
     text-align: center;
     pointer-events: none;
   }
-  .live-board[data-theme="loki-classic"] .live-player-footer .live-riichi {
+  .live-board:is([data-theme="loki-classic"], [data-custom-theme]) .live-player-footer .live-riichi {
     pointer-events: auto;
   }
-  .live-board[data-theme="loki-classic"] .live-player-delta {
+  .live-board:is([data-theme="loki-classic"], [data-custom-theme]) .live-player-delta {
     line-height: 1.1;
   }
   .live-board[data-theme="loki-classic"] .live-player-points {
     color: #fff6df;
-    font-size: clamp(.92rem, 14cqi, 4.35rem);
     text-shadow: 0 2px 10px rgba(0, 0, 0, 0.82), 0 0 14px rgba(235, 195, 104, 0.34);
+  }
+  .live-board:is([data-theme="loki-classic"], [data-custom-theme]) .live-player-points {
+    font-size: clamp(.92rem, 14cqi, 4.35rem);
   }
   .live-board[data-theme="loki-classic"] .live-wind-panel {
     --live-wind-frame: var(--live-loki-classic-wind) center / 100% 100% no-repeat;
@@ -2408,46 +2462,46 @@ body.soul-playing{overflow:hidden}
     text-shadow: 0 2px 10px rgba(0, 0, 0, 0.84), 0 0 16px rgba(235, 192, 96, 0.42);
   }
   @media (max-width: 560px) {
-    .live-board[data-theme="loki-classic"] .live-score-grid {
+    .live-board:is([data-theme="loki-classic"], [data-custom-theme]) .live-score-grid {
       margin-inline: clamp(.4rem, 2.1vw, .65rem);
     }
   }
   @media (min-width: 900px) {
-    .live-board:is([data-theme="loki-classic"], [data-theme="cat"], [data-theme="dog"], [data-theme="whale-shark"]) .live-table-slot {
+    .live-board:is([data-theme="loki-classic"], [data-theme="cat"], [data-theme="dog"], [data-theme="whale-shark"], [data-custom-theme]) .live-table-slot {
       display: grid;
       place-items: center;
       min-block-size: 29rem;
       container-type: size;
     }
-    .live-board:is([data-theme="loki-classic"], [data-theme="cat"], [data-theme="dog"], [data-theme="whale-shark"]) .live-table {
+    .live-board:is([data-theme="loki-classic"], [data-theme="cat"], [data-theme="dog"], [data-theme="whale-shark"], [data-custom-theme]) .live-table {
       inline-size: min(100%, calc(100cqh * 16 / 9));
       aspect-ratio: 16 / 9;
       container-type: inline-size;
       grid-template-rows: minmax(0, 1fr);
     }
-    .live-board[data-theme="loki-classic"] .live-table { container-name: classic-table; }
-    .live-board[data-theme="loki-classic"] .live-score-grid {
+    .live-board:is([data-theme="loki-classic"], [data-custom-theme]) .live-table { container-name: scoreboard-table; }
+    .live-board:is([data-theme="loki-classic"], [data-custom-theme]) .live-score-grid {
       margin-block: 4cqw;
       padding-block: 0;
       gap: clamp(.5rem, 1.25cqw, 1.15rem);
     }
-    .live-board[data-theme="loki-classic"] .live-player {
+    .live-board:is([data-theme="loki-classic"], [data-custom-theme]) .live-player {
       justify-self: center;
       inline-size: min(100%, 24cqw, 28rem);
     }
-    .live-board[data-theme="loki-classic"] .live-wind-panel {
+    .live-board:is([data-theme="loki-classic"], [data-custom-theme]) .live-wind-panel {
       justify-self: center;
       margin-inline: 0;
       inline-size: min(100%, 21cqw, 18rem);
     }
   }
-  @container classic-table (min-width: 80rem) {
-    .live-board[data-theme="loki-classic"] .live-score-grid {
+  @container scoreboard-table (min-width: 80rem) {
+    .live-board:is([data-theme="loki-classic"], [data-custom-theme]) .live-score-grid {
       align-self: stretch;
       grid-template-rows: auto minmax(min-content, 1fr) auto;
       margin-block: 5.6cqw;
     }
-    .live-board[data-theme="loki-classic"] .live-player {
+    .live-board:is([data-theme="loki-classic"], [data-custom-theme]) .live-player {
       inline-size: min(100%, 28cqw, 30rem);
     }
   }
@@ -2663,7 +2717,7 @@ body.soul-playing{overflow:hidden}
     margin-inline: 5.2%;
     padding-block: clamp(2.4rem, 5.6vw, 3.8rem);
   }
-  .live-board:is([data-theme="cat"], [data-theme="dog"], [data-theme="whale-shark"]) .live-table .live-wind-panel {
+  .live-board:is([data-theme="cat"], [data-theme="dog"], [data-theme="whale-shark"], [data-custom-theme]) .live-table .live-wind-panel {
     --pet-wind-rim: clamp(.9rem, 2vw, 2rem);
     padding: var(--pet-wind-rim);
   }
@@ -3420,53 +3474,53 @@ body.soul-playing{overflow:hidden}
     }
   }
 
-  /* Full-Groove Custom Theme Riichi Sticks (14 Themes across 5 Series) */
-  .live-board:is([data-theme="loki-tva"], [data-theme="loki-classic"], [data-theme="tron"], [data-theme="cyberpunk"], [data-theme="matrix"], [data-theme="cake"], [data-theme="bread"], [data-theme="fruit"], [data-theme="cat"], [data-theme="dog"], [data-theme="whale-shark"], [data-theme="soft-darts"], [data-theme="miyabi-frost"], [data-theme="vice-sunset"]) .live-wind-panel {
+  /* Theme artwork for Riichi sticks */
+  .live-board:is([data-theme="loki-tva"], [data-theme="loki-classic"], [data-theme="tron"], [data-theme="cyberpunk"], [data-theme="matrix"], [data-theme="cake"], [data-theme="bread"], [data-theme="fruit"], [data-theme="cat"], [data-theme="dog"], [data-theme="whale-shark"], [data-theme="soft-darts"], [data-theme="miyabi-frost"], [data-theme="vice-sunset"], [data-custom-theme]) .live-wind-panel {
     padding: clamp(1.3rem, 3.1vw, 2.85rem);
   }
-  .live-board:is([data-theme="loki-tva"], [data-theme="loki-classic"], [data-theme="tron"], [data-theme="cyberpunk"], [data-theme="matrix"], [data-theme="cake"], [data-theme="bread"], [data-theme="fruit"], [data-theme="cat"], [data-theme="dog"], [data-theme="whale-shark"], [data-theme="soft-darts"], [data-theme="miyabi-frost"], [data-theme="vice-sunset"]) .live-stick {
+  .live-board:is([data-theme="loki-tva"], [data-theme="loki-classic"], [data-theme="tron"], [data-theme="cyberpunk"], [data-theme="matrix"], [data-theme="cake"], [data-theme="bread"], [data-theme="fruit"], [data-theme="cat"], [data-theme="dog"], [data-theme="whale-shark"], [data-theme="soft-darts"], [data-theme="miyabi-frost"], [data-theme="vice-sunset"], [data-custom-theme]) .live-stick {
     border: 0;
     border-radius: 0;
     background: var(--live-custom-stick-h) center / contain no-repeat;
     box-shadow: none;
     filter: drop-shadow(0 2px 5px rgba(0, 0, 0, 0.58));
   }
-  .live-board:is([data-theme="loki-tva"], [data-theme="loki-classic"], [data-theme="tron"], [data-theme="cyberpunk"], [data-theme="matrix"], [data-theme="cake"], [data-theme="bread"], [data-theme="fruit"], [data-theme="cat"], [data-theme="dog"], [data-theme="whale-shark"], [data-theme="soft-darts"], [data-theme="miyabi-frost"], [data-theme="vice-sunset"]) .live-stick::after {
+  .live-board:is([data-theme="loki-tva"], [data-theme="loki-classic"], [data-theme="tron"], [data-theme="cyberpunk"], [data-theme="matrix"], [data-theme="cake"], [data-theme="bread"], [data-theme="fruit"], [data-theme="cat"], [data-theme="dog"], [data-theme="whale-shark"], [data-theme="soft-darts"], [data-theme="miyabi-frost"], [data-theme="vice-sunset"], [data-custom-theme]) .live-stick::after {
     display: none;
   }
-  .live-board:is([data-theme="loki-tva"], [data-theme="loki-classic"], [data-theme="tron"], [data-theme="cyberpunk"], [data-theme="matrix"], [data-theme="cake"], [data-theme="bread"], [data-theme="fruit"], [data-theme="cat"], [data-theme="dog"], [data-theme="whale-shark"], [data-theme="soft-darts"], [data-theme="miyabi-frost"], [data-theme="vice-sunset"]) .live-stick-tray:is([data-position="bottom"], [data-position="top"]) {
+  .live-board:is([data-theme="loki-tva"], [data-theme="loki-classic"], [data-theme="tron"], [data-theme="cyberpunk"], [data-theme="matrix"], [data-theme="cake"], [data-theme="bread"], [data-theme="fruit"], [data-theme="cat"], [data-theme="dog"], [data-theme="whale-shark"], [data-theme="soft-darts"], [data-theme="miyabi-frost"], [data-theme="vice-sunset"], [data-custom-theme]) .live-stick-tray:is([data-position="bottom"], [data-position="top"]) {
     width: 78%;
     height: clamp(1.08rem, 2.55vw, 2.25rem);
     padding: 0;
     border-radius: .34rem;
   }
-  .live-board:is([data-theme="loki-tva"], [data-theme="loki-classic"], [data-theme="tron"], [data-theme="cyberpunk"], [data-theme="matrix"], [data-theme="cake"], [data-theme="bread"], [data-theme="fruit"], [data-theme="cat"], [data-theme="dog"], [data-theme="whale-shark"], [data-theme="soft-darts"], [data-theme="miyabi-frost"], [data-theme="vice-sunset"]) .live-stick-tray[data-position="bottom"] {
+  .live-board:is([data-theme="loki-tva"], [data-theme="loki-classic"], [data-theme="tron"], [data-theme="cyberpunk"], [data-theme="matrix"], [data-theme="cake"], [data-theme="bread"], [data-theme="fruit"], [data-theme="cat"], [data-theme="dog"], [data-theme="whale-shark"], [data-theme="soft-darts"], [data-theme="miyabi-frost"], [data-theme="vice-sunset"], [data-custom-theme]) .live-stick-tray[data-position="bottom"] {
     bottom: clamp(.08rem, .24vw, .26rem);
   }
-  .live-board:is([data-theme="loki-tva"], [data-theme="loki-classic"], [data-theme="tron"], [data-theme="cyberpunk"], [data-theme="matrix"], [data-theme="cake"], [data-theme="bread"], [data-theme="fruit"], [data-theme="cat"], [data-theme="dog"], [data-theme="whale-shark"], [data-theme="soft-darts"], [data-theme="miyabi-frost"], [data-theme="vice-sunset"]) .live-stick-tray[data-position="top"] {
+  .live-board:is([data-theme="loki-tva"], [data-theme="loki-classic"], [data-theme="tron"], [data-theme="cyberpunk"], [data-theme="matrix"], [data-theme="cake"], [data-theme="bread"], [data-theme="fruit"], [data-theme="cat"], [data-theme="dog"], [data-theme="whale-shark"], [data-theme="soft-darts"], [data-theme="miyabi-frost"], [data-theme="vice-sunset"], [data-custom-theme]) .live-stick-tray[data-position="top"] {
     top: clamp(.08rem, .24vw, .26rem);
   }
-  .live-board:is([data-theme="loki-tva"], [data-theme="loki-classic"], [data-theme="tron"], [data-theme="cyberpunk"], [data-theme="matrix"], [data-theme="cake"], [data-theme="bread"], [data-theme="fruit"], [data-theme="cat"], [data-theme="dog"], [data-theme="whale-shark"], [data-theme="soft-darts"], [data-theme="miyabi-frost"], [data-theme="vice-sunset"]) .live-stick-tray:is([data-position="left"], [data-position="right"]) {
+  .live-board:is([data-theme="loki-tva"], [data-theme="loki-classic"], [data-theme="tron"], [data-theme="cyberpunk"], [data-theme="matrix"], [data-theme="cake"], [data-theme="bread"], [data-theme="fruit"], [data-theme="cat"], [data-theme="dog"], [data-theme="whale-shark"], [data-theme="soft-darts"], [data-theme="miyabi-frost"], [data-theme="vice-sunset"], [data-custom-theme]) .live-stick-tray:is([data-position="left"], [data-position="right"]) {
     width: clamp(1.08rem, 2.55vw, 2.25rem);
     height: 76%;
     padding: 0;
     border-radius: .34rem;
   }
-  .live-board:is([data-theme="loki-tva"], [data-theme="loki-classic"], [data-theme="tron"], [data-theme="cyberpunk"], [data-theme="matrix"], [data-theme="cake"], [data-theme="bread"], [data-theme="fruit"], [data-theme="cat"], [data-theme="dog"], [data-theme="whale-shark"], [data-theme="soft-darts"], [data-theme="miyabi-frost"], [data-theme="vice-sunset"]) .live-stick-tray[data-position="left"] {
+  .live-board:is([data-theme="loki-tva"], [data-theme="loki-classic"], [data-theme="tron"], [data-theme="cyberpunk"], [data-theme="matrix"], [data-theme="cake"], [data-theme="bread"], [data-theme="fruit"], [data-theme="cat"], [data-theme="dog"], [data-theme="whale-shark"], [data-theme="soft-darts"], [data-theme="miyabi-frost"], [data-theme="vice-sunset"], [data-custom-theme]) .live-stick-tray[data-position="left"] {
     left: clamp(.08rem, .24vw, .26rem);
   }
-  .live-board:is([data-theme="loki-tva"], [data-theme="loki-classic"], [data-theme="tron"], [data-theme="cyberpunk"], [data-theme="matrix"], [data-theme="cake"], [data-theme="bread"], [data-theme="fruit"], [data-theme="cat"], [data-theme="dog"], [data-theme="whale-shark"], [data-theme="soft-darts"], [data-theme="miyabi-frost"], [data-theme="vice-sunset"]) .live-stick-tray[data-position="right"] {
+  .live-board:is([data-theme="loki-tva"], [data-theme="loki-classic"], [data-theme="tron"], [data-theme="cyberpunk"], [data-theme="matrix"], [data-theme="cake"], [data-theme="bread"], [data-theme="fruit"], [data-theme="cat"], [data-theme="dog"], [data-theme="whale-shark"], [data-theme="soft-darts"], [data-theme="miyabi-frost"], [data-theme="vice-sunset"], [data-custom-theme]) .live-stick-tray[data-position="right"] {
     right: clamp(.08rem, .24vw, .26rem);
   }
-  .live-board:is([data-theme="loki-tva"], [data-theme="loki-classic"], [data-theme="tron"], [data-theme="cyberpunk"], [data-theme="matrix"], [data-theme="cake"], [data-theme="bread"], [data-theme="fruit"], [data-theme="cat"], [data-theme="dog"], [data-theme="whale-shark"], [data-theme="soft-darts"], [data-theme="miyabi-frost"], [data-theme="vice-sunset"]) .live-stick-tray:is([data-position="left"], [data-position="right"]) .live-stick {
+  .live-board:is([data-theme="loki-tva"], [data-theme="loki-classic"], [data-theme="tron"], [data-theme="cyberpunk"], [data-theme="matrix"], [data-theme="cake"], [data-theme="bread"], [data-theme="fruit"], [data-theme="cat"], [data-theme="dog"], [data-theme="whale-shark"], [data-theme="soft-darts"], [data-theme="miyabi-frost"], [data-theme="vice-sunset"], [data-custom-theme]) .live-stick-tray:is([data-position="left"], [data-position="right"]) .live-stick {
     background: var(--live-custom-stick-v) center / contain no-repeat;
   }
-  .live-board:is([data-theme="loki-tva"], [data-theme="loki-classic"], [data-theme="tron"], [data-theme="cyberpunk"], [data-theme="matrix"], [data-theme="cake"], [data-theme="bread"], [data-theme="fruit"], [data-theme="cat"], [data-theme="dog"], [data-theme="whale-shark"], [data-theme="soft-darts"], [data-theme="miyabi-frost"], [data-theme="vice-sunset"]) .live-carry-stick {
+  .live-board:is([data-theme="loki-tva"], [data-theme="loki-classic"], [data-theme="tron"], [data-theme="cyberpunk"], [data-theme="matrix"], [data-theme="cake"], [data-theme="bread"], [data-theme="fruit"], [data-theme="cat"], [data-theme="dog"], [data-theme="whale-shark"], [data-theme="soft-darts"], [data-theme="miyabi-frost"], [data-theme="vice-sunset"], [data-custom-theme]) .live-carry-stick {
     width: 74%;
     height: clamp(.92rem, 1.85vw, 1.55rem);
     bottom: -.54rem;
   }
-  .live-board:is([data-theme="loki-tva"], [data-theme="loki-classic"], [data-theme="tron"], [data-theme="cyberpunk"], [data-theme="matrix"], [data-theme="cake"], [data-theme="bread"], [data-theme="fruit"], [data-theme="cat"], [data-theme="dog"], [data-theme="whale-shark"], [data-theme="soft-darts"], [data-theme="miyabi-frost"], [data-theme="vice-sunset"]) .live-transfer-token .live-stick {
+  .live-board:is([data-theme="loki-tva"], [data-theme="loki-classic"], [data-theme="tron"], [data-theme="cyberpunk"], [data-theme="matrix"], [data-theme="cake"], [data-theme="bread"], [data-theme="fruit"], [data-theme="cat"], [data-theme="dog"], [data-theme="whale-shark"], [data-theme="soft-darts"], [data-theme="miyabi-frost"], [data-theme="vice-sunset"], [data-custom-theme]) .live-transfer-token .live-stick {
     width: clamp(4.8rem, 10.5vw, 9.2rem);
     height: clamp(1.15rem, 2.5vw, 2.15rem);
   }
@@ -3484,7 +3538,7 @@ body.soul-playing{overflow:hidden}
   .live-board[data-theme="cat"] { --live-custom-stick-h: var(--live-cat-stick-h); --live-custom-stick-v: var(--live-cat-stick-v); }
   .live-board[data-theme="dog"] { --live-custom-stick-h: var(--live-dog-stick-h); --live-custom-stick-v: var(--live-dog-stick-v); }
   .live-board[data-theme="whale-shark"] { --live-custom-stick-h: var(--live-whale-shark-stick-h); --live-custom-stick-v: var(--live-whale-shark-stick-v); }
-  .live-board:is([data-theme="cat"], [data-theme="dog"], [data-theme="whale-shark"]) .live-stick-tray {
+  .live-board:is([data-theme="cat"], [data-theme="dog"], [data-theme="whale-shark"], [data-custom-theme]) .live-stick-tray {
     --pet-groove-width: clamp(.54rem, calc(var(--pet-wind-rim) - .4rem), 1rem);
     --pet-groove-inset: calc((var(--pet-wind-rim) - var(--pet-groove-width)) / 2);
     border-color: color-mix(in srgb, var(--series-edge) 55%, var(--series-screen));
@@ -3493,21 +3547,21 @@ body.soul-playing{overflow:hidden}
     background: color-mix(in srgb, var(--series-frame) 30%, var(--series-screen));
     box-shadow: inset 0 1px 2px var(--series-shadow);
   }
-  .live-board:is([data-theme="cat"], [data-theme="dog"], [data-theme="whale-shark"])
+  .live-board:is([data-theme="cat"], [data-theme="dog"], [data-theme="whale-shark"], [data-custom-theme])
     .live-stick-tray:is([data-position="top"], [data-position="bottom"]) {
     width: 63%;
     height: var(--pet-groove-width);
   }
-  .live-board:is([data-theme="cat"], [data-theme="dog"], [data-theme="whale-shark"])
+  .live-board:is([data-theme="cat"], [data-theme="dog"], [data-theme="whale-shark"], [data-custom-theme])
     .live-stick-tray:is([data-position="left"], [data-position="right"]) {
     width: var(--pet-groove-width);
     height: 58%;
   }
-  .live-board:is([data-theme="cat"], [data-theme="dog"], [data-theme="whale-shark"]) .live-stick-tray[data-position="top"] { top: var(--pet-groove-inset); }
-  .live-board:is([data-theme="cat"], [data-theme="dog"], [data-theme="whale-shark"]) .live-stick-tray[data-position="bottom"] { bottom: var(--pet-groove-inset); }
-  .live-board:is([data-theme="cat"], [data-theme="dog"], [data-theme="whale-shark"]) .live-stick-tray[data-position="left"] { left: var(--pet-groove-inset); }
-  .live-board:is([data-theme="cat"], [data-theme="dog"], [data-theme="whale-shark"]) .live-stick-tray[data-position="right"] { right: var(--pet-groove-inset); }
-  .live-board:is([data-theme="cat"], [data-theme="dog"], [data-theme="whale-shark"]) .live-stick-tray .live-stick {
+  .live-board:is([data-theme="cat"], [data-theme="dog"], [data-theme="whale-shark"], [data-custom-theme]) .live-stick-tray[data-position="top"] { top: var(--pet-groove-inset); }
+  .live-board:is([data-theme="cat"], [data-theme="dog"], [data-theme="whale-shark"], [data-custom-theme]) .live-stick-tray[data-position="bottom"] { bottom: var(--pet-groove-inset); }
+  .live-board:is([data-theme="cat"], [data-theme="dog"], [data-theme="whale-shark"], [data-custom-theme]) .live-stick-tray[data-position="left"] { left: var(--pet-groove-inset); }
+  .live-board:is([data-theme="cat"], [data-theme="dog"], [data-theme="whale-shark"], [data-custom-theme]) .live-stick-tray[data-position="right"] { right: var(--pet-groove-inset); }
+  .live-board:is([data-theme="cat"], [data-theme="dog"], [data-theme="whale-shark"], [data-custom-theme]) .live-stick-tray .live-stick {
     filter: drop-shadow(0 1px 1.25px #10212861);
   }
   .live-board[data-theme="soft-darts"] { --live-custom-stick-h: var(--live-soft-darts-stick-h); --live-custom-stick-v: var(--live-soft-darts-stick-v); }
@@ -3902,7 +3956,7 @@ body.soul-playing{overflow:hidden}
         <button type="button" class="live-button live-theme-tab" role="tab" id="liveThemeGroupFoodTab" aria-controls="liveThemeGroupFood" aria-selected="false" tabindex="-1">可愛食物系列</button>
         <button type="button" class="live-button live-theme-tab" role="tab" id="liveThemeGroupGothicTab" aria-controls="liveThemeGroupGothic" aria-selected="false" tabindex="-1">灰暗憂鬱系列</button>
       </div>
-      <div id="liveThemeGroupBase" role="tabpanel" aria-labelledby="liveThemeGroupBaseTab">
+      <div id="liveThemeGroupBase" role="tabpanel" aria-labelledby="liveThemeGroupBaseTab" data-theme-group="base">
         <fieldset class="live-fieldset live-theme-options">
           <legend class="sr-only">基本風格</legend>
           <label class="live-theme-option">
@@ -3943,7 +3997,7 @@ body.soul-playing{overflow:hidden}
           </label>
         </fieldset>
       </div>
-      <div id="liveThemeGroupScifi" role="tabpanel" aria-labelledby="liveThemeGroupScifiTab" hidden>
+      <div id="liveThemeGroupScifi" role="tabpanel" aria-labelledby="liveThemeGroupScifiTab" data-theme-group="scifi" hidden>
         <fieldset class="live-fieldset live-theme-options" data-columns="3">
           <legend class="sr-only">科幻系列</legend>
           <label class="live-theme-option">
@@ -3975,7 +4029,7 @@ body.soul-playing{overflow:hidden}
           </label>
         </fieldset>
       </div>
-      <div id="liveThemeGroupMovie" role="tabpanel" aria-labelledby="liveThemeGroupMovieTab" hidden>
+      <div id="liveThemeGroupMovie" role="tabpanel" aria-labelledby="liveThemeGroupMovieTab" data-theme-group="movie" hidden>
         <fieldset class="live-fieldset live-theme-options">
           <legend class="sr-only">電影系列</legend>
           <label class="live-theme-option">
@@ -3998,7 +4052,7 @@ body.soul-playing{overflow:hidden}
           </label>
         </fieldset>
       </div>
-      <div id="liveThemeGroupPets" role="tabpanel" aria-labelledby="liveThemeGroupPetsTab" hidden>
+      <div id="liveThemeGroupPets" role="tabpanel" aria-labelledby="liveThemeGroupPetsTab" data-theme-group="pets" hidden>
         <fieldset class="live-fieldset live-theme-options" data-columns="3">
           <legend class="sr-only">動物系列</legend>
           <label class="live-theme-option">
@@ -4030,7 +4084,7 @@ body.soul-playing{overflow:hidden}
           </label>
         </fieldset>
       </div>
-      <div id="liveThemeGroupGames" role="tabpanel" aria-labelledby="liveThemeGroupGamesTab" hidden>
+      <div id="liveThemeGroupGames" role="tabpanel" aria-labelledby="liveThemeGroupGamesTab" data-theme-group="games" hidden>
         <fieldset class="live-fieldset live-theme-options" data-columns="3">
           <legend class="sr-only">遊戲系列</legend>
           <label class="live-theme-option">
@@ -4062,7 +4116,7 @@ body.soul-playing{overflow:hidden}
           </label>
         </fieldset>
       </div>
-      <div id="liveThemeGroupFood" role="tabpanel" aria-labelledby="liveThemeGroupFoodTab" hidden>
+      <div id="liveThemeGroupFood" role="tabpanel" aria-labelledby="liveThemeGroupFoodTab" data-theme-group="food" hidden>
         <fieldset class="live-fieldset live-theme-options" data-columns="3">
           <legend class="sr-only">可愛食物系列</legend>
           <label class="live-theme-option">
@@ -4094,7 +4148,7 @@ body.soul-playing{overflow:hidden}
           </label>
         </fieldset>
       </div>
-      <div id="liveThemeGroupGothic" role="tabpanel" aria-labelledby="liveThemeGroupGothicTab" hidden>
+      <div id="liveThemeGroupGothic" role="tabpanel" aria-labelledby="liveThemeGroupGothicTab" data-theme-group="gothic" hidden>
         <fieldset class="live-fieldset live-theme-options">
           <legend class="sr-only">灰暗憂鬱系列</legend>
           <label class="live-theme-option">
@@ -4143,6 +4197,14 @@ body.soul-playing{overflow:hidden}
         <label class="live-name-field"><span class="live-seat-position"></span><input type="text" maxlength="24" required></label>
         <label class="live-dealer-label"><input type="radio" name="liveFirstDealer" required><span>首任莊家</span></label>
       </div>
+    </template>
+    <template id="liveThemeOptionTemplate">
+      <label class="live-theme-option">
+        <span class="live-theme-preview" aria-hidden="true">
+          <span class="live-theme-diagram"><i></i><i></i><i></i><i></i><i></i></span>
+        </span>
+        <span class="live-theme-caption"><input type="radio"><span></span></span>
+      </label>
     </template>
     <template id="livePlayerTemplate">
       <article class="live-player">
@@ -7260,12 +7322,22 @@ globalThis.PracticeProfile=Object.freeze({"version":2,"source":{"title":"天鳳�
 'use strict';
 window.addEventListener('DOMContentLoaded', () => {
   const $ = id => document.getElementById(id);
+  const clone = id => $(id).content.firstElementChild.cloneNode(true);
   const board = $('liveScoreboard');
   const dialog = $('liveActionDialog');
   const themeDialog = $('liveThemeDialog');
-  const themeChoices = [...themeDialog.querySelectorAll('input[type="radio"]')];
   const themeTabs = [...themeDialog.querySelectorAll('.live-theme-tab')];
   const themePanels = themeTabs.map(tab => $(tab.getAttribute('aria-controls')));
+  const themeAssetProperties = {
+    bg: '--custom-theme-bg',
+    felt: '--custom-theme-felt',
+    card: '--custom-theme-card',
+    wind: '--custom-theme-wind',
+    'stick-h': '--live-custom-stick-h',
+    'stick-v': '--live-custom-stick-v'
+  };
+  const customThemes = new Map();
+  const themeChoices = [...themeDialog.querySelectorAll('input[type="radio"]')];
   const setupForm = $('liveSetupForm');
   const drawForm = $('liveDrawForm');
   const winForm = $('liveWinForm');
@@ -7280,7 +7352,6 @@ window.addEventListener('DOMContentLoaded', () => {
   const positions = ['bottom', 'right', 'top', 'left'];
   const positionNames = ['下方', '右方', '上方', '左方'];
   const matchTitles = {east: '四人東風戰', south: '四人南半莊戰'};
-  const clone = id => $(id).content.firstElementChild.cloneNode(true);
   const trays = [...$('livePlayers').querySelectorAll('.live-stick-tray')];
   const sticks = trays.map(tray => tray.querySelector('.live-stick'));
 
@@ -7426,6 +7497,61 @@ window.addEventListener('DOMContentLoaded', () => {
     paintSticks(match);
   }
 
+  function applyCustomTheme(element, theme) {
+    if (theme) element.dataset.customTheme = theme.appearance;
+    else delete element.dataset.customTheme;
+    for (const [asset, property] of Object.entries(themeAssetProperties)) {
+      if (theme) element.style.setProperty(property, `url("./assets/themes/${theme.id}/${asset}.webp")`);
+      else element.style.removeProperty(property);
+    }
+  }
+
+  function registerCustomThemes(entries) {
+    if (!Array.isArray(entries)) return;
+    const groups = new Map(themePanels.map(panel => [
+      panel.dataset.themeGroup, panel.querySelector('.live-theme-options')
+    ]));
+    const ids = new Set(themeChoices.map(option => option.value));
+    for (const entry of entries) {
+      const {id, name, group, appearance = 'dark'} = entry ?? {};
+      if (typeof id !== 'string' || !/^[a-z0-9]+(?:-[a-z0-9]+)*$/.test(id) || ids.has(id) ||
+          typeof name !== 'string' || !name.trim() || !groups.has(group) ||
+          !['dark', 'light'].includes(appearance)) {
+        console.warn('Skipped invalid or duplicate custom scoreboard theme:', id);
+        continue;
+      }
+      const theme = {id, appearance};
+      const option = clone('liveThemeOptionTemplate');
+      const preview = option.querySelector('.live-theme-preview');
+      const radio = option.querySelector('input');
+      preview.dataset.preview = id;
+      radio.name = 'liveTheme-' + group;
+      radio.value = id;
+      option.querySelector('.live-theme-caption > span').textContent = name.trim();
+      applyCustomTheme(preview, theme);
+      groups.get(group).append(option);
+      themeChoices.push(radio);
+      ids.add(id);
+      customThemes.set(id, theme);
+    }
+  }
+
+  async function loadCustomThemes() {
+    if (!/^https?:$/.test(location.protocol)) return;
+    try {
+      const response = await fetch('./assets/themes/custom-themes.json', {cache: 'no-cache'});
+      if (!response.ok) return;
+      registerCustomThemes(await response.json());
+    } catch (error) {
+      console.warn('Could not load custom scoreboard themes:', error);
+      return;
+    }
+    try {
+      const savedTheme = localStorage.getItem(themeStorageKey);
+      if (customThemes.has(savedTheme)) setTheme(savedTheme);
+    } catch {}
+  }
+
   function setTheme(value) {
     const choice = themeChoices.find(option => option.value === value) ?? themeChoices[0];
     if (stopMotion) {
@@ -7433,6 +7559,7 @@ window.addEventListener('DOMContentLoaded', () => {
       finishMotion();
     }
     board.setAttribute('data-theme', choice.value);
+    applyCustomTheme(board, customThemes.get(choice.value));
     themeChoices.forEach(option => { option.checked = option === choice; });
   }
 
@@ -7793,6 +7920,7 @@ window.addEventListener('DOMContentLoaded', () => {
 
   try { load(localStorage.getItem(storageKey)); } catch { storageUnavailable = true; }
   loadTheme();
+  loadCustomThemes();
   window.addEventListener('storage', event => {
     if (event.key === themeStorageKey || event.key === null) loadTheme();
     if (!storageUnavailable && (event.key === storageKey || event.key === null)) {
