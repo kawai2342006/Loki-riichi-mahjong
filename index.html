@@ -2326,14 +2326,13 @@ body.soul-playing{overflow:hidden}
     --live-card:
       linear-gradient(180deg, rgba(6, 18, 12, 0.18), rgba(4, 12, 8, 0.42)),
       var(--live-loki-classic-card) center / 100% 100% no-repeat;
-    --live-card-footer: rgba(5, 16, 11, 0.62);
-    --live-card-footer-border: rgba(214, 178, 102, 0.42);
     --live-card-hover: rgba(120, 232, 168, 0.10);
+    --classic-delta-row: clamp(1.55rem, 1.7vw, 2.7rem);
+    grid-template-columns: minmax(0, 1fr);
+    grid-template-rows: auto var(--classic-delta-row);
     border: 1px solid #d0aa60;
     border-radius: clamp(.5rem, 1vw, .85rem);
-    padding: clamp(.28rem, .72vw, .66rem);
     box-shadow: 0 .35rem 1.25rem rgba(2, 8, 5, 0.78), inset 0 0 .9rem rgba(62, 198, 126, 0.12);
-    overflow: hidden;
   }
   .live-board[data-theme="loki-classic"] .live-player.is-dealer {
     border-color: #ffe39b;
@@ -2343,8 +2342,10 @@ body.soul-playing{overflow:hidden}
       0 .4rem 1.3rem rgba(2, 8, 5, 0.82);
   }
   .live-board[data-theme="loki-classic"] .live-player-select {
-    border-radius: .35rem .35rem 0 0;
-    padding: clamp(.34rem, .8vw, .8rem) clamp(.34rem, .95vw, 1rem) .15rem;
+    grid-area: 1 / 1 / -1 / -1;
+    border-radius: inherit;
+    padding: clamp(.55rem, 1.1vw, 1.35rem) clamp(.55rem, 1.45vw, 1.65rem)
+      calc(var(--classic-delta-row) + .15rem);
     gap: .28rem;
   }
   .live-board[data-theme="loki-classic"] .live-player-name {
@@ -2355,17 +2356,22 @@ body.soul-playing{overflow:hidden}
     font-size: clamp(.78rem, 5.8cqi, 1.65rem);
   }
   .live-board[data-theme="loki-classic"] .live-player-footer {
-    justify-content: center;
-    min-height: clamp(1.15rem, 5.8cqi, 1.65rem);
-    padding: 0 .2rem .22rem;
+    grid-area: 2 / 1;
+    display: grid;
+    place-content: center;
+    padding: 0 .2rem clamp(.42rem, .7vw, .8rem);
     text-align: center;
+    pointer-events: none;
+  }
+  .live-board[data-theme="loki-classic"] .live-player-footer .live-riichi {
+    pointer-events: auto;
   }
   .live-board[data-theme="loki-classic"] .live-player-delta {
     line-height: 1.1;
   }
   .live-board[data-theme="loki-classic"] .live-player-points {
     color: #fff6df;
-    font-size: clamp(.92rem, 14cqi, 3.85rem);
+    font-size: clamp(.92rem, 14cqi, 4.35rem);
     text-shadow: 0 2px 10px rgba(0, 0, 0, 0.82), 0 0 14px rgba(235, 195, 104, 0.34);
   }
   .live-board[data-theme="loki-classic"] .live-wind-panel {
@@ -2414,23 +2420,32 @@ body.soul-playing{overflow:hidden}
     .live-board[data-theme="loki-classic"] .live-table {
       inline-size: min(100%, calc(100cqh * 16 / 9));
       aspect-ratio: 16 / 9;
-      container-type: inline-size;
+      container: classic-table / inline-size;
       grid-template-rows: minmax(0, 1fr);
     }
     .live-board[data-theme="loki-classic"] .live-score-grid {
-      margin-block: 5cqw;
+      margin-block: 4cqw;
       padding-block: 0;
       gap: clamp(.5rem, 1.25cqw, 1.15rem);
     }
     .live-board[data-theme="loki-classic"] .live-player {
       justify-self: center;
-      inline-size: min(100%, 23cqw, 24rem);
-      padding: clamp(.28rem, .66cqw, .66rem);
+      inline-size: min(100%, 24cqw, 28rem);
     }
     .live-board[data-theme="loki-classic"] .live-wind-panel {
       justify-self: center;
       margin-inline: 0;
       inline-size: min(100%, 21cqw, 18rem);
+    }
+  }
+  @container classic-table (min-width: 80rem) {
+    .live-board[data-theme="loki-classic"] .live-score-grid {
+      align-self: stretch;
+      grid-template-rows: auto minmax(min-content, 1fr) auto;
+      margin-block: 5.6cqw;
+    }
+    .live-board[data-theme="loki-classic"] .live-player {
+      inline-size: min(100%, 28cqw, 30rem);
     }
   }
 
