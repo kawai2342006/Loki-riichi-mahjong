@@ -2186,10 +2186,10 @@ body.soul-playing{overflow:hidden}
     --series-shadow: #120704d6;
     --series-ray: #f28c4b;
     --series-page:
-      linear-gradient(180deg, rgba(19, 10, 7, 0.56) 0%, rgba(18, 9, 6, 0.34) 48%, rgba(14, 7, 5, 0.68) 100%),
+      linear-gradient(180deg, rgba(19, 10, 7, 0.20) 0%, rgba(18, 9, 6, 0.06) 48%, rgba(14, 7, 5, 0.28) 100%),
       var(--live-loki-tva-bg) center / cover no-repeat fixed;
     --series-felt:
-      radial-gradient(ellipse at center, rgba(22, 11, 7, 0.14) 0%, rgba(16, 8, 5, 0.44) 100%),
+      radial-gradient(ellipse at center, rgba(22, 11, 7, 0.03) 0%, rgba(16, 8, 5, 0.16) 100%),
       var(--live-loki-tva-felt) center / 100% 100% no-repeat;
     --series-table-shadow:
       inset 0 0 2.2rem rgba(244, 150, 74, 0.16),
@@ -2232,27 +2232,25 @@ body.soul-playing{overflow:hidden}
     border-radius: .46rem;
   }
   .live-board[data-theme="loki-tva"] .live-player {
-    --live-card:
-      linear-gradient(180deg, rgba(22, 12, 8, 0.22), rgba(14, 7, 5, 0.44)),
-      var(--live-loki-tva-card) center / 100% 100% no-repeat;
-    --live-card-footer: rgba(18, 9, 6, 0.62);
-    --live-card-footer-border: rgba(218, 146, 86, 0.38);
-    --live-card-hover: rgba(255, 174, 98, 0.12);
-    border: 1px solid #c68652;
-    padding: clamp(.26rem, .68vw, .62rem);
-    box-shadow: 0 .35rem 1.2rem rgba(8, 3, 2, 0.72), inset 0 0 .8rem rgba(255, 166, 86, 0.14);
+    --live-card: var(--live-loki-tva-card) center / 100% 100% no-repeat;
+    --live-card-footer: rgba(13, 17, 24, 0.82);
+    --live-card-footer-border: rgba(242, 132, 34, 0.48);
+    --live-card-hover: rgba(242, 132, 34, 0.14);
+    border: 0;
+    border-radius: .42rem;
+    padding: clamp(1.3rem, 3.1vw, 2.45rem) clamp(.95rem, 2.3vw, 1.95rem) clamp(.62rem, 1.4vw, 1.2rem);
+    box-shadow: 0 .38rem 1.25rem rgba(8, 3, 2, 0.78);
     overflow: hidden;
   }
   .live-board[data-theme="loki-tva"] .live-player.is-dealer {
-    border-color: #ffca84;
     box-shadow:
-      0 0 0 2px rgba(255, 190, 112, 0.85),
-      0 0 1.45rem rgba(246, 146, 62, 0.56),
-      0 .4rem 1.2rem rgba(8, 3, 2, 0.78);
+      0 0 0 2px rgba(255, 168, 72, 0.92),
+      0 0 1.45rem rgba(242, 132, 34, 0.62),
+      0 .4rem 1.25rem rgba(8, 3, 2, 0.82);
   }
   .live-board[data-theme="loki-tva"] .live-player-select {
-    border-radius: .32rem .32rem 0 0;
-    padding: clamp(.34rem, .95vw, 1rem);
+    border-radius: .22rem .22rem 0 0;
+    padding: clamp(.22rem, .65vw, .68rem) clamp(.3rem, .75vw, .78rem);
   }
   .live-board[data-theme="loki-tva"] .live-player-footer {
     border-radius: 0 0 .32rem .32rem;
@@ -2434,10 +2432,9 @@ body.soul-playing{overflow:hidden}
     --series-shadow: #6b467546;
     --series-ray: #fff1dc;
     --series-page:
-      linear-gradient(180deg, rgba(248, 240, 252, 0.34) 0%, rgba(245, 236, 250, 0.20) 50%, rgba(238, 224, 246, 0.40) 100%),
+      linear-gradient(180deg, rgba(248, 240, 252, 0.18) 0%, rgba(245, 236, 250, 0.08) 50%, rgba(238, 224, 246, 0.22) 100%),
       var(--live-cat-bg) center / cover no-repeat fixed;
     --series-felt:
-      radial-gradient(ellipse at center, rgba(255, 250, 255, 0.08) 0%, rgba(214, 186, 230, 0.16) 100%),
       var(--live-cat-felt) center / 100% 100% no-repeat;
     --series-table-shadow: inset 0 0 1.6rem rgba(255, 255, 255, 0.45), 0 .9rem 2.4rem rgba(96, 62, 118, 0.24);
   }
@@ -2566,27 +2563,32 @@ body.soul-playing{overflow:hidden}
     --series-shadow: #01101cd8;
     --series-ray: #46d8f0;
     --series-page:
-      linear-gradient(180deg, rgba(4, 24, 40, 0.50) 0%, rgba(4, 24, 40, 0.26) 50%, rgba(2, 16, 28, 0.64) 100%),
+      linear-gradient(180deg, rgba(4, 24, 40, 0.18) 0%, rgba(4, 24, 40, 0.05) 50%, rgba(2, 16, 28, 0.24) 100%),
       var(--live-whale-shark-bg) center / cover no-repeat fixed;
     --series-felt:
-      radial-gradient(ellipse at center, rgba(4, 28, 46, 0.10) 0%, rgba(2, 18, 32, 0.36) 100%),
-      var(--live-whale-shark-felt) center / 100% 100% no-repeat;
-    --series-table-shadow: inset 0 0 2.2rem rgba(92, 224, 248, 0.16), 0 1rem 2.8rem rgba(1, 12, 22, 0.82);
+      var(--live-whale-shark-felt) center / cover no-repeat;
+    --series-table-shadow: none;
   }
   .live-theme-preview[data-preview="whale-shark"] {
-    --sample-felt: var(--live-whale-shark-felt) center / 100% 100% no-repeat;
+    --sample-felt: var(--live-whale-shark-felt) center / cover no-repeat;
     --sample-card: var(--live-whale-shark-card) center / 100% 100% no-repeat;
     --sample-center: var(--live-whale-shark-wind) center / 100% 100% no-repeat;
     --sample-outline: #64cbe3;
     --sample-accent: #8cf2ff;
   }
   .live-board[data-theme="whale-shark"] :is(.live-button, .live-setup) {
-    background: rgba(7, 32, 50, 0.84);
+    background: rgba(7, 32, 50, 0.78);
     backdrop-filter: blur(8px);
     -webkit-backdrop-filter: blur(8px);
   }
-  .live-board[data-theme="whale-shark"] .live-table { border: 2px solid #5ac4dd; padding: clamp(.78rem, 2.3vw, 2.4rem); }
-  .live-board[data-theme="whale-shark"] .live-table::before { border: 0; opacity: 0; }
+  .live-board[data-theme="whale-shark"] .live-table {
+    border: 0;
+    border-radius: 0;
+    box-shadow: none;
+    padding: clamp(.78rem, 2.3vw, 2.4rem);
+  }
+  .live-board[data-theme="whale-shark"] .live-table::before,
+  .live-board[data-theme="whale-shark"] .live-table::after { border: 0; opacity: 0; display: none; }
   .live-board[data-theme="whale-shark"] .live-player {
     --live-card:
       linear-gradient(180deg, rgba(5, 24, 40, 0.16), rgba(3, 16, 28, 0.36)),
@@ -2613,7 +2615,10 @@ body.soul-playing{overflow:hidden}
     color: #9df5ff;
     text-shadow: 0 2px 10px rgba(0, 0, 0, 0.78), 0 0 14px rgba(84, 224, 248, 0.44);
   }
-  .live-board:is([data-theme="cat"], [data-theme="dog"], [data-theme="whale-shark"]) :is(.live-table, .live-wind-panel) {
+  .live-board:is([data-theme="cat"], [data-theme="dog"]) :is(.live-table, .live-wind-panel) {
+    border-radius: clamp(.85rem, 2vw, 1.65rem);
+  }
+  .live-board[data-theme="whale-shark"] .live-wind-panel {
     border-radius: clamp(.85rem, 2vw, 1.65rem);
   }
 
@@ -3420,6 +3425,9 @@ body.soul-playing{overflow:hidden}
   .live-board[data-theme="tron"] { --live-custom-stick-h: var(--live-tron-stick-h); --live-custom-stick-v: var(--live-tron-stick-v); }
   .live-board[data-theme="cyberpunk"] { --live-custom-stick-h: var(--live-cyberpunk-stick-h); --live-custom-stick-v: var(--live-cyberpunk-stick-v); }
   .live-board[data-theme="matrix"] { --live-custom-stick-h: var(--live-matrix-stick-h); --live-custom-stick-v: var(--live-matrix-stick-v); }
+  .live-board[data-theme="matrix"] .live-stick-tray:is([data-position="bottom"], [data-position="top"]) { height: clamp(1.38rem, 3.05vw, 2.65rem); }
+  .live-board[data-theme="matrix"] .live-stick-tray:is([data-position="left"], [data-position="right"]) { width: clamp(1.38rem, 3.05vw, 2.65rem); }
+  .live-board[data-theme="matrix"] .live-transfer-token .live-stick { height: clamp(1.6rem, 3.4vw, 2.85rem); }
   .live-board[data-theme="cake"] { --live-custom-stick-h: var(--live-cake-stick-h); --live-custom-stick-v: var(--live-cake-stick-v); }
   .live-board[data-theme="bread"] { --live-custom-stick-h: var(--live-bread-stick-h); --live-custom-stick-v: var(--live-bread-stick-v); }
   .live-board[data-theme="fruit"] { --live-custom-stick-h: var(--live-fruit-stick-h); --live-custom-stick-v: var(--live-fruit-stick-v); }
@@ -3811,7 +3819,7 @@ body.soul-playing{overflow:hidden}
         <button type="button" class="live-button live-theme-tab" role="tab" id="liveThemeGroupBaseTab" aria-controls="liveThemeGroupBase" aria-selected="true" tabindex="0">基本風格</button>
         <button type="button" class="live-button live-theme-tab" role="tab" id="liveThemeGroupScifiTab" aria-controls="liveThemeGroupScifi" aria-selected="false" tabindex="-1">科幻系列</button>
         <button type="button" class="live-button live-theme-tab" role="tab" id="liveThemeGroupMovieTab" aria-controls="liveThemeGroupMovie" aria-selected="false" tabindex="-1">電影系列</button>
-        <button type="button" class="live-button live-theme-tab" role="tab" id="liveThemeGroupPetsTab" aria-controls="liveThemeGroupPets" aria-selected="false" tabindex="-1">動物寵物系列</button>
+        <button type="button" class="live-button live-theme-tab" role="tab" id="liveThemeGroupPetsTab" aria-controls="liveThemeGroupPets" aria-selected="false" tabindex="-1">動物系列</button>
         <button type="button" class="live-button live-theme-tab" role="tab" id="liveThemeGroupGamesTab" aria-controls="liveThemeGroupGames" aria-selected="false" tabindex="-1">遊戲系列</button>
         <button type="button" class="live-button live-theme-tab" role="tab" id="liveThemeGroupFoodTab" aria-controls="liveThemeGroupFood" aria-selected="false" tabindex="-1">可愛食物系列</button>
         <button type="button" class="live-button live-theme-tab" role="tab" id="liveThemeGroupGothicTab" aria-controls="liveThemeGroupGothic" aria-selected="false" tabindex="-1">灰暗憂鬱系列</button>
@@ -3914,7 +3922,7 @@ body.soul-playing{overflow:hidden}
       </div>
       <div id="liveThemeGroupPets" role="tabpanel" aria-labelledby="liveThemeGroupPetsTab" hidden>
         <fieldset class="live-fieldset live-theme-options" data-columns="3">
-          <legend class="sr-only">動物寵物系列</legend>
+          <legend class="sr-only">動物系列</legend>
           <label class="live-theme-option">
             <span class="live-theme-preview" data-preview="cat" aria-hidden="true">
               <span class="live-theme-diagram"><i></i><i></i><i></i><i></i><i></i></span>
@@ -3939,7 +3947,7 @@ body.soul-playing{overflow:hidden}
             </span>
             <span class="live-theme-caption">
               <input type="radio" name="liveTheme-pets" value="whale-shark">
-              <span>鯨鯊</span>
+              <span>海洋系列</span>
             </span>
           </label>
         </fieldset>
