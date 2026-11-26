@@ -6,7 +6,7 @@
   <meta name="color-scheme" content="light">
   <meta name="theme-color" content="#f4f5ef">
   <meta name="description" content="四人日麻手牌點數計算器。手牌計算預設雀魂和牌動畫、番符速算即時計算。附隨機番符練習、圖像牌面及逐項符數拆解。">
-  <meta http-equiv="Content-Security-Policy" content="default-src 'none'; script-src 'unsafe-inline'; style-src 'unsafe-inline'; img-src 'self' data:; connect-src 'self'; base-uri 'none'; form-action 'none'">
+  <meta http-equiv="Content-Security-Policy" content="default-src 'none'; script-src 'unsafe-inline'; style-src 'unsafe-inline'; img-src 'self' data:; connect-src 'self' https://api.github.com; base-uri 'none'; form-action 'none'">
   <title>點和 · 日麻點數計算器</title>
   <link rel="icon" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 64 64'%3E%3Crect x='9' y='3' width='46' height='58' rx='10' fill='%231f5644'/%3E%3Crect x='9' y='3' width='46' height='51' rx='10' fill='%23fffefb'/%3E%3Cpath d='M21 19h22v19H21zM32 11v36' fill='none' stroke='%23b85d4b' stroke-width='5'/%3E%3C/svg%3E">
   <style>
@@ -909,7 +909,7 @@ body.soul-playing{overflow:hidden}
     gap: .55rem;
   }
   .live-seat-position { color: var(--live-muted); font-size: .9rem; white-space: nowrap; }
-  .live-name-field input, .live-hand-row select {
+  .live-name-field input, .live-hand-row select, .live-theme-import :is(input, select) {
     min-height: 2.75rem;
     width: 100%;
     border: 1px solid var(--live-border);
@@ -1312,6 +1312,16 @@ body.soul-playing{overflow:hidden}
   .live-theme-button { display: inline-flex; align-items: center; justify-content: center; gap: .43rem; white-space: nowrap; }
   .live-theme-button .icon { width: 1.16rem; height: 1.16rem; flex: 0 0 auto; }
   .live-theme-dialog { width: min(46rem, calc(100% - 1.25rem)); }
+  .live-theme-dialog-actions { display: flex; align-items: center; gap: .45rem; }
+  .live-theme-add { border-color: var(--live-gold); white-space: nowrap; }
+  .live-theme-import label { display: grid; gap: .35rem; color: var(--live-muted); font-size: .92rem; }
+  .live-theme-import-fields { display: grid; grid-template-columns: repeat(2, minmax(0, 1fr)); gap: .7rem; }
+  .live-theme-import-source { padding: .65rem .8rem; border: 1px solid var(--live-border); border-radius: .55rem; }
+  .live-theme-import-source summary { display: flex; justify-content: space-between; align-items: center; font-weight: 650; }
+  .live-theme-import-source[open] summary .icon { transform: rotate(180deg); }
+  .live-theme-import-source .live-theme-import-fields { margin-block: .7rem; }
+  .live-theme-import-status:empty { display: none; }
+  .live-theme-import-status { font-size: .92rem; }
   .live-theme-tabs {
     display: grid;
     grid-template-columns: repeat(4, minmax(0, 1fr));
@@ -3943,9 +3953,15 @@ body.soul-playing{overflow:hidden}
     <dialog class="live-dialog live-theme-dialog" id="liveThemeDialog" aria-labelledby="liveThemeTitle">
       <header class="live-dialog-header">
         <h2 id="liveThemeTitle">風格設定</h2>
-        <button type="button" class="live-button live-close" id="liveCloseTheme" aria-label="關閉">
-          <svg class="icon" aria-hidden="true"><use href="#i-x"/></svg>
-        </button>
+        <div class="live-theme-dialog-actions">
+          <button type="button" class="live-button live-theme-button live-theme-add" id="liveOpenThemeImport"
+                  aria-haspopup="dialog" aria-controls="liveThemeImportDialog">
+            <svg class="icon" aria-hidden="true"><use href="#i-plus"/></svg>加入風格
+          </button>
+          <button type="button" class="live-button live-close" id="liveCloseTheme" aria-label="關閉">
+            <svg class="icon" aria-hidden="true"><use href="#i-x"/></svg>
+          </button>
+        </div>
       </header>
       <div class="live-theme-tabs" role="tablist" aria-label="風格系列">
         <button type="button" class="live-button live-theme-tab" role="tab" id="liveThemeGroupBaseTab" aria-controls="liveThemeGroupBase" aria-selected="true" tabindex="0">基本風格</button>
@@ -4189,6 +4205,59 @@ body.soul-playing{overflow:hidden}
           </label>
         </fieldset>
       </div>
+    </dialog>
+
+    <dialog class="live-dialog" id="liveThemeImportDialog" aria-labelledby="liveThemeImportTitle">
+      <header class="live-dialog-header">
+        <h2 id="liveThemeImportTitle">加入風格</h2>
+        <button type="button" class="live-button live-close" id="liveCloseThemeImport" aria-label="關閉">
+          <svg class="icon" aria-hidden="true"><use href="#i-x"/></svg>
+        </button>
+      </header>
+      <form class="live-action live-theme-import" id="liveThemeImportForm" autocomplete="off">
+        <label>
+          <span>GitHub 資料夾</span>
+          <select name="folder" required></select>
+        </label>
+        <label id="liveManualThemeFolder" hidden>
+          <span>資料夾名稱</span>
+          <input type="text" name="folderName" spellcheck="false" autocapitalize="none" placeholder="例如 temporal-vault">
+        </label>
+        <p id="liveThemeFoldersStatus" class="live-theme-import-status" role="status"></p>
+        <div class="live-theme-import-fields">
+          <label><span>系列</span><select name="group" required></select></label>
+          <label>
+            <span>分數卡配色</span>
+            <select name="appearance">
+              <option value="dark">深色</option>
+              <option value="light">淺色</option>
+            </select>
+          </label>
+        </div>
+        <label>
+          <span>風格名稱（選填）</span>
+          <input type="text" name="displayName" placeholder="預設用資料夾名稱">
+        </label>
+        <details class="live-theme-import-source">
+          <summary>GitHub 來源設定<svg class="icon" aria-hidden="true"><use href="#i-chevron"/></svg></summary>
+          <div class="live-theme-import-fields">
+            <label>
+              <span>GitHub 儲存庫</span>
+              <input type="text" name="repository" spellcheck="false" autocapitalize="none" placeholder="owner/repo">
+            </label>
+            <label>
+              <span>發佈分支（選填）</span>
+              <input type="text" name="branch" spellcheck="false" autocapitalize="none" placeholder="預設分支">
+            </label>
+          </div>
+          <button type="button" class="live-button" id="liveRefreshThemeFolders">讀取資料夾</button>
+        </details>
+        <p id="liveThemeImportStatus" class="live-theme-import-status" role="status"></p>
+        <div class="live-dialog-actions">
+          <button type="button" class="live-button" id="liveCancelThemeImport">取消</button>
+          <button type="submit" class="live-button live-theme-add">加入並套用</button>
+        </div>
+      </form>
     </dialog>
 
     <template id="liveSetupSeatTemplate">
@@ -7326,8 +7395,18 @@ window.addEventListener('DOMContentLoaded', () => {
   const board = $('liveScoreboard');
   const dialog = $('liveActionDialog');
   const themeDialog = $('liveThemeDialog');
+  const themeImportDialog = $('liveThemeImportDialog');
+  const themeImportForm = $('liveThemeImportForm');
+  const themeImportFields = themeImportForm.elements;
+  const themeImportSubmit = themeImportForm.querySelector('[type="submit"]');
+  const manualFolder = '/manual';
   const themeTabs = [...themeDialog.querySelectorAll('.live-theme-tab')];
   const themePanels = themeTabs.map(tab => $(tab.getAttribute('aria-controls')));
+  const themeGroups = new Map(themePanels.map((panel, index) => [
+    panel.dataset.themeGroup, {
+      index, label: themeTabs[index].textContent.trim(), options: panel.querySelector('.live-theme-options')
+    }
+  ]));
   const themeAssetProperties = {
     bg: '--custom-theme-bg',
     felt: '--custom-theme-felt',
@@ -7346,6 +7425,9 @@ window.addEventListener('DOMContentLoaded', () => {
   const undoLimit = 30;
   const storageKey = 'tenwa.live-scoreboard.v1';
   const themeStorageKey = 'tenwa.live-scoreboard.theme.v1';
+  const sitePath = new URL('./', location.href).pathname;
+  const importedThemePrefix = 'tenwa.live-scoreboard.imported-theme.v1:' + sitePath + ':';
+  const themeSourceKey = 'tenwa.live-scoreboard.theme-source.v1:' + sitePath;
   const hash = '#liveScoreboard';
   const format = new Intl.NumberFormat('en-US');
   const seatNumbers = ['一', '二', '三', '四'];
@@ -7359,6 +7441,8 @@ window.addEventListener('DOMContentLoaded', () => {
   let storageUnavailable = false, saving = false, calculatorScroll = 0;
   let source = null, winners = [], winnerChoices = [], tenpai = new Set();
   let stopMotion = null;
+  let themeFoldersRequest = null;
+  let themeImportAttempt = 0;
   const handRows = new Map();
 
   const setupSeats = LiveScore.seats.map(player => {
@@ -7497,25 +7581,33 @@ window.addEventListener('DOMContentLoaded', () => {
     paintSticks(match);
   }
 
+  function isThemeFolder(id) {
+    if (typeof id !== 'string' || !id || id !== id.trim() ||
+        id === '.' || id === '..' || /[\/\\\x00-\x1f]/.test(id)) return false;
+    try { encodeURIComponent(id); } catch { return false; }
+    return true;
+  }
+
+  function themeAssetPath(id, asset) {
+    return './assets/themes/' + encodeURIComponent(id) + '/' + asset + '.webp';
+  }
+
   function applyCustomTheme(element, theme) {
     if (theme) element.dataset.customTheme = theme.appearance;
     else delete element.dataset.customTheme;
     for (const [asset, property] of Object.entries(themeAssetProperties)) {
-      if (theme) element.style.setProperty(property, `url("./assets/themes/${theme.id}/${asset}.webp")`);
+      if (theme) element.style.setProperty(property, 'url("' + themeAssetPath(theme.id, asset) + '")');
       else element.style.removeProperty(property);
     }
   }
 
   function registerCustomThemes(entries) {
     if (!Array.isArray(entries)) return;
-    const groups = new Map(themePanels.map(panel => [
-      panel.dataset.themeGroup, panel.querySelector('.live-theme-options')
-    ]));
     const ids = new Set(themeChoices.map(option => option.value));
     for (const entry of entries) {
       const {id, name, group, appearance = 'dark'} = entry ?? {};
-      if (typeof id !== 'string' || !/^[a-z0-9]+(?:-[a-z0-9]+)*$/.test(id) || ids.has(id) ||
-          typeof name !== 'string' || !name.trim() || !groups.has(group) ||
+      if (!isThemeFolder(id) || ids.has(id) ||
+          typeof name !== 'string' || !name.trim() || !themeGroups.has(group) ||
           !['dark', 'light'].includes(appearance)) {
         console.warn('Skipped invalid or duplicate custom scoreboard theme:', id);
         continue;
@@ -7529,7 +7621,7 @@ window.addEventListener('DOMContentLoaded', () => {
       radio.value = id;
       option.querySelector('.live-theme-caption > span').textContent = name.trim();
       applyCustomTheme(preview, theme);
-      groups.get(group).append(option);
+      themeGroups.get(group).options.append(option);
       themeChoices.push(radio);
       ids.add(id);
       customThemes.set(id, theme);
@@ -7563,6 +7655,11 @@ window.addEventListener('DOMContentLoaded', () => {
     themeChoices.forEach(option => { option.checked = option === choice; });
   }
 
+  function selectTheme(value) {
+    setTheme(value);
+    try { localStorage.setItem(themeStorageKey, value); } catch {}
+  }
+
   function loadTheme() {
     try { setTheme(localStorage.getItem(themeStorageKey)); } catch {}
   }
@@ -7574,6 +7671,166 @@ window.addEventListener('DOMContentLoaded', () => {
       tab.tabIndex = active ? 0 : -1;
       themePanels[i].hidden = !active;
     });
+  }
+
+  function loadImportedThemes() {
+    try {
+      const entries = [];
+      for (const key of Object.keys(localStorage)) {
+        if (!key.startsWith(importedThemePrefix)) continue;
+        try { entries.push(JSON.parse(localStorage.getItem(key))); } catch {}
+      }
+      registerCustomThemes(entries);
+    } catch {}
+  }
+
+  function githubRepository(value) {
+    const path = value.trim().replace(/^https:\/\/github\.com\//i, '').replace(/\/+$/, '').replace(/\.git$/i, '');
+    const match = /^([a-z0-9-]+)\/([a-z0-9_.-]+)$/i.exec(path);
+    return match && !['.', '..'].includes(match[2]) ? path : '';
+  }
+
+  function defaultThemeRepository() {
+    const owner = /^([a-z0-9-]+)\.github\.io$/i.exec(location.hostname)?.[1];
+    return owner ? githubRepository(owner + '/' + (sitePath.split('/')[1] || location.hostname)) : '';
+  }
+
+  function updateManualThemeFolder() {
+    const manual = themeImportFields.folder.value === manualFolder;
+    $('liveManualThemeFolder').hidden = !manual;
+    themeImportFields.folderName.disabled = !manual;
+    themeImportFields.folderName.required = manual;
+  }
+
+  function showThemeFolders(folders) {
+    const select = themeImportFields.folder;
+    const selected = select.value;
+    select.replaceChildren(
+      new Option('揀選資料夾', ''),
+      ...folders.map(folder => new Option(folder, folder)),
+      new Option('手動輸入資料夾名稱', manualFolder)
+    );
+    if (folders.includes(selected) || (selected === manualFolder && themeImportFields.folderName.value.trim()))
+      select.value = selected;
+    else select.value = folders.length ? '' : manualFolder;
+    updateManualThemeFolder();
+  }
+
+  async function readThemeFolders() {
+    themeFoldersRequest?.abort();
+    const repository = githubRepository(themeImportFields.repository.value);
+    const branch = themeImportFields.branch.value.trim();
+    const status = $('liveThemeFoldersStatus');
+    if (!repository) {
+      showThemeFolders([]);
+      status.textContent = '可輸入已發佈嘅資料夾名稱，或者喺 GitHub 來源設定填寫公開儲存庫。';
+      return;
+    }
+    try { localStorage.setItem(themeSourceKey, JSON.stringify({repository, branch})); } catch {}
+    const request = new AbortController();
+    themeFoldersRequest = request;
+    status.textContent = '讀取 GitHub 資料夾中…';
+    const responses = await Promise.allSettled(['assets/themes', 'docs/assets/themes'].map(async path => {
+      const url = new URL('https://api.github.com/repos/' + repository + '/contents/' + path);
+      if (branch) url.searchParams.set('ref', branch);
+      const response = await fetch(url, {
+        credentials: 'omit',
+        headers: {Accept: 'application/vnd.github+json'},
+        signal: request.signal
+      });
+      if (!response.ok) throw new Error('GitHub HTTP ' + response.status);
+      return response.json();
+    }));
+    if (request.signal.aborted || !themeImportDialog.open) return;
+    const directories = responses.filter(result => result.status === 'fulfilled' && Array.isArray(result.value));
+    const existing = new Set(themeChoices.map(choice => choice.value));
+    const folders = new Set();
+    for (const directory of directories) {
+      for (const entry of directory.value) {
+        if (entry?.type === 'dir' && isThemeFolder(entry.name) && !existing.has(entry.name))
+          folders.add(entry.name);
+      }
+    }
+    showThemeFolders([...folders].sort((a, b) => a.localeCompare(b)));
+    status.textContent = folders.size ? '' : directories.length
+      ? '暫時未有可加入嘅新資料夾。可以重新讀取或手動輸入名稱。'
+      : '讀取 GitHub 資料夾失敗。可以檢查儲存庫同分支，或手動輸入名稱。';
+  }
+
+  function openThemeImport() {
+    themeImportAttempt++;
+    themeImportForm.reset();
+    const activeIndex = themeTabs.findIndex(tab => tab.getAttribute('aria-selected') === 'true');
+    if (activeIndex >= 0) themeImportFields.group.value = themePanels[activeIndex].dataset.themeGroup;
+    let savedSource = {};
+    try { savedSource = JSON.parse(localStorage.getItem(themeSourceKey)) ?? {}; } catch {}
+    themeImportFields.repository.value = savedSource.repository || defaultThemeRepository();
+    themeImportFields.branch.value = savedSource.branch || '';
+    themeImportForm.querySelector('details').open = false;
+    $('liveThemeImportStatus').textContent = '';
+    themeImportSubmit.disabled = false;
+    showThemeFolders([]);
+    themeImportDialog.showModal();
+    themeImportFields.folder.focus();
+    readThemeFolders();
+  }
+
+  async function importTheme(event) {
+    event.preventDefault();
+    if (themeImportSubmit.disabled) return;
+    const id = (themeImportFields.folder.value === manualFolder
+      ? themeImportFields.folderName.value : themeImportFields.folder.value).trim();
+    const group = themeImportFields.group.value;
+    const name = themeImportFields.displayName.value.trim() || id;
+    const appearance = themeImportFields.appearance.value;
+    const status = $('liveThemeImportStatus');
+    if (!isThemeFolder(id) || !themeGroups.has(group)) {
+      status.textContent = '請揀選或輸入一個資料夾名稱，再選擇系列。';
+      return;
+    }
+    if (themeChoices.some(choice => choice.value === id)) {
+      status.textContent = '「' + id + '」已經加入。';
+      return;
+    }
+
+    const attempt = ++themeImportAttempt;
+    themeImportSubmit.disabled = true;
+    status.textContent = '檢查「' + id + '」嘅六張素材中…';
+    const assets = await Promise.all(Object.keys(themeAssetProperties).map(async asset => {
+      const image = new Image();
+      image.src = themeAssetPath(id, asset);
+      try {
+        await image.decode();
+        return '';
+      } catch {
+        return asset + '.webp';
+      }
+    }));
+    if (attempt !== themeImportAttempt || !themeImportDialog.open) return;
+    themeImportSubmit.disabled = false;
+    const missing = assets.filter(Boolean);
+    if (missing.length) {
+      status.textContent = '網站暫時讀取唔到 ' + missing.join('、') + '。請核對檔名，並確認已發佈。';
+      return;
+    }
+
+    const theme = {id, name, group, appearance};
+    try {
+      const storageId = importedThemePrefix + id;
+      if (themeChoices.some(choice => choice.value === id) || localStorage.getItem(storageId) !== null) {
+        status.textContent = '「' + id + '」已經加入。';
+        return;
+      }
+      localStorage.setItem(storageId, JSON.stringify(theme));
+    } catch {
+      status.textContent = '瀏覽器儲存空間暫時無法儲存風格。';
+      return;
+    }
+    registerCustomThemes([theme]);
+    selectTheme(id);
+    themeImportDialog.close();
+    showThemeGroup(themeGroups.get(group).index);
+    themeChoices.find(choice => choice.value === id)?.focus();
   }
 
   function animateChange(previous, next, transfers) {
@@ -7658,6 +7915,7 @@ window.addEventListener('DOMContentLoaded', () => {
     else {
       cancelMotion();
       if (dialog.open) dialog.close();
+      if (themeImportDialog.open) themeImportDialog.close();
       if (themeDialog.open) themeDialog.close();
       if (document.fullscreenElement === board) document.exitFullscreen().catch(() => {});
     }
@@ -7883,8 +8141,19 @@ window.addEventListener('DOMContentLoaded', () => {
   $('liveCloseTheme').addEventListener('click', () => themeDialog.close());
   themeDialog.addEventListener('change', ({target}) => {
     if (!themeChoices.includes(target) || !target.checked) return;
-    setTheme(target.value);
-    try { localStorage.setItem(themeStorageKey, target.value); } catch {}
+    selectTheme(target.value);
+  });
+  for (const [group, {label}] of themeGroups) {
+    themeImportFields.group.add(new Option(label, group));
+  }
+  $('liveOpenThemeImport').addEventListener('click', openThemeImport);
+  $('liveCloseThemeImport').addEventListener('click', () => themeImportDialog.close());
+  $('liveCancelThemeImport').addEventListener('click', () => themeImportDialog.close());
+  $('liveRefreshThemeFolders').addEventListener('click', readThemeFolders);
+  themeImportFields.folder.addEventListener('change', updateManualThemeFolder);
+  themeImportForm.addEventListener('submit', importTheme);
+  themeImportDialog.addEventListener('close', () => {
+    if (!themeImportDialog.open) themeFoldersRequest?.abort();
   });
 
   $('openLiveScoreboard').addEventListener('click', () => {
@@ -7919,9 +8188,13 @@ window.addEventListener('DOMContentLoaded', () => {
   });
 
   try { load(localStorage.getItem(storageKey)); } catch { storageUnavailable = true; }
+  loadImportedThemes();
   loadTheme();
   loadCustomThemes();
   window.addEventListener('storage', event => {
+    if (event.key?.startsWith(importedThemePrefix) && event.newValue) {
+      try { registerCustomThemes([JSON.parse(event.newValue)]); } catch {}
+    }
     if (event.key === themeStorageKey || event.key === null) loadTheme();
     if (!storageUnavailable && (event.key === storageKey || event.key === null)) {
       try { reload(localStorage.getItem(storageKey)); }
