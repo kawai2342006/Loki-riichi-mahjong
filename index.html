@@ -978,17 +978,6 @@ body.soul-playing{overflow:hidden}
     box-shadow: var(--live-wind-frame-shadow, inset 0 0 0 2px #172b23, 0 .32rem .7rem #0b251a90);
     text-align: center;
   }
-  .live-counters {
-    display: grid;
-    grid-template-columns: repeat(2, minmax(0, 1fr));
-    gap: .13rem;
-    color: var(--live-muted);
-  }
-  .live-counters > div { position: relative; min-width: 0; padding: .3rem 0; }
-  .live-counters dt { font-size: clamp(.62rem, 4.5cqi, .98rem); line-height: 1.1; }
-  .live-counters dd { display: flex; align-items: baseline; justify-content: center; gap: .15em; line-height: 1.35; }
-  .live-counters dd span { font-size: clamp(.56rem, 4cqi, .91rem); }
-  .live-counters strong { font-size: clamp(.84rem, 8.2cqi, 2.2rem); color: var(--live-text); }
   .live-counters strong, .live-player-points, .live-player-delta, .live-transfer-amount { font-variant-numeric: tabular-nums; }
 
   .live-stick-tray {
@@ -2270,9 +2259,6 @@ body.soul-playing{overflow:hidden}
       0 .48rem 1.7rem rgba(1, 7, 4, 0.86),
       0 0 1.45rem rgba(80, 212, 138, 0.22);
   }
-  .live-board[data-theme="loki-classic"] .live-table .live-wind-panel {
-    padding: clamp(.65rem, 1.7vw, 1.65rem);
-  }
   .live-board[data-theme="loki-classic"] .live-stick-tray {
     border-color: #e0bc70;
     background: rgba(6, 20, 13, 0.88);
@@ -3518,32 +3504,6 @@ body.soul-playing{overflow:hidden}
     aspect-ratio: 1;
     padding: 0;
   }
-  .live-board .live-table .live-wind-face {
-    position: absolute;
-    inset: 13% 21% 24%;
-    display: grid;
-    align-content: center;
-    padding: 0;
-    border: 0;
-    background: transparent;
-    box-shadow: none;
-    backdrop-filter: none;
-    -webkit-backdrop-filter: none;
-  }
-  .live-board .live-counters {
-    color: var(--live-wind-ink);
-    -webkit-text-stroke: .09em var(--live-wind-outline);
-    paint-order: stroke fill;
-    font-weight: 750;
-  }
-  .live-board .live-counters dt {
-    font-size: clamp(.68rem, 4.6cqi, .96rem);
-    white-space: nowrap;
-  }
-  .live-board .live-counters strong {
-    color: inherit;
-    font-size: clamp(.98rem, 8.6cqi, 1.6rem);
-  }
   .live-board .live-wind-panel .live-stick-tray {
     --live-slot-thickness: clamp(.52rem, 6cqi, 1rem);
     --live-slot-inset: clamp(2px, 2.25cqi, .52rem);
@@ -3565,6 +3525,179 @@ body.soul-playing{overflow:hidden}
   .live-board .live-wind-panel .live-stick-tray[data-position="bottom"] { bottom: var(--live-slot-inset); }
   .live-board .live-wind-panel .live-stick-tray[data-position="left"] { left: var(--live-slot-inset); }
   .live-board .live-wind-panel .live-stick-tray[data-position="right"] { right: var(--live-slot-inset); }
+</style>
+<style id="live-scoreboard-counters">
+  .live-board {
+    --live-counter-panel: color-mix(in srgb, var(--live-wind-outline) 86%, transparent);
+    --live-counter-panel-edge: color-mix(in srgb, var(--live-round-accent) 50%, transparent);
+  }
+  .live-board[data-theme="classic"] { --live-counter-panel: #152e25e6; }
+  .live-board[data-theme="earth"] { --live-counter-panel: #563422e6; }
+  .live-board[data-theme="comic"] {
+    --live-counter-panel: #fff0b9;
+    --live-counter-panel-edge: #34416a;
+  }
+  .live-board[data-theme="sakura"] { --live-counter-panel: #fff3eceb; }
+  .live-board[data-theme="hades"] { --live-counter-panel: #351920e6; }
+  .live-board[data-theme="fallen-angel"] { --live-counter-panel: #382f3ae6; }
+  .live-board[data-theme="soul-rose"] { --live-counter-panel: #3a263ce6; }
+  .live-board[data-theme="dark-moon"] { --live-counter-panel: #172439e6; }
+  .live-board[data-theme="tron"] {
+    --live-counter-panel: #071a2ee6;
+    --live-counter-radius: .26rem;
+  }
+  .live-board[data-theme="loki-tva"] {
+    --live-counter-panel: #17161be6;
+    --live-counter-center-y: 48%;
+    --live-counter-radius: .32rem;
+  }
+
+  /* Coordinates use the square wind artwork as their reference. */
+  .live-board[data-theme="Hogwarts"] {
+    --live-honba-slot-x: 27.2%; --live-pot-slot-x: 72.2%; --live-counter-slot-y: 71.3%; --live-counter-slot-width: 15cqi;
+  }
+  .live-board[data-theme="Lilac"] {
+    --live-honba-slot-x: 32.4%; --live-pot-slot-x: 67.2%; --live-counter-slot-y: 74.8%; --live-counter-slot-width: 16cqi;
+  }
+  .live-board[data-theme="Misa_Death_Note"] {
+    --live-honba-slot-x: 29.4%; --live-pot-slot-x: 71.1%; --live-counter-slot-y: 75.2%; --live-counter-slot-width: 31cqi;
+  }
+  .live-board[data-theme="Yoshizawa"] {
+    --live-honba-slot-x: 28.7%; --live-pot-slot-x: 71.3%; --live-counter-slot-y: 84.8%; --live-counter-slot-width: 26cqi;
+  }
+  .live-board[data-theme="frieren"] {
+    --live-honba-slot-x: 22%; --live-pot-slot-x: 77.7%; --live-counter-slot-y: 70.1%; --live-counter-slot-width: 16cqi;
+  }
+  .live-board[data-theme="bread"] {
+    --live-honba-slot-x: 33.5%; --live-pot-slot-x: 67.1%; --live-counter-slot-y: 70.7%; --live-counter-slot-width: 28cqi;
+  }
+  .live-board[data-theme="cake"] {
+    --live-honba-slot-x: 34.9%; --live-pot-slot-x: 64.7%; --live-counter-slot-y: 66.3%; --live-counter-slot-width: 23.5cqi;
+  }
+  .live-board[data-theme="cat"] {
+    --live-honba-slot-x: 34.5%; --live-pot-slot-x: 66%; --live-counter-slot-y: 64.4%; --live-counter-slot-width: 26cqi;
+  }
+  .live-board[data-theme="dog"] {
+    --live-honba-slot-x: 34.5%; --live-pot-slot-x: 66.4%; --live-counter-slot-y: 71.4%; --live-counter-slot-width: 26cqi;
+  }
+  .live-board[data-theme="fruit"] {
+    --live-honba-slot-x: 36.7%; --live-pot-slot-x: 63.3%; --live-counter-slot-y: 67.4%; --live-counter-slot-width: 21cqi;
+  }
+  .live-board[data-theme="loki-classic"] {
+    --live-honba-slot-x: 28.2%; --live-pot-slot-x: 71.8%; --live-counter-slot-y: 71.6%; --live-counter-slot-width: 13.6cqi;
+  }
+  .live-board[data-theme="matrix"] {
+    --live-honba-slot-x: 19.3%; --live-pot-slot-x: 80.5%; --live-counter-slot-y: 27.2%; --live-counter-slot-width: 14.6cqi;
+    --live-counter-slot-label-top: calc(100% + 2.5cqi);
+    --live-counter-slot-label-bottom: auto;
+    --live-carry-slot-y: 53%;
+  }
+  .live-board[data-theme="miyabi-frost"] {
+    --live-honba-slot-x: 31%; --live-pot-slot-x: 68.7%; --live-counter-slot-y: 70.5%; --live-counter-slot-width: 26.5cqi;
+    --live-counter-slot-number-size: clamp(.59rem, 5.6cqi, 1.12rem);
+  }
+  .live-board[data-theme="soft-darts"] {
+    --live-honba-slot-x: 32.7%; --live-pot-slot-x: 68.5%; --live-counter-slot-y: 75.4%; --live-counter-slot-width: 29cqi;
+  }
+  .live-board[data-theme="vice-sunset"] {
+    --live-honba-slot-x: 24.1%; --live-pot-slot-x: 75.3%; --live-counter-slot-y: 74.8%; --live-counter-slot-width: 14.8cqi;
+  }
+  .live-board[data-theme="whale-shark"] {
+    --live-honba-slot-x: 35.1%; --live-pot-slot-x: 65%; --live-counter-slot-y: 70.2%; --live-counter-slot-width: 25.7cqi;
+  }
+  .live-board[data-theme="cyberpunk"] {
+    --live-honba-slot-x: 36.2%; --live-pot-slot-x: 63.8%; --live-counter-slot-y: 69.4%; --live-counter-slot-width: 20.7cqi;
+  }
+
+  .live-wind-face {
+    --live-honba-x: 34%;
+    --live-pot-x: 66%;
+    --live-counter-y: var(--live-counter-center-y, 46%);
+    --live-counter-width: 29cqi;
+    --live-counter-background: var(--live-counter-panel);
+    --live-counter-border: 1px solid var(--live-counter-panel-edge);
+    --live-counter-padding: .2rem .13rem;
+    --live-counter-label-size: clamp(.59rem, 4cqi, .8rem);
+    --live-counter-number-size: clamp(.78rem, 7.5cqi, 1.46rem);
+    --live-counter-number-room: calc(var(--live-counter-width) - .32rem);
+    position: absolute;
+    inset: 0;
+    color: var(--live-wind-ink);
+  }
+  .live-counters { position: absolute; inset: 0; }
+  .live-counter {
+    position: absolute;
+    top: var(--live-counter-y);
+    display: var(--live-counter-display, grid);
+    align-items: center;
+    justify-items: center;
+    justify-content: center;
+    gap: clamp(1px, 1cqi, .2rem);
+    inline-size: var(--live-counter-width);
+    translate: -50% -50%;
+    padding: var(--live-counter-padding);
+    border: var(--live-counter-border);
+    border-radius: var(--live-counter-radius, .55rem);
+    background: var(--live-counter-background);
+    line-height: 1.04;
+    white-space: nowrap;
+  }
+  .live-counter[data-counter="honba"] { left: var(--live-honba-x); }
+  .live-counter[data-counter="pot"] { left: var(--live-pot-x); }
+  .live-counter dd { display: grid; place-items: center; }
+  .live-counter :is(dt, strong) {
+    -webkit-text-stroke: .085em var(--live-wind-outline);
+    paint-order: stroke fill;
+  }
+  .live-counter dt {
+    position: var(--live-counter-label-position, static);
+    inset-inline: 0;
+    top: var(--live-counter-label-top, auto);
+    bottom: var(--live-counter-label-bottom, calc(100% + 2cqi));
+    font-size: var(--live-counter-label-size);
+    font-weight: 730;
+  }
+  .live-counter strong {
+    font-size: min(var(--live-counter-number-size), calc(1.45 * var(--live-counter-number-room) / var(--live-counter-glyphs, 1)));
+    font-weight: 820;
+  }
+  .live-board .live-wind-panel .live-carry-stick {
+    top: var(--live-carry-y, 73%);
+    bottom: auto;
+    width: clamp(1.1rem, 27cqi, 4.2rem);
+    height: clamp(.4rem, 6.2cqi, .98rem);
+    transform: translate(-50%, -50%);
+    pointer-events: none;
+  }
+  @container (min-width: 8rem) {
+    .live-board:is([data-theme="Hogwarts"], [data-theme="Lilac"], [data-theme="Misa_Death_Note"],
+      [data-theme="Yoshizawa"], [data-theme="frieren"], [data-theme="bread"], [data-theme="cake"],
+      [data-theme="cat"], [data-theme="dog"], [data-theme="fruit"], [data-theme="loki-classic"],
+      [data-theme="matrix"], [data-theme="miyabi-frost"], [data-theme="soft-darts"],
+      [data-theme="vice-sunset"], [data-theme="whale-shark"], [data-theme="cyberpunk"]) .live-wind-face {
+      --live-honba-x: var(--live-honba-slot-x);
+      --live-pot-x: var(--live-pot-slot-x);
+      --live-counter-y: var(--live-counter-slot-y);
+      --live-counter-width: var(--live-counter-slot-width);
+      --live-counter-background: transparent;
+      --live-counter-border: 0;
+      --live-counter-padding: 0;
+      --live-counter-label-position: absolute;
+      --live-counter-label-top: var(--live-counter-slot-label-top, auto);
+      --live-counter-label-bottom: var(--live-counter-slot-label-bottom, calc(100% + 3cqi));
+      --live-counter-number-size: var(--live-counter-slot-number-size, clamp(.68rem, 7.4cqi, 1.26rem));
+      --live-carry-y: var(--live-carry-slot-y, 44%);
+    }
+  }
+  @container (min-width: 13rem) {
+    .live-board:is([data-theme="Misa_Death_Note"], [data-theme="Yoshizawa"], [data-theme="bread"],
+      [data-theme="cake"], [data-theme="cat"], [data-theme="dog"], [data-theme="fruit"],
+      [data-theme="soft-darts"], [data-theme="whale-shark"], [data-theme="cyberpunk"]) .live-wind-face {
+      --live-counter-display: flex;
+      --live-counter-label-position: static;
+      --live-counter-number-room: calc(var(--live-counter-width) - 2 * var(--live-counter-label-size) - .35rem);
+    }
+  }
 </style>
 </head>
 <body>
@@ -3863,15 +3996,16 @@ body.soul-playing{overflow:hidden}
               <div class="live-wind-panel">
                 <div class="live-wind-face" id="liveWindFace">
                   <dl class="live-counters">
-                    <div><dt>本場</dt><dd><strong id="liveHonba">0</strong><span>本</span></dd></div>
-                    <div id="livePot">
+                    <div class="live-counter" data-counter="honba">
+                      <dt>本場</dt>
+                      <dd><strong id="liveHonba">0</strong><span class="sr-only">本</span></dd>
+                    </div>
+                    <div class="live-counter" id="livePot" data-counter="pot">
                       <dt>供託</dt>
-                      <dd>
-                        <strong id="liveSticks">0</strong><span>支</span>
-                        <span class="live-carry-stick live-stick" id="liveCarryStick" title="前局留下的供託" aria-hidden="true" hidden></span>
-                      </dd>
+                      <dd><strong id="liveSticks">0</strong><span class="sr-only">支</span></dd>
                     </div>
                   </dl>
+                  <span class="live-carry-stick live-stick" id="liveCarryStick" title="前局留下的供託" aria-hidden="true" hidden></span>
                 </div>
                 <div class="live-stick-tray" data-position="bottom" aria-hidden="true"><span class="live-stick" hidden></span></div>
                 <div class="live-stick-tray" data-position="right" aria-hidden="true"><span class="live-stick" hidden></span></div>
@@ -7552,8 +7686,14 @@ window.addEventListener('DOMContentLoaded', () => {
     });
   }
 
+  function paintCounter(element, value) {
+    const amount = format.format(value);
+    element.textContent = amount;
+    element.style.setProperty('--live-counter-glyphs', amount.length);
+  }
+
   function paintSticks(state, movingPlayer = null) {
-    $('liveSticks').textContent = format.format(state.sticks);
+    paintCounter($('liveSticks'), state.sticks);
     $('liveCarryStick').hidden = state.sticks <= state.declared.length;
     sticks.forEach((stick, player) => {
       stick.hidden = player === movingPlayer || !state.declared.includes(player);
@@ -7866,7 +8006,7 @@ window.addEventListener('DOMContentLoaded', () => {
     $('liveMatchMode').textContent = matchTitles[match.mode] +
       (LiveScore.isExtension(match) ? ' · 延長賽' : '') + (ended ? ' · 終局' : '');
     $('liveRoundLabel').textContent = LiveScore.roundLabel(match);
-    $('liveHonba').textContent = format.format(match.honba);
+    paintCounter($('liveHonba'), match.honba);
     paintScores(points);
     paintSticks(match);
     $('liveLastAction').textContent = last?.label ?? '';
