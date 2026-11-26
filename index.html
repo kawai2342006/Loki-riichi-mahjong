@@ -809,13 +809,13 @@ body.soul-playing{overflow:hidden}
     padding-block: clamp(1.25rem, 3.4vh, 3.25rem);
   }
   .live-header, .live-brand, .live-header-actions,
-  .live-player-meta, .live-player-footer, .live-match-actions, .live-match-footer,
+  .live-player-footer, .live-match-actions, .live-match-footer,
   .live-dialog-header, .live-dialog-actions, .live-setup-footer {
     display: flex;
     align-items: center;
     gap: .75rem;
   }
-  .live-header, .live-player-footer, .live-match-footer,
+  .live-header, .live-match-footer,
   .live-dialog-header, .live-setup-footer { justify-content: space-between; }
   .live-header, .live-match-footer, .live-setup-footer { flex-wrap: wrap; }
   .live-brand { gap: .9rem; min-width: 0; }
@@ -950,13 +950,15 @@ body.soul-playing{overflow:hidden}
     content: '';
   }
   .live-score-grid {
+    --live-grid-inset: 0%;
     position: relative;
     display: grid;
     grid-template-areas: ". top ." "left wind right" ". bottom .";
     grid-template-columns: minmax(0, 1fr) minmax(0, .93fr) minmax(0, 1fr);
     align-items: center;
-    gap: clamp(.38rem, 1.65vw, 2rem);
-    row-gap: clamp(.45rem, 2vh, 1.9rem);
+    margin-inline: var(--live-grid-inset);
+    column-gap: clamp(.38rem, 1.2vw, 1.45rem);
+    row-gap: clamp(.42rem, 1.3vh, 1.2rem);
   }
   .live-player[data-position="bottom"] { grid-area: bottom; }
   .live-player[data-position="right"] { grid-area: right; }
@@ -1075,6 +1077,7 @@ body.soul-playing{overflow:hidden}
     container-type: inline-size;
     min-width: 0;
     display: grid;
+    grid-template-columns: minmax(0, 1fr);
     grid-template-rows: 1fr auto;
     border: 1px solid var(--live-card-border, #647d6d);
     border-radius: clamp(.55rem, 1.1vw, .92rem);
@@ -1088,6 +1091,7 @@ body.soul-playing{overflow:hidden}
   .live-player-select {
     width: 100%;
     display: grid;
+    grid-template-columns: minmax(0, 1fr);
     justify-items: stretch;
     min-width: 0;
     gap: clamp(.25rem, .65vh, .55rem);
@@ -1099,28 +1103,55 @@ body.soul-playing{overflow:hidden}
   }
   .live-player-select:not(:disabled):hover { background: var(--live-card-hover, #2d503f); }
   .live-player-meta {
+    --live-seat-width: clamp(1.18rem, 10cqi, 3rem);
+    --live-status-size: clamp(.65rem, 4.55cqi, 1.07rem);
+    --live-header-side: max(var(--live-seat-width), calc(3.2 * var(--live-status-size)));
     display: grid;
-    grid-template-columns: auto minmax(0, 1fr) auto;
+    grid-template-columns: var(--live-header-side) minmax(0, 1fr) var(--live-header-side);
+    grid-template-areas: "seat name status";
+    align-items: center;
     gap: clamp(.2rem, .7vw, .68rem);
     min-width: 0;
   }
   .live-player-name {
+    grid-area: name;
+    display: -webkit-box;
+    -webkit-box-orient: vertical;
+    -webkit-line-clamp: 2;
     min-width: 0;
+    overflow: hidden;
     overflow-wrap: anywhere;
-    font-size: clamp(.84rem, 7.6cqi, 2.7rem);
+    font-size: clamp(.78rem, 5.8cqi, 1.65rem);
     font-weight: 750;
     line-height: 1.18;
+    text-align: center;
   }
   .live-player-select .live-wind {
-    width: clamp(1.18rem, 10cqi, 3rem);
+    grid-area: seat;
+    width: var(--live-seat-width);
     min-height: clamp(1.3rem, 11cqi, 3.3rem);
     font-size: clamp(.77rem, 6.8cqi, 1.6rem);
   }
   .live-dealer-mark, .live-rank {
+    grid-area: status;
+    justify-self: end;
     color: var(--live-gold);
-    font-size: clamp(.65rem, 4.55cqi, 1.07rem);
+    font-size: var(--live-status-size);
     font-weight: 750;
     white-space: nowrap;
+  }
+  @container (max-width: 9rem) {
+    .live-player-meta {
+      grid-template-columns: auto minmax(0, 1fr);
+      grid-template-areas: "seat status" "name name";
+      gap: .15rem;
+    }
+    .live-dealer-mark, .live-rank {
+      min-width: 0;
+      overflow-wrap: anywhere;
+      white-space: normal;
+      text-align: end;
+    }
   }
   .live-player-points {
     justify-self: center;
@@ -1132,13 +1163,19 @@ body.soul-playing{overflow:hidden}
   }
   .live-player-points.is-negative { color: var(--live-loss); }
   .live-player-footer {
+    justify-content: center;
     min-height: 2.55rem;
     padding: 0 clamp(.36rem, 1.12vw, 1.2rem);
     background: var(--live-card-footer, #0d251d68);
     border-top: 1px solid var(--live-card-footer-border, #456251);
     border-radius: 0 0 .65rem .65rem;
   }
-  .live-player-delta { font-size: clamp(.73rem, 5.1cqi, 1.23rem); font-weight: 700; }
+  .live-player-delta {
+    font-size: clamp(.73rem, 5.1cqi, 1.23rem);
+    font-weight: 700;
+    line-height: 1.1;
+    white-space: nowrap;
+  }
   .live-player-delta.gain { color: var(--live-accent); }
   .live-player-delta.loss { color: var(--live-loss); }
   .live-riichi {
@@ -1264,6 +1301,9 @@ body.soul-playing{overflow:hidden}
   .live-action .live-error { color: var(--live-loss); }
   .live-dialog-actions { justify-content: flex-end; flex-wrap: wrap; gap: .45rem; }
 
+  @media (min-width: 900px) {
+    .live-score-grid { --live-grid-inset: 3%; }
+  }
   @media (max-width: 560px) {
     .live-header { align-items: flex-start; }
     .live-header-actions { gap: .35rem; }
@@ -1281,8 +1321,6 @@ body.soul-playing{overflow:hidden}
       justify-self: center;
       width: 48%;
     }
-    .live-player-meta { grid-template-columns: auto minmax(0, 1fr); }
-    .live-dealer-mark, .live-rank { grid-column: 2; }
     .live-player-footer { display: grid; justify-items: center; gap: 0; padding: 0 .2rem; }
     .live-player-delta:empty { display: none; }
     .live-riichi { min-height: 2.34rem; margin-left: 0; }
@@ -2376,7 +2414,7 @@ body.soul-playing{overflow:hidden}
   }
   .live-board:is([data-theme="loki-classic"], [data-custom-theme]) .live-table::before { content: none; }
   .live-board:is([data-theme="loki-classic"], [data-custom-theme]) .live-score-grid {
-    margin-inline: 5.8%;
+    margin-inline: calc(5.8% + var(--live-grid-inset));
     padding-block: clamp(3rem, 7vw, 4.5rem);
   }
   .live-board:is([data-theme="loki-classic"], [data-custom-theme])
@@ -2394,7 +2432,6 @@ body.soul-playing{overflow:hidden}
   }
   .live-board:is([data-theme="loki-classic"], [data-custom-theme]) .live-player {
     --live-card-delta-row: clamp(1.55rem, 1.7vw, 2.7rem);
-    grid-template-columns: minmax(0, 1fr);
     grid-template-rows: auto var(--live-card-delta-row);
     border-radius: clamp(.5rem, 1vw, .85rem);
   }
@@ -2412,13 +2449,6 @@ body.soul-playing{overflow:hidden}
       calc(var(--live-card-delta-row) + .15rem);
     gap: .28rem;
   }
-  .live-board:is([data-theme="loki-classic"], [data-custom-theme]) .live-player-name {
-    display: -webkit-box;
-    -webkit-box-orient: vertical;
-    -webkit-line-clamp: 2;
-    overflow: hidden;
-    font-size: clamp(.78rem, 5.8cqi, 1.65rem);
-  }
   .live-board:is([data-theme="loki-classic"], [data-custom-theme]) .live-player-footer {
     grid-area: 2 / 1;
     display: grid;
@@ -2429,9 +2459,6 @@ body.soul-playing{overflow:hidden}
   }
   .live-board:is([data-theme="loki-classic"], [data-custom-theme]) .live-player-footer .live-riichi {
     pointer-events: auto;
-  }
-  .live-board:is([data-theme="loki-classic"], [data-custom-theme]) .live-player-delta {
-    line-height: 1.1;
   }
   .live-board[data-theme="loki-classic"] .live-player-points {
     color: #fff6df;
@@ -2491,13 +2518,17 @@ body.soul-playing{overflow:hidden}
     }
     .live-board:is([data-theme="loki-classic"], [data-custom-theme]) .live-table { container-name: scoreboard-table; }
     .live-board:is([data-theme="loki-classic"], [data-custom-theme]) .live-score-grid {
+      --live-score-card-width: min(24cqw, 28rem);
+      grid-template-areas: "top top top" "left wind right" "bottom bottom bottom";
+      grid-template-columns: minmax(0, var(--live-score-card-width)) minmax(0, 1fr) minmax(0, var(--live-score-card-width));
       margin-block: 4cqw;
       padding-block: 0;
-      gap: clamp(.5rem, 1.25cqw, 1.15rem);
+      column-gap: clamp(.5rem, 1.25cqw, 1.15rem);
+      row-gap: clamp(.48rem, .9cqw, .98rem);
     }
     .live-board:is([data-theme="loki-classic"], [data-custom-theme]) .live-player {
       justify-self: center;
-      inline-size: min(100%, 24cqw, 28rem);
+      inline-size: min(100%, var(--live-score-card-width));
     }
     .live-board:is([data-theme="loki-classic"], [data-custom-theme]) .live-wind-panel {
       justify-self: center;
@@ -2507,12 +2538,10 @@ body.soul-playing{overflow:hidden}
   }
   @container scoreboard-table (min-width: 80rem) {
     .live-board:is([data-theme="loki-classic"], [data-custom-theme]) .live-score-grid {
+      --live-score-card-width: min(28cqw, 30rem);
       align-self: stretch;
       grid-template-rows: auto minmax(min-content, 1fr) auto;
-      margin-block: 5.6cqw;
-    }
-    .live-board:is([data-theme="loki-classic"], [data-custom-theme]) .live-player {
-      inline-size: min(100%, 28cqw, 30rem);
+      margin-block: 7.5cqw;
     }
   }
 
@@ -2724,7 +2753,7 @@ body.soul-playing{overflow:hidden}
   }
   .live-board:is([data-theme="cat"], [data-theme="dog"], [data-theme="whale-shark"]) .live-table::before { content: none; }
   .live-board:is([data-theme="cat"], [data-theme="dog"], [data-theme="whale-shark"]) .live-score-grid {
-    margin-inline: 5.2%;
+    margin-inline: calc(5.2% + var(--live-grid-inset));
     padding-block: clamp(2.4rem, 5.6vw, 3.8rem);
   }
   .live-board:is([data-theme="cat"], [data-theme="dog"], [data-theme="whale-shark"], [data-custom-theme]) .live-table .live-wind-panel {
@@ -2746,7 +2775,8 @@ body.soul-playing{overflow:hidden}
     .live-board:is([data-theme="cat"], [data-theme="dog"], [data-theme="whale-shark"]) .live-score-grid {
       padding-block: 0;
       margin-block: 4cqw;
-      gap: clamp(.5rem, 1.2cqw, 1.15rem);
+      column-gap: clamp(.5rem, 1.2cqw, 1.15rem);
+      row-gap: clamp(.48rem, .9cqw, .98rem);
     }
     .live-board:is([data-theme="cat"], [data-theme="dog"], [data-theme="whale-shark"]) .live-player {
       justify-self: center;
@@ -3421,7 +3451,6 @@ body.soul-playing{overflow:hidden}
     background: transparent !important;
     border-top: 0 !important;
     padding: 0 clamp(.45rem, 1vw, 1rem) clamp(.18rem, .45vw, .42rem);
-    justify-content: flex-start;
   }
   .live-board .live-player-delta:empty {
     display: none;
