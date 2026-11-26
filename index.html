@@ -3667,8 +3667,6 @@ body.soul-playing{overflow:hidden}
     --live-card-outline: #f5efff;
     --live-delta-gain-ink: #245246;
     --live-delta-loss-ink: #882d50;
-    --live-counter-ink: #283659;
-    --live-counter-outline: #fff8ff;
   }
 
   .live-board .live-brand {
@@ -3726,7 +3724,6 @@ body.soul-playing{overflow:hidden}
     .live-round-banner { order: 1; flex-basis: 100%; grid-area: 3 / 1 / auto / -1; }
   }
 
-  .live-theme-preview[data-round-banner] { --sample-center: transparent; }
   .live-board[data-round-banner] .live-player {
     aspect-ratio: 2.45;
     max-inline-size: 100%;
@@ -3805,17 +3802,24 @@ body.soul-playing{overflow:hidden}
   }
 
   .live-board[data-round-banner] .live-wind-panel {
-    --live-wind-frame: transparent;
-    --live-wind-frame-border: transparent;
-    --live-wind-frame-shadow: none;
+    aspect-ratio: 1;
     --live-wind-face: transparent;
-    --live-wind-face-border: transparent;
     --live-wind-face-shadow: none;
   }
-  .live-board[data-round-banner] .live-wind-face { padding: 0; border: 0; }
+  @media (min-width: 900px) {
+    .live-board[data-round-banner] .live-wind-panel { inline-size: min(100%, 18.5cqw, 17rem); }
+  }
+  .live-board[data-round-banner] .live-wind-face {
+    position: absolute;
+    inset: 13% 21% 24%;
+    display: grid;
+    align-content: center;
+    padding: 0;
+    border: 0;
+  }
   .live-board[data-round-banner] .live-counters {
-    color: var(--live-counter-ink, #fff9e9);
-    -webkit-text-stroke: .11em var(--live-counter-outline, #15131d);
+    color: var(--live-card-ink);
+    -webkit-text-stroke: .09em var(--live-card-outline);
     paint-order: stroke fill;
     font-weight: 750;
   }
@@ -3826,9 +3830,9 @@ body.soul-playing{overflow:hidden}
   }
   .live-board[data-round-banner] .live-counters > div { border: 0; }
   .live-board[data-round-banner] .live-stick-tray {
-    border: 0;
-    background: transparent;
-    box-shadow: none;
+    border-color: color-mix(in srgb, var(--live-round-accent) 60%, #161622);
+    background: rgb(16 15 25 / 68%);
+    box-shadow: inset 0 1px 3px #06050d99;
   }
 </style>
 </head>
@@ -7853,7 +7857,6 @@ window.addEventListener('DOMContentLoaded', () => {
   function applyCustomTheme(element, theme) {
     if (theme) element.dataset.customTheme = theme.appearance;
     else delete element.dataset.customTheme;
-    element.toggleAttribute('data-round-banner', roundBannerThemes.has(theme?.id));
     for (const [asset, property] of Object.entries(themeAssetProperties)) {
       if (theme) element.style.setProperty(property, 'url("' + themeAssetPath(theme.id, asset) + '")');
       else element.style.removeProperty(property);
@@ -7910,8 +7913,11 @@ window.addEventListener('DOMContentLoaded', () => {
       finishMotion();
     }
     board.setAttribute('data-theme', choice.value);
-    applyCustomTheme(board, customThemes.get(choice.value));
-    const roundTarget = $(board.hasAttribute('data-round-banner') ? 'liveRoundBanner' : 'liveWindFace');
+    const theme = customThemes.get(choice.value);
+    const hasRoundBanner = roundBannerThemes.has(theme?.id);
+    board.toggleAttribute('data-round-banner', hasRoundBanner);
+    applyCustomTheme(board, theme);
+    const roundTarget = $(hasRoundBanner ? 'liveRoundBanner' : 'liveWindFace');
     if (roundInfo.parentElement !== roundTarget) roundTarget.prepend(roundInfo);
     themeChoices.forEach(option => { option.checked = option === choice; });
   }
