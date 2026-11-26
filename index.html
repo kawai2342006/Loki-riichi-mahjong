@@ -3607,6 +3607,230 @@ body.soul-playing{overflow:hidden}
   .live-board[data-theme="miyabi-frost"] { --live-custom-stick-h: var(--live-miyabi-frost-stick-h); --live-custom-stick-v: var(--live-miyabi-frost-stick-v); }
   .live-board[data-theme="vice-sunset"] { --live-custom-stick-h: var(--live-vice-sunset-stick-h); --live-custom-stick-v: var(--live-vice-sunset-stick-v); }
 </style>
+<style id="live-scoreboard-round-banner">
+  .live-board[data-theme="Hogwarts"] {
+    --live-round-accent: #f4d291;
+    --live-seat-x: 10%;
+    --live-seat-y: 12.5%;
+    --live-card-header-y: 12%;
+    --live-card-delta-y: 88%;
+    --live-card-ink: #302010;
+    --live-card-outline: #f6ddb1;
+    --live-delta-gain-ink: #164b34;
+    --live-delta-loss-ink: #761c2d;
+  }
+  .live-board[data-theme="Lilac"] {
+    --live-round-accent: #e1c9ff;
+    --live-seat-x: 9.5%;
+    --live-seat-y: 13.6%;
+    --live-card-header-y: 13.6%;
+    --live-card-delta-y: 89%;
+    --live-card-ink: #392348;
+    --live-card-outline: #fae7ef;
+    --live-delta-gain-ink: #175145;
+    --live-delta-loss-ink: #811d4b;
+  }
+  .live-board[data-theme="Misa_Death_Note"] {
+    --live-round-accent: #ffb0c0;
+    --live-seat-x: 17.5%;
+    --live-seat-y: 22.5%;
+    --live-card-header-y: 21%;
+    --live-card-delta-y: 82%;
+    --live-card-name-inset: 27%;
+    --live-card-ink: #441724;
+    --live-card-outline: #f7e2dc;
+    --live-delta-gain-ink: #234f3d;
+    --live-delta-loss-ink: #831a37;
+  }
+  .live-board[data-theme="Yoshizawa"] {
+    --live-round-accent: #ffd197;
+    --live-seat-x: 11.4%;
+    --live-seat-y: 17.1%;
+    --live-card-header-y: 13%;
+    --live-card-delta-y: 89%;
+    --live-card-ink: #32141b;
+    --live-card-outline: #f5eadc;
+    --live-card-header-ink: #fff2d0;
+    --live-card-header-outline: #23121b;
+    --live-card-loss-ink: #791d30;
+    --live-delta-gain-ink: #b1f4c9;
+    --live-delta-loss-ink: #ffb5bb;
+    --live-delta-outline: #25101a;
+  }
+  .live-board[data-theme="frieren"] {
+    --live-round-accent: #c4dcff;
+    --live-seat-x: 11.6%;
+    --live-seat-y: 25.1%;
+    --live-card-header-y: 21%;
+    --live-card-delta-y: 81%;
+    --live-card-ink: #283659;
+    --live-card-outline: #f5efff;
+    --live-delta-gain-ink: #245246;
+    --live-delta-loss-ink: #882d50;
+    --live-counter-ink: #283659;
+    --live-counter-outline: #fff8ff;
+  }
+
+  .live-board .live-brand {
+    justify-self: start;
+    padding: .38rem .7rem .38rem .42rem;
+    background: rgb(11 15 24 / 90%);
+    border: 1px solid color-mix(in srgb, var(--live-round-accent, #f2d89e) 38%, transparent);
+    border-radius: .78rem;
+    box-shadow: 0 .3rem 1rem #070a1059;
+  }
+  .live-board .live-brand-name { color: #eee8dd; }
+  .live-board .live-header .live-brand h1 {
+    color: #fff8e9;
+    text-shadow: 0 1px 2px #050608,
+      0 0 .55em color-mix(in srgb, var(--live-round-accent, #f2d89e) 65%, transparent);
+  }
+  .live-round-banner { display: none; }
+  .live-board[data-round-banner]:has(.live-match:not([hidden])) .live-round-banner {
+    display: grid;
+    place-items: center;
+  }
+  .live-round-banner .live-round-info {
+    min-inline-size: clamp(9rem, 13vw, 15rem);
+    padding: .42rem 1.1rem .48rem;
+    text-align: center;
+    color: #fff9ed;
+    background: linear-gradient(180deg,
+      color-mix(in srgb, var(--live-round-accent) 15%, #0c1018), #0c1018);
+    border: 1px solid color-mix(in srgb, var(--live-round-accent) 72%, #101420);
+    border-radius: .62rem;
+    box-shadow: inset 0 -2px 0 color-mix(in srgb, var(--live-round-accent) 40%, transparent), 0 .3rem .85rem #090c1466;
+  }
+  .live-round-banner p {
+    color: var(--live-round-accent);
+    font-size: clamp(.69rem, 1vw, .84rem);
+    font-weight: 750;
+    line-height: 1.2;
+  }
+  .live-round-banner h2 {
+    margin-top: .14em;
+    color: color-mix(in srgb, #fff9ed 84%, var(--live-round-accent));
+    text-shadow: 0 1px 2px #090c14;
+    font-size: clamp(1.28rem, 2.3vw, 2rem);
+    line-height: 1.1;
+    font-weight: 800;
+  }
+  @media (min-width: 1024px) {
+    .live-board[data-round-banner]:has(.live-match:not([hidden])) .live-header {
+      display: grid;
+      grid-template-columns: minmax(0, 1fr) auto minmax(0, 1fr);
+    }
+    .live-board[data-round-banner] .live-header-actions { justify-content: flex-end; }
+  }
+  @media (max-width: 1023px) {
+    .live-round-banner { order: 1; flex-basis: 100%; grid-area: 3 / 1 / auto / -1; }
+  }
+
+  .live-theme-preview[data-round-banner] { --sample-center: transparent; }
+  .live-board[data-round-banner] .live-player {
+    aspect-ratio: 2.45;
+    max-inline-size: 100%;
+    min-block-size: 5.9rem;
+    text-shadow: none;
+  }
+  .live-board[data-round-banner] .live-player-select {
+    position: absolute;
+    inset: 0;
+    grid-area: auto;
+    display: block;
+    padding: 0;
+  }
+  .live-board[data-round-banner] :is(.live-player-meta, .live-player-footer) { display: contents; }
+  .live-board[data-round-banner] .live-player-select .live-wind {
+    position: absolute;
+    left: var(--live-seat-x);
+    top: var(--live-seat-y);
+    translate: -50% -50%;
+    width: max-content;
+    min-height: 0;
+    border: 0;
+    background: transparent;
+    box-shadow: none;
+    color: var(--live-card-ink);
+    -webkit-text-stroke: .14em var(--live-card-outline);
+    paint-order: stroke fill;
+    font-size: clamp(.74rem, 5.3cqi, 1.6rem);
+    font-weight: 850;
+    line-height: 1.05;
+  }
+  .live-board[data-round-banner] :is(.live-player-name, .live-dealer-mark, .live-rank, .live-player-points, .live-player-delta) {
+    position: absolute;
+    translate: 0 -50%;
+    text-align: center;
+    color: var(--live-card-ink);
+    -webkit-text-stroke: .09em var(--live-card-outline);
+    paint-order: stroke fill;
+  }
+  .live-board[data-round-banner] :is(.live-player-name, .live-dealer-mark, .live-rank) {
+    top: var(--live-card-header-y);
+    color: var(--live-card-header-ink, var(--live-card-ink));
+    -webkit-text-stroke-color: var(--live-card-header-outline, var(--live-card-outline));
+    line-height: 1.08;
+  }
+  .live-board[data-round-banner] .live-player-name {
+    inset-inline: var(--live-card-name-inset, 23%);
+    font-size: clamp(.68rem, 4.5cqi, 1.4rem);
+  }
+  .live-board[data-round-banner] :is(.live-dealer-mark, .live-rank) {
+    inset-inline: 79% 3%;
+    font-size: clamp(.58rem, 3.25cqi, .9rem);
+    white-space: normal;
+  }
+  .live-board[data-round-banner] .live-player-points {
+    inset-inline: 5%;
+    top: 53%;
+    font-size: clamp(.88rem, 13.4cqi, 4.15rem);
+  }
+  .live-board[data-round-banner] .live-player-points.is-negative {
+    color: var(--live-card-loss-ink, var(--live-delta-loss-ink));
+  }
+  .live-board[data-round-banner] .live-player-delta {
+    inset-inline: 5%;
+    top: var(--live-card-delta-y);
+    pointer-events: none;
+    font-size: clamp(.68rem, 4.4cqi, 1.15rem);
+    -webkit-text-stroke-color: var(--live-delta-outline, var(--live-card-outline));
+  }
+  .live-board[data-round-banner] .live-player-delta.gain { color: var(--live-delta-gain-ink); }
+  .live-board[data-round-banner] .live-player-delta.loss { color: var(--live-delta-loss-ink); }
+  @container (max-width: 9rem) {
+    .live-board[data-round-banner] :is(.live-dealer-mark, .live-rank) {
+      inset-inline: 77% 1%;
+    }
+  }
+
+  .live-board[data-round-banner] .live-wind-panel {
+    --live-wind-frame: transparent;
+    --live-wind-frame-border: transparent;
+    --live-wind-frame-shadow: none;
+    --live-wind-face: transparent;
+    --live-wind-face-border: transparent;
+    --live-wind-face-shadow: none;
+  }
+  .live-board[data-round-banner] .live-wind-face { padding: 0; border: 0; }
+  .live-board[data-round-banner] .live-counters {
+    color: var(--live-counter-ink, #fff9e9);
+    -webkit-text-stroke: .11em var(--live-counter-outline, #15131d);
+    paint-order: stroke fill;
+    font-weight: 750;
+  }
+  .live-board[data-round-banner] .live-counters dt { font-size: clamp(.68rem, 4.6cqi, .96rem); }
+  .live-board[data-round-banner] .live-counters strong {
+    color: inherit;
+    font-size: clamp(.98rem, 8.6cqi, 1.6rem);
+  }
+  .live-board[data-round-banner] .live-counters > div { border: 0; }
+  .live-board[data-round-banner] .live-stick-tray {
+    border: 0;
+    background: transparent;
+    box-shadow: none;
+  }
+</style>
 </head>
 <body>
   <svg width="0" height="0" aria-hidden="true" style="position:absolute;overflow:hidden"><defs id="mj-running-defs">
@@ -3855,6 +4079,7 @@ body.soul-playing{overflow:hidden}
           <span class="live-brand-tile" aria-hidden="true">中</span>
           <div><span class="live-brand-name">點和</span><h1 id="liveBoardTitle" tabindex="-1">直播記分板</h1></div>
         </div>
+        <div class="live-round-banner" id="liveRoundBanner"></div>
         <div class="live-header-actions">
           <button type="button" class="live-button" id="liveExit">返回點和</button>
           <button type="button" class="live-button" id="liveFullscreen">全螢幕</button>
@@ -3896,9 +4121,11 @@ body.soul-playing{overflow:hidden}
           <div class="live-table" id="liveTable">
             <div class="live-score-grid" id="livePlayers">
               <div class="live-wind-panel">
-                <div class="live-wind-face">
-                  <p id="liveMatchMode"></p>
-                  <h2 id="liveRoundLabel" tabindex="-1"></h2>
+                <div class="live-wind-face" id="liveWindFace">
+                  <div class="live-round-info" id="liveRoundInfo">
+                    <p id="liveMatchMode"></p>
+                    <h2 id="liveRoundLabel" tabindex="-1"></h2>
+                  </div>
                   <dl class="live-counters">
                     <div><dt>本場</dt><dd><strong id="liveHonba">0</strong><span>本</span></dd></div>
                     <div id="livePot">
@@ -7422,6 +7649,8 @@ window.addEventListener('DOMContentLoaded', () => {
   const $ = id => document.getElementById(id);
   const clone = id => $(id).content.firstElementChild.cloneNode(true);
   const board = $('liveScoreboard');
+  const roundBannerThemes = new Set(['Hogwarts', 'Lilac', 'Misa_Death_Note', 'Yoshizawa', 'frieren']);
+  const roundInfo = $('liveRoundInfo');
   const dialog = $('liveActionDialog');
   const themeDialog = $('liveThemeDialog');
   const themeImportDialog = $('liveThemeImportDialog');
@@ -7624,6 +7853,7 @@ window.addEventListener('DOMContentLoaded', () => {
   function applyCustomTheme(element, theme) {
     if (theme) element.dataset.customTheme = theme.appearance;
     else delete element.dataset.customTheme;
+    element.toggleAttribute('data-round-banner', roundBannerThemes.has(theme?.id));
     for (const [asset, property] of Object.entries(themeAssetProperties)) {
       if (theme) element.style.setProperty(property, 'url("' + themeAssetPath(theme.id, asset) + '")');
       else element.style.removeProperty(property);
@@ -7681,6 +7911,8 @@ window.addEventListener('DOMContentLoaded', () => {
     }
     board.setAttribute('data-theme', choice.value);
     applyCustomTheme(board, customThemes.get(choice.value));
+    const roundTarget = $(board.hasAttribute('data-round-banner') ? 'liveRoundBanner' : 'liveWindFace');
+    if (roundInfo.parentElement !== roundTarget) roundTarget.prepend(roundInfo);
     themeChoices.forEach(option => { option.checked = option === choice; });
   }
 
